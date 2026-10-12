@@ -63,7 +63,7 @@
 1. AS a user, I want to view the number of people who speak Chinese, English, Hindi, Spanish, and Arabic from greatest to smallest, including percentage of the world population, so that I can evaluate language distribution.
 
 #### Testing & Quality Assurance (Code Review 3)
-1. As a developer, I want to implement unit tests (using mocks) and integration tests running inside GitHub Actions, so that database queries and output schemas are automatically validated.  \
+1. As a developer, I want to implement unit tests (using mocks) and integration tests running inside GitHub Actions, so that database queries and output schemas are automatically validated.
 
 #### Continuous Deployment & Bug Management (Code Review 4)
 1. As a DevOps engineer, I want to configure automated deployment packaging and GitHub Issue bug report templates, so that final release artifacts are built seamlessly and user bugs can be tracked.
