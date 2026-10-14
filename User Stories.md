@@ -47,11 +47,11 @@ As a market research company, I want all the top 7 populated cities in the world
 
 As a market research company, I want all the top 4 populated cities in a continent.
 
-As a market research company, I want all The top 3 populated cities in a region.
+As a market research company, I want all the top 3 populated cities in a region.
 
-As a market research company, I want all The top 5 populated cities in a country.
+As a market research company, I want all the top 5 populated cities in a country.
 
-As a market research company, I want all The top 4 populated cities in a district.
+As a market research company, I want all the top 4 populated cities in a district.
 
 As a market research company, I want all the capital cities in the world organised by largest population to smallest.
 
