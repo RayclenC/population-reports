@@ -2,6 +2,12 @@ package com.napier.sem;
 
 import java.sql.*;
 
+/**
+ * <p>
+ *     The App class establishes a connection with the local database with error handling
+ *     if the request to connect takes too long or if a connection cannot be established.
+ * </p>
+ */
 public class App
 {
     public static void main(String[] args)
