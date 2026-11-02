@@ -47,7 +47,7 @@
 ## Low Priority(Sprint 3 & 4)
 #### Population Distribution Report
 1. As a user, I want to view the population of people, people living in cities, and people not living in cities (including percentages) in each continent, so that I can analyze continental urbanization.
-2. As a user, I want to view the population of people, people living in cities, and people not living in cities (including percentages) in each region, so that I can analyze regional urbanization.
+   2. As a user, I want to view the population of people, people living in cities, and people not living in cities (including percentages) in each region, so that I can analyze regional urbanization.
 3. As a user, I want to view the population of people, people living in cities, and people not living in cities (including percentages) in each country, so that I can analyze national urbanization.
 
 #### Exact headcount queries
