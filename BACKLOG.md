@@ -47,7 +47,7 @@
 ## Low Priority(Sprint 3 & 4)
 #### Population Distribution Report
 1. As a user, I want to view the population of people, people living in cities, and people not living in cities (including percentages) in each continent, so that I can analyze continental urbanization.
-2. As a user, I want to view the population of people, people living in cities, and people not living in cities (including percentages) in each region, so that I can analyze regional urbanization.
+   2. As a user, I want to view the population of people, people living in cities, and people not living in cities (including percentages) in each region, so that I can analyze regional urbanization.
 3. As a user, I want to view the population of people, people living in cities, and people not living in cities (including percentages) in each country, so that I can analyze national urbanization.
 
 #### Exact headcount queries
@@ -63,7 +63,7 @@
 1. AS a user, I want to view the number of people who speak Chinese, English, Hindi, Spanish, and Arabic from greatest to smallest, including percentage of the world population, so that I can evaluate language distribution.
 
 #### Testing & Quality Assurance (Code Review 3)
-1. As a developer, I want to implement unit tests (using mocks) and integration tests running inside GitHub Actions, so that database queries and output schemas are automatically validated.  \
+1. As a developer, I want to implement unit tests (using mocks) and integration tests running inside GitHub Actions, so that database queries and output schemas are automatically validated.
 
 #### Continuous Deployment & Bug Management (Code Review 4)
 1. As a DevOps engineer, I want to configure automated deployment packaging and GitHub Issue bug report templates, so that final release artifacts are built seamlessly and user bugs can be tracked.

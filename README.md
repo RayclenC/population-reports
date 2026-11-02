@@ -1,5 +1,6 @@
 # Group Project Contributors:
-Will Wheeler
-Mohamed Bashar
-RayClen Cardoso
-Magnus Mcghee
+* Will Wheeler
+* Mohamed Bashar
+* RayClen Cardoso
+* Magnus Mcghee
+* Umer zia

@@ -2,6 +2,12 @@ package com.napier.sem;
 
 import java.sql.*;
 
+/**
+ * <p>
+ *     The App class establishes a connection with the local database with error handling
+ *     if the request to connect takes too long or if a connection cannot be established.
+ * </p>
+ */
 public class App
 {
     public static void main(String[] args)
@@ -26,12 +32,12 @@ public class App
             try
             {
                 // Wait a bit for db to start
-                Thread.sleep(1000);
+                Thread.sleep(30000);
                 // Connect to database
                 con = DriverManager.getConnection("jdbc:mysql://db:3306/world?useSSL=false&allowPublicKeyRetrieval=true", "root", "example");
                 System.out.println("Successfully connected");
                 // Wait a bit
-                Thread.sleep(1000);
+                Thread.sleep(30000);
                 // Exit for loop
                 break;
             }
