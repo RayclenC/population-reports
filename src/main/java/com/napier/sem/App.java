@@ -30,8 +30,8 @@ public class App
         {
             // Create string for SQL statement
             String strSelect =
-                    "SELECT ID, Name, CountryCode, District, Populationopulation "
-                            + "FROM city" +
+                    "SELECT ID, Name, CountryCode, District, Population "
+                            + "FROM city " +
                             "ORDER BY Population DESC";
             // Create an SQL statement
             Statement stmt = con.createStatement();
