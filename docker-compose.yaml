@@ -4,8 +4,6 @@ services:
   # Build app from Dockerfile in same folder
   app:
     build: .
-    environment:
-      DB_URL: "jdbc:mysql://db:3306/world?useSSL=false&allowPublicKeyRetrieval=true"
     depends_on:
       - db
 

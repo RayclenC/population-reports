@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class App
 {
     private static final String DEFAULT_DB_URL =
-            "jdbc:mysql://localhost:33060/world?useSSL=false&allowPublicKeyRetrieval=true";
+            "jdbc:mysql://db:3306/world?useSSL=false&allowPublicKeyRetrieval=true";
 
     public static void main(String[] args)
     {
