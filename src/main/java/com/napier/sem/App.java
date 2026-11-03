@@ -31,7 +31,7 @@ public class App
             // Create string for SQL statement
             String strSelect =
                     "SELECT ID, Name, CountryCode, District, population "
-                            + "FROM city ";
+                            + "FROM city";
             // Create an SQL statement
             Statement stmt = con.createStatement();
             // Execute SQL statement
@@ -104,6 +104,15 @@ public class App
         {
             try
             {
+                ArrayList<City> cities = getCityByPopulation();
+                System.out.println("All cities by population (largest to smallest):");
+                for (City city : cities)
+                {
+                    System.out.println(city.id + " | " + city.name + " | "
+                            + city.country_code + " | " + city.district + " | "
+                            + city.population);
+                }
+
                 // Close connection
                 con.close();
             }
