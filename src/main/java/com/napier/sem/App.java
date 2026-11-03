@@ -24,7 +24,7 @@ public class App
     }
 
 
-    private void Connect(){
+    public void Connect(){
         try
         {
             // Load Database driver
@@ -66,7 +66,7 @@ public class App
         }
     }
 
-    private void Disconnect(){
+    public void Disconnect(){
         if (con != null)
         {
             try
