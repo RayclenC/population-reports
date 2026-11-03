@@ -14,33 +14,49 @@ public class App
     private static final String DEFAULT_DB_URL =
             "jdbc:mysql://db:3306/world?useSSL=false&allowPublicKeyRetrieval=true";
 
+    private Connection con = null;
+
     public static void main(String[] args)
     {
         App ThisApp = new App();
         ThisApp.Connect();
+
+        ThisApp.getCitiesByPopulation();
     }
 
-    public static ArrayList<Cities> getCitiesByPopulation(Connection con) throws SQLException {
-        String query = "SELECT city.id, city.name, city.country_code, city.district, "
-                + "city.population, city.name AS Capital "
-                + "FROM city"
-                + "ORDER BY city.population DESC, city.name ASC";
-
-        ArrayList<Cities> cities = new ArrayList<>();
-        try (PreparedStatement statement = con.prepareStatement(query);
-             ResultSet results = statement.executeQuery()) {
-            while (results.next()) {
+    public Cities getCitiesByPopulation()
+    {
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT id, name, country_code, district, population "
+                            + "FROM city ";
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Return new employee if valid.
+            // Check one is returned
+            if (rset.next())
+            {
                 Cities city = new Cities();
-                city.id = results.getInt("ID");
-                city.name = results.getString("Name");
-                city.country_code = results.getString("CountryCode");
-                city.district = results.getString("District");
-                city.population = results.getInt("Population");
-                cities.add(city);
+                city.id = rset.getInt("ID");
+                city.name = rset.getString("Name");
+                city.country_code = rset.getString("CountryCode");
+                city.district = rset.getString("District");
+                city.population = rset.getInt("Population");
+                return city;
             }
+            else
+                return null;
         }
-        return cities;
-
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get employee details");
+            return null;
+        }
     }
 
     private void Connect(){
@@ -56,7 +72,6 @@ public class App
         }
 
         // Connection to the database
-        Connection con = null;
         int retries = 100;
         for (int i = 0; i < retries; ++i)
         {
