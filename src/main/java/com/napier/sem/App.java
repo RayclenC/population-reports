@@ -121,6 +121,15 @@ public class App
         {
             try
             {
+                ArrayList<Country> countries = getCountriesByPopulation(con);
+                System.out.println("All countries by population (largest to smallest):");
+                for (Country country : countries)
+                {
+                    System.out.println(country.code + " | " + country.name + " | "
+                            + country.continent + " | " + country.region + " | "
+                            + country.population + " | " + country.capital);
+                }
+
                 // Close connection
                 con.close();
             }
