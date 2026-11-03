@@ -10,6 +10,8 @@ import java.sql.*;
  */
 public class App
 {
+    private Connection con = null;
+
     public static void main(String[] args)
     {
         App ThisApp = new App();
@@ -29,7 +31,7 @@ public class App
         }
 
         // Connection to the database
-        Connection con = null;
+        con = null;
         int retries = 100;
         for (int i = 0; i < retries; ++i)
         {
