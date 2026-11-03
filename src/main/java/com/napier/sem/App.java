@@ -12,6 +12,11 @@ public class App
 {
     public static void main(String[] args)
     {
+        App ThisApp = new App();
+        ThisApp.Connect();
+    }
+
+    private void Connect(){
         try
         {
             // Load Database driver
