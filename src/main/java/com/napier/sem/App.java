@@ -21,10 +21,10 @@ public class App
         App ThisApp = new App();
         ThisApp.Connect();
 
-        ThisApp.getCitiesByPopulation();
+        ThisApp.getCityByPopulation();
     }
 
-    public Cities getCitiesByPopulation()
+    public ArrayList<City> getCityByPopulation()
     {
         try
         {
@@ -38,18 +38,19 @@ public class App
             ResultSet rset = stmt.executeQuery(strSelect);
             // Return new employee if valid.
             // Check one is returned
-            if (rset.next())
+
+            ArrayList<City> cities = new ArrayList<>();
+            while (rset.next())
             {
-                Cities city = new Cities();
+                City city = new City();
                 city.id = rset.getInt("ID");
                 city.name = rset.getString("Name");
                 city.country_code = rset.getString("CountryCode");
                 city.district = rset.getString("District");
                 city.population = rset.getInt("Population");
-                return city;
+                cities.add(city);
             }
-            else
-                return null;
+            return cities;
         }
         catch (Exception e)
         {

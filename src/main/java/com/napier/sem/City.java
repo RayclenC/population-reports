@@ -1,6 +1,6 @@
 package com.napier.sem;
 
-public class Cities {
+public class City {
 
     // 2343,'Chongju','KOR','Chungchongbuk',531376)
     public int id;
