@@ -16,74 +16,8 @@ public class App
 
     public static void main(String[] args)
     {
-        try
-        {
-            // Load Database driver
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        }
-        catch (ClassNotFoundException e)
-        {
-            System.out.println("Could not load SQL driver");
-            System.exit(-1);
-        }
-
-        String dbUrl = System.getenv().getOrDefault("DB_URL", DEFAULT_DB_URL);
-        Connection con = null;
-        int retries = 30;
-        for (int attempt = 1; attempt <= retries; attempt++)
-        {
-            System.out.printf("Connecting to database (attempt %d/%d)...%n", attempt, retries);
-            try
-            {
-                con = DriverManager.getConnection(dbUrl, "root", "example");
-                System.out.println("Successfully connected");
-                break;
-            }
-            catch (SQLException sqle)
-            {
-                System.err.println("Failed to connect: " + sqle.getMessage());
-                if (attempt < retries) {
-                    try {
-                        Thread.sleep(30000);
-                    } catch (InterruptedException interrupted) {
-                        Thread.currentThread().interrupt();
-                        System.err.println("Interrupted while waiting to retry the database connection");
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (con != null)
-        {
-            try
-            {
-                ArrayList<Cities> cities = getCitiesByPopulation(con);
-                System.out.println("All countries by population (largest to smallest):");
-                for (Cities city : cities) {
-                    System.out.println(city.id + " | " + city.name + " | "
-                            + city.country_code + " | " + city.district + " | "
-                            + city.population);
-                }
-            }
-            catch (SQLException e)
-            {
-                System.err.println("Could not retrieve cities: " + e.getMessage());
-            }
-            finally
-            {
-                try {
-                    con.close();
-                } catch (SQLException e) {
-                    System.err.println("Error closing connection to database: " + e.getMessage());
-                }
-            }
-        }
-        else
-        {
-            System.err.println("Could not connect to database at " + dbUrl);
-            System.exit(1);
-        }
+        App ThisApp = new App();
+        ThisApp.Connect();
     }
 
     public static ArrayList<Cities> getCitiesByPopulation(Connection con) throws SQLException {
@@ -108,4 +42,60 @@ public class App
         return cities;
 
     }
+
+    private void Connect(){
+        try
+        {
+            // Load Database driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        }
+        catch (ClassNotFoundException e)
+        {
+            System.out.println("Could not load SQL driver");
+            System.exit(-1);
+        }
+
+        // Connection to the database
+        Connection con = null;
+        int retries = 100;
+        for (int i = 0; i < retries; ++i)
+        {
+            System.out.println("Connecting to database...");
+            try
+            {
+                // Wait a bit for db to start
+                Thread.sleep(30000);
+                // Connect to database
+                con = DriverManager.getConnection("jdbc:mysql://db:3306/world?useSSL=false&allowPublicKeyRetrieval=true", "root", "example");
+                System.out.println("Successfully connected");
+                // Wait a bit
+                Thread.sleep(30000);
+                // Exit for loop
+                break;
+            }
+            catch (SQLException sqle)
+            {
+                System.out.println("Failed to connect to database attempt " + Integer.toString(i));
+                System.out.println(sqle.getMessage());
+            }
+            catch (InterruptedException ie)
+            {
+                System.out.println("Thread interrupted? Should not happen.");
+            }
+        }
+
+        if (con != null)
+        {
+            try
+            {
+                // Close connection
+                con.close();
+            }
+            catch (Exception e)
+            {
+                System.out.println("Error closing connection to database");
+            }
+        }
+    }
 }
+
