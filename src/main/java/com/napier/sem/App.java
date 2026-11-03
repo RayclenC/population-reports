@@ -21,10 +21,10 @@ public class App
         App ThisApp = new App();
         ThisApp.Connect();
 
-        ThisApp.getCityByPopulation();
+        ThisApp.getCitiesInPopulationSizeOrder();
     }
 
-    public ArrayList<City> getCityByPopulation()
+    public ArrayList<City> getCitiesInPopulationSizeOrder()
     {
         try
         {
@@ -104,7 +104,7 @@ public class App
         {
             try
             {
-                ArrayList<City> cities = getCityByPopulation();
+                ArrayList<City> cities = getCitiesInPopulationSizeOrder();
                 System.out.println("All cities by population (largest to smallest):");
                 for (City city : cities)
                 {
