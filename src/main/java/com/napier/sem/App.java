@@ -1,6 +1,7 @@
 package com.napier.sem;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * <p>
@@ -16,7 +17,12 @@ public class App
     {
         App ThisApp = new App();
         ThisApp.Connect();
+
+        //Methods go here
+
+        ThisApp.Disconnect();
     }
+
 
     private void Connect(){
         try
@@ -58,7 +64,9 @@ public class App
                 System.out.println("Thread interrupted? Should not happen.");
             }
         }
+    }
 
+    private void Disconnect(){
         if (con != null)
         {
             try
