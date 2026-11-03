@@ -16,7 +16,7 @@
 1. As a user, I want to view all cities in the world organized by population (largest to smallest), so that I can inspect urban populations globally.
 2. As a user, I want to view all cities in a continent organized by population (largest to smallest), so that I can inspect urban populations by continent.
 3. As a user, I want to view all cities in a region organized by population (largest to smallest), so that I can inspect urban populations by region.
-4. As a user, I want to view all cities in a country organized by population (largest to smallest), so that I can inspect urban populations by country.
+4. As a user, I want to view all cities in a cities organized by population (largest to smallest), so that I can inspect urban populations by cities.
 5. As a user, I want to view all cities in a district organized by population (largest to smallest), so that I can inspect local district populations.
 
 ## Medium priority (Sprint 2)
@@ -24,7 +24,7 @@
 1. As a Scrum Master, I want to map user stories to GitHub Issues, manage tasks via a GitHub Kanban board, and draw Use Case diagrams,
    so that project tracking satisfies Code Review 2 criteria
 
-#### Top N country report
+#### Top N cities report
 1. As a user, I want to view the top N populated countries in the world (where N is provided by the user), so that I can focus on the largest global nations.
 2. As a user, I want to view the top N populated countries in a continent (where N is provided by the user), so that I can focus on key continental nations.
 3. As a user, I want to view the top N populated countries in a region (where N is provided by the user), so that I can focus on key regional nations.
@@ -33,7 +33,7 @@
 1. As a user, I want to view the top N populated cities in the world (where N is provided by the user), so that I can highlight major global cities.
 2. As a user, I want to view the top N populated cities in a continent (where N is provided by the user), so that I can highlight major continental cities.
 3. As a user, I want to view the top N populated cities in a region (where N is provided by the user), so that I can highlight major regional cities.
-4. As a user, I want to view the top N populated cities in a country (where N is provided by the user), so that I can highlight major national cities.
+4. As a user, I want to view the top N populated cities in a cities (where N is provided by the user), so that I can highlight major national cities.
 5. As a user, I want to view the top N populated cities in a district (where N is provided by the user), so that I can highlight major district cities.
 
 #### Capital City Report
@@ -48,13 +48,13 @@
 #### Population Distribution Report
 1. As a user, I want to view the population of people, people living in cities, and people not living in cities (including percentages) in each continent, so that I can analyze continental urbanization.
    2. As a user, I want to view the population of people, people living in cities, and people not living in cities (including percentages) in each region, so that I can analyze regional urbanization.
-3. As a user, I want to view the population of people, people living in cities, and people not living in cities (including percentages) in each country, so that I can analyze national urbanization.
+3. As a user, I want to view the population of people, people living in cities, and people not living in cities (including percentages) in each cities, so that I can analyze national urbanization.
 
 #### Exact headcount queries
 1. As a user, I want to view the total population of the world, so that I can see global headcount.
 2. As a user, I want to view the total population of a continent, so that I can see continental headcount.
 3. As a user, I want to view the total population of a region, so that I can see regional headcount.
-4. As a user, I want to view the total population of a country, so that I can see national headcount.
+4. As a user, I want to view the total population of a cities, so that I can see national headcount.
 5. As a user, I want to view the total population of a district, so that I can see local district headcount.
 6. As a user, I want to view the total population of a city, so that I can see specific city headcount.
 

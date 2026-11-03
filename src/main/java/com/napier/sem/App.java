@@ -44,7 +44,7 @@ public class App
                 System.err.println("Failed to connect: " + sqle.getMessage());
                 if (attempt < retries) {
                     try {
-                        Thread.sleep(2000);
+                        Thread.sleep(30000);
                     } catch (InterruptedException interrupted) {
                         Thread.currentThread().interrupt();
                         System.err.println("Interrupted while waiting to retry the database connection");
@@ -58,17 +58,17 @@ public class App
         {
             try
             {
-                ArrayList<Country> countries = getCountriesByPopulation(con);
+                ArrayList<Cities> cities = getCitiesByPopulation(con);
                 System.out.println("All countries by population (largest to smallest):");
-                for (Country country : countries) {
-                    System.out.println(country.code + " | " + country.name + " | "
-                            + country.continent + " | " + country.region + " | "
-                            + country.population + " | " + country.capital);
+                for (Cities city : cities) {
+                    System.out.println(city.id + " | " + city.name + " | "
+                            + city.country_code + " | " + city.district + " | "
+                            + city.population);
                 }
             }
             catch (SQLException e)
             {
-                System.err.println("Could not retrieve countries: " + e.getMessage());
+                System.err.println("Could not retrieve cities: " + e.getMessage());
             }
             finally
             {
@@ -86,59 +86,26 @@ public class App
         }
     }
 
-    public static ArrayList<Country> getCountriesByPopulation(Connection con) throws SQLException {
-        String query = "SELECT country.Code, country.Name, country.Continent, country.Region, "
-                + "country.Population, city.Name AS Capital "
-                + "FROM country LEFT JOIN city ON country.Capital = city.ID "
-                + "ORDER BY country.Population DESC, country.Name ASC";
+    public static ArrayList<Cities> getCitiesByPopulation(Connection con) throws SQLException {
+        String query = "SELECT city.id, city.name, city.country_code, city.district, "
+                + "city.population, city.name AS Capital "
+                + "FROM city"
+                + "ORDER BY city.population DESC, city.name ASC";
 
-        ArrayList<Country> countries = new ArrayList<>();
+        ArrayList<Cities> cities = new ArrayList<>();
         try (PreparedStatement statement = con.prepareStatement(query);
              ResultSet results = statement.executeQuery()) {
             while (results.next()) {
-                Country country = new Country();
-                country.code = results.getString("Code");
-                country.name = results.getString("Name");
-                country.continent = results.getString("Continent");
-                country.region = results.getString("Region");
-                country.population = results.getInt("Population");
-                country.capital = results.getString("Capital");
-                countries.add(country);
+                Cities city = new Cities();
+                city.id = results.getInt("ID");
+                city.name = results.getString("Name");
+                city.country_code = results.getString("CountryCode");
+                city.district = results.getString("District");
+                city.population = results.getInt("Population");
+                cities.add(city);
             }
         }
-        return countries;
-    }
+        return cities;
 
-    /**
-     * Report 3: All the countries in a region organised by largest population to smallest.
-     */
-    public static ArrayList<Country> getCountriesByRegion(Connection con, String region) {
-        try {
-            String strSelect =
-                    "SELECT Code, Name, Continent, Region, Population, Capital " +
-                            "FROM country " +
-                            "WHERE Region = ? " +
-                            "ORDER BY Population DESC";
-
-            PreparedStatement stmt = con.prepareStatement(strSelect);
-            stmt.setString(1, region);
-            ResultSet rset = stmt.executeQuery();
-
-            ArrayList<Country> countries = new ArrayList<>();
-            while (rset.next()) {
-                Country c = new Country();
-                c.code = rset.getString("Code");
-                c.name = rset.getString("Name");
-                c.continent = rset.getString("Continent");
-                c.region = rset.getString("Region");
-                c.population = rset.getInt("Population");
-                c.capital = rset.getString("Capital");
-                countries.add(c);
-            }
-            return countries;
-        } catch (Exception e) {
-            System.out.println("Failed to get country details by region: " + e.getMessage());
-            return null;
-        }
     }
 }
