@@ -47,6 +47,6 @@ public class CountryDAOTest {
         assertFalse(countries.isEmpty(), "The list can't be empty");
 
         // Check whether the name of the first country is not null
-        assertNotNull(countries.getFirst().getName());
+        assertNotNull(countries.get(0).getName());
     }
 }
