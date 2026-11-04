@@ -37,7 +37,7 @@ jobs:
           docker stop world
           docker rm world
           docker image rm database   
-  
+
   
 
   Build:
@@ -55,4 +55,5 @@ jobs:
         run: mvn package -DskipTests
       - name: Run docker compose
         run: docker compose up --abort-on-container-exit
+
 

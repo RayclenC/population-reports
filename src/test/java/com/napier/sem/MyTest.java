@@ -1,21 +1,53 @@
 package com.napier.sem;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.ArrayList;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 
 class MyTest
 {
+    static App app;
+
+    @BeforeAll
+    static void init(){
+        app = new App();
+    }
+
+
+    @Test
+    void PrintCitiesTestNull()
+    {
+        ArrayList<City> cities = null;
+        app.PrintCities(cities);
+    }
+
+    @Test
+    void PrintCitiesTestEmpty(){
+        ArrayList<City> cities = new ArrayList<>();
+        app.PrintCities(cities);
+    }
+
+    @Test
+    void PrintCitiesTestNormal(){
+        ArrayList<City> cities = new ArrayList<>();
+        City city = new City();
+        city.SetName("London");
+        cities.add(city);
+
+        app.PrintCities(cities);
+    }
+
     @Test
     void formatCountryTest()
     {
         Country country = new Country();
-        country.code = "CHN";
-        country.name = "China";
-        country.population = 1277558000;
+        country.SetCode("CHN");
+        country.SetName("China");
+        country.SetPopulation(1277558000);
 
-        String result = App.formatCountry(country);
-
-        assertEquals("CHN | China | 1277558000", result);
+        assertEquals("CHN | China | 1277558000", App.formatCountry(country));
     }
 }
