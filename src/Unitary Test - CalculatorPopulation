@@ -1,0 +1,10 @@
+package org.example;
+
+public class CalculatorPopulation {
+
+    public double calculatePercentage(double populationCity, double populationTotal) {
+        // Simple logic for testing: (city population / total population) \* 100
+        // Making sure the project's actual logic follows this
+        return (populationCity / populationTotal) * 100;
+    }
+}
