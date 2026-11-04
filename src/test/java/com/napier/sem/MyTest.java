@@ -4,8 +4,6 @@ import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 
 class MyTest
 {
@@ -21,13 +19,13 @@ class MyTest
     void PrintCitiesTestNull()
     {
         ArrayList<City> cities = null;
-        app.PrintCities(cities);
+        app.printCities(cities);
     }
 
     @Test
     void PrintCitiesTestEmpty(){
         ArrayList<City> cities = new ArrayList<>();
-        app.PrintCities(cities);
+        app.printCities(cities);
     }
 
     @Test
@@ -37,6 +35,6 @@ class MyTest
         city.setName("London");
         cities.add(city);
 
-        app.PrintCities(cities);
+        app.printCities(cities);
     }
 }
