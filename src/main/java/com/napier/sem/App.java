@@ -7,6 +7,9 @@ import java.util.ArrayList;
  * <p>
  *     The App class establishes a connection with the local database with error handling
  *     if the request to connect takes too long or if a connection cannot be established.
+ *
+ *     Inside the App class is the methods used to generate reports.
+ *
  * </p>
  */
 public class App

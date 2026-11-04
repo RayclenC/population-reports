@@ -1,5 +1,13 @@
 package com.napier.sem;
 
+/**
+ *
+ * <p>
+ *     The City class builds a 'city' object from the 'city' database table, allowing us to set and get different elements of the database table.
+ * </p>
+ *
+ */
+
 public class City {
 
     private int id;

@@ -5,6 +5,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ *<p>
+ *     The AppIntegrationTest class is where our Integration tests (Tests against the database) are carried out.
+ *
+ *</p>
+ */
+
 public class AppIntegrationTest
 {
     static App app;
