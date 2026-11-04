@@ -1,22 +1,22 @@
-import org.junit.jupiter.api.Test; // this to import the anotation of the library JUnit 5, used to execute and test automatic tests in java. 
-
-import static org.junit.jupiter.api.Assertions.assertEquals; // that is to import the method assertEquals() of the JUnit 5, that is used to verify the two values are equal during the execution of an automatic test
-
-class CalculationPopulationTest {
-
-@Test
-void mustCalculatePercentageCorrectly() {
-
-calculaterPopulation calc = new CalculaterPopulation(); 
-double populationCity =  ;
-double populationTotal =  ;
+package org.example;
+import org.exampleJv.calculatorPopulation;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-double result = calc.calculatePercentage(populationCity, populationTotal); 
+public class CalculatorTest {
+       @Test
+       void
+    mustCalculatePercentageCorrectly() {
 
+           calculatorPopulation calc = new calculatorPopulation();
 
+           double populationCity = 2.85;
+           double populationTotal = 69.93;
 
-assertEquals( (double pCity), result, "(pCitynaturalN) of (pTotalnaturalN) must be (pCity%)");
+           double result = calc.calculatePercentage(populationCity, populationTotal);
 
-  }
+           assertEquals (4.07, result, 0.001, "3 of 70 must be 4.08");
+       }
 }
+
