@@ -21,10 +21,8 @@ public class App
     }
 
     public static ArrayList<Country> getCountriesByPopulation(Connection con) throws SQLException {
-        String query = "SELECT country.Code, country.Name, country.Continent, country.Region, "
-                + "country.Population, city.Name AS Capital "
-                + "FROM country LEFT JOIN city ON country.Capital = city.ID "
-                + "ORDER BY country.Population DESC, country.Name ASC";
+        String query = "SELECT Code, Name, Population FROM country "
+                + "ORDER BY Population DESC";
 
         ArrayList<Country> countries = new ArrayList<>();
         try (PreparedStatement statement = con.prepareStatement(query);
@@ -33,10 +31,7 @@ public class App
                 Country country = new Country();
                 country.code = results.getString("Code");
                 country.name = results.getString("Name");
-                country.continent = results.getString("Continent");
-                country.region = results.getString("Region");
                 country.population = results.getInt("Population");
-                country.capital = results.getString("Capital");
                 countries.add(country);
             }
         }
@@ -125,9 +120,7 @@ public class App
                 System.out.println("All countries by population (largest to smallest):");
                 for (Country country : countries)
                 {
-                    System.out.println(country.code + " | " + country.name + " | "
-                            + country.continent + " | " + country.region + " | "
-                            + country.population + " | " + country.capital);
+                    System.out.println(formatCountry(country));
                 }
 
                 // Close connection
@@ -138,5 +131,11 @@ public class App
                 System.out.println("Error closing connection to database");
             }
         }
+
+    }
+
+    static String formatCountry(Country country)
+    {
+        return country.code + " | " + country.name + " | " + country.population;
     }
 }
