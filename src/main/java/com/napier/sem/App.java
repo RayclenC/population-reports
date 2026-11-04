@@ -64,7 +64,8 @@ public class App
             ArrayList<City> cities = new ArrayList<>();
             while (rset.next())
             {
-                City city = new City(rset.getString("Name"));
+                City city = new City();
+                city.SetName(rset.getString("Name"));
                 city.SetPopulation(Double.parseDouble(rset.getString("Population")));
                 cities.add(city);
             }
