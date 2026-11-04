@@ -25,11 +25,18 @@ public class AppIntegrationTest
 
 
     @Test
-    void GetCitiesInContinentTestAssert()
+    void GetCitiesInContinentTest()
     {
         Continent continent = new Continent("Asia");
 
-        //ArrayList<City> city = app.GetCitiesInContinent(continent);
+        app.GetCitiesInContinent(continent);
+    }
+
+    @Test
+    void GetCitiesInContinentTestEmpty(){
+        Continent continent = null;
+
+        app.GetCitiesInContinent(continent);
     }
 
 
