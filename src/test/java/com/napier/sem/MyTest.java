@@ -16,20 +16,20 @@ class MyTest
 
 
     @Test
-    void PrintCitiesTestNull()
+    void printCitiesTestNull()
     {
         ArrayList<City> cities = null;
         app.printCities(cities);
     }
 
     @Test
-    void PrintCitiesTestEmpty(){
+    void printCitiesTestEmpty(){
         ArrayList<City> cities = new ArrayList<>();
         app.printCities(cities);
     }
 
     @Test
-    void PrintCitiesTestNormal(){
+    void printCitiesTestNormal(){
         ArrayList<City> cities = new ArrayList<>();
         City city = new City();
         city.setName("London");
