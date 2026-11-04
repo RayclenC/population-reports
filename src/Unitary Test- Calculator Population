@@ -2,7 +2,7 @@ package org.example;
 
 public class CalculatorPopulation {
 
-    // // Method responsible for calculating the percentage of a city's population
+    // Method responsible for calculating the percentage of a city's population
     public double calculatePercentage(double populationCity, double populationTotal) {
 
         // Divide the city's population by the total population and multiply by 100
