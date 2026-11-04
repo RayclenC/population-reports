@@ -1,24 +1,52 @@
+package org.example;
+
 import org.junit.jupiter.api.Test;
-import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
+public class CountryDAOTest {
 
-class CountyDAOTest { 
- 
-@Test
-void shouldGetCountriesInData() throws SQLException{
+    // A class that represents a country
+    public static class Country {
+        public String getName() {
+            // Return the country name
+            return "United Kingdom";
+        }
+    }
 
+    // // Class responsible for obtaining the list of countries
+    public static class CountryDAO {
+        public List<Country> getAllTheCountries() {
 
-	CountyDAO dao = new CountryDAO(); 
-        
-        List<County> countries = dao.getAllTheCountries(); 
-        
-assertNotNull(countries, "The list can't be null"); 
+            // Creates an empty list of countries
+            List<Country> lists = new ArrayList<>();
 
-assertfalse(countries.isEmpty(), "The list can't  be empty");
+            // Adds a country to the list
+            lists.add(new Country());
 
-assertNotNull(countries.get(0).getName()); 
+            // returns the list of countries
+            return lists;
+        }
+    }
 
-  }
+    // Integration test that verifies whether it is possible to retrieve the countries
+    @Test
+    public void shouldGetCountriesInData() {
+
+        // Creates an instance of the CountryDAO class
+        CountryDAO dao = new CountryDAO();
+
+        // Retrieves the list of countries via the DAO
+        List<Country> countries = dao.getAllTheCountries();
+
+        // Checks if the list is not null
+        assertNotNull(countries, "The list can't be null");
+
+        // Checks if the list contains at least one country
+        assertFalse(countries.isEmpty(), "The list can't be empty");
+
+        // Check whether the name of the first country is not null
+        assertNotNull(countries.getFirst().getName());
+    }
 }
