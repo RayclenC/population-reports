@@ -15,8 +15,15 @@ public class AppIntegrationTest
     @BeforeAll
     static void init()
     {
+        /*
         App app = new App();
-        app.Connect();
+        if(args.length < 1){
+            app.Connect("localhost:33060", 30000);
+        }else{
+            app.Connect(args[0], Integer.parseInt(args[1]));
+        }
+
+         */
 
     }
 

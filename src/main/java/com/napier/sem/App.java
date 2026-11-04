@@ -16,7 +16,12 @@ public class App
     public static void main(String[] args)
     {
         App ThisApp = new App();
-        ThisApp.Connect();
+
+        if(args.length < 1){
+            ThisApp.Connect("localhost:33060", 30000);
+        }else{
+            ThisApp.Connect(args[0], Integer.parseInt(args[1]));
+        }
 
         //Methods go here
 
@@ -24,7 +29,7 @@ public class App
     }
 
 
-    public void Connect(){
+    public void Connect(String location, int delay){
         try
         {
             // Load Database driver
@@ -47,10 +52,11 @@ public class App
                 // Wait a bit for db to start
                 Thread.sleep(30000);
                 // Connect to database
-                con = DriverManager.getConnection("jdbc:mysql://db:3306/world?useSSL=false&allowPublicKeyRetrieval=true", "root", "example");
-                System.out.println("Successfully connected");
+                con = DriverManager.getConnection("jdbc:mysql://" + location
+                                + "/world?allowPublicKeyRetrieval=true&useSSL=false",
+                        "root", "example");
                 // Wait a bit
-                Thread.sleep(30000);
+                System.out.println("Succesfully connected");
                 // Exit for loop
                 break;
             }
