@@ -3,6 +3,8 @@ package com.napier.sem;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class AppIntegrationTest
 {
     static App app;
@@ -22,7 +24,20 @@ public class AppIntegrationTest
     @Test
     void testAddCity()
     {
-        City city = new City();
+        City testCity = new City();
+
+        testCity.setId(460);
+        testCity.setName("Edinburgh");
+        testCity.setCountryCode("GBR");
+        testCity.setDistrict("District");
+        testCity.setPopulation(450180);
+
+        assertEquals(testCity.getId(),460);
+        assertEquals(testCity.getName(),"Edinburgh");
+        assertEquals(testCity.getCountryCode(),"GBR");
+        assertEquals(testCity.getDistrict(),"District");
+        assertEquals(testCity.getPopulation(),450180);
+
 
     }
 

@@ -34,7 +34,7 @@ class MyTest
     void PrintCitiesTestNormal(){
         ArrayList<City> cities = new ArrayList<>();
         City city = new City();
-        city.SetName("London");
+        city.setName("London");
         cities.add(city);
 
         app.PrintCities(cities);
