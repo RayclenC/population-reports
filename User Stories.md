@@ -39,7 +39,7 @@ As a market research company, I want all the cities in a continent organised by 
 
 As a market research company, I want all the cities in a region organised by largest population to smallest.
 
-As a market research company, I want all the cities in a country organised by largest population to smallest.
+As a market research company, I want all the cities in a cities organised by largest population to smallest.
 
 As a market research company, I want all the cities in a district organised by largest population to smallest.
 
@@ -49,7 +49,7 @@ As a market research company, I want all the top 4 populated cities in a contine
 
 As a market research company, I want all the top 3 populated cities in a region.
 
-As a market research company, I want all the top 5 populated cities in a country.
+As a market research company, I want all the top 5 populated cities in a cities.
 
 As a market research company, I want all the top 4 populated cities in a district.
 
@@ -69,7 +69,7 @@ As a market research company, I want all the population of people, people living
 
 As a market research company, I want all the population of people, people living in cities, and people not living in cities in each region.
 
-As a market research company, I want all the population of people, people living in cities, and people not living in cities in each country.
+As a market research company, I want all the population of people, people living in cities, and people not living in cities in each cities.
 
 ********* Extra Add **********
 
@@ -77,7 +77,7 @@ As a market research company, I want to have the access of:
 -The population of the world.
 -The population of a continent.
 -The population of a region.
--The population of a country.
+-The population of a cities.
 -The population of a district.
 -The population of a city.
 
