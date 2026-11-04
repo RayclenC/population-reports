@@ -25,18 +25,18 @@ public class AppIntegrationTest
 
 
     @Test
-    void GetCitiesInContinentTest()
+    void testGetCitiesInContinent()
     {
         Continent continent = new Continent("Asia");
 
         app.GetCitiesInContinent(continent);
-    }
 
-    @Test
-    void GetCitiesInContinentTestEmpty(){
-        Continent continent = null;
+        // Testing if the city is entered is empty
+        continent = null;
 
         app.GetCitiesInContinent(continent);
+
+
     }
 
 
