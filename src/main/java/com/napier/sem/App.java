@@ -27,12 +27,12 @@ public class App
 
         //#20
         Continent Asia = new Continent("Asia");
-        //ThisApp.PrintCities(ThisApp.GetCitiesInContinent(Asia));
+        ThisApp.PrintCities(ThisApp.GetCitiesInContinent(Asia));
 
         //#19
         ArrayList<City> cities = ThisApp.getCitiesInPopulationSizeOrder();
         System.out.println("All cities by population (largest to smallest):");
-        ThisApp.PrintCities(cities);
+        //ThisApp.PrintCities(cities);
 
 
 
@@ -46,9 +46,14 @@ public class App
         else{
             for (City city : cities){
                 if (city != null) {
-                    System.out.println(city.GetId() + " | " + city.GetName() + " | "
-                            + city.GetCountryCode() + " | " + city.GetDistrict() + " | "
-                            + city.GetPopulation());;
+                    String city_string = "";
+
+                    if (city.GetId() != 0) {city_string += " | " + city.GetId();}
+                    if (city.GetName() != null) {city_string += " | " + city.GetName();}
+                    if (city.GetCountryCode() != null) {city_string += " | " + city.GetCountryCode();}
+                    if (city.GetDistrict() != null) {city_string += " | " + city.GetDistrict();}
+                    if (city.GetPopulation() != 0) {city_string += " | " + city.GetPopulation();}
+                    System.out.println(city_string);
                 }
             }
         }
