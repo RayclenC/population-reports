@@ -24,8 +24,57 @@ public class App
         }
 
         //Methods go here
+        Continent Asia = new Continent("Asia");
+
+        ThisApp.PrintCities(ThisApp.GetCitiesInContinent(Asia));
+
+
 
         ThisApp.Disconnect();
+    }
+
+    public void PrintCities(ArrayList<City> cities){
+        if (cities == null){
+            System.out.println("No cities to print");
+        }
+        else{
+            for (City city : cities){
+                if (city != null) {
+                    System.out.println(city.GetName() + " - population: " + city.GetPopulation());
+                }
+            }
+        }
+    }
+
+    public ArrayList<City> GetCitiesInContinent(Continent continent){
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT city.Name, city.Population "
+                            + "FROM city "
+                            + "LEFT JOIN country ON city.CountryCode = country.Code "
+                            + "WHERE country.Continent LIKE '" + continent.GetName() + "'"
+                            + " ORDER BY city.population ASC";
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract employee information
+            ArrayList<City> cities = new ArrayList<>();
+            while (rset.next())
+            {
+                City city = new City(rset.getString("Name"));
+                city.SetPopulation(Double.parseDouble(rset.getString("Population")));
+                cities.add(city);
+            }
+            return cities;
+        }
+        catch (Exception e)
+        {
+            System.out.println("ViewCitiesInContinent failed: " + e.getMessage());
+            return null;
+        }
     }
 
 
