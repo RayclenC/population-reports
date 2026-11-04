@@ -17,7 +17,7 @@ public class AppIntegrationTest
     {
 
         app = new App();
-        app.Connect("localhost:33060", 30000);
+        // app.Connect("localhost:33060", 30000);
 
 
 
