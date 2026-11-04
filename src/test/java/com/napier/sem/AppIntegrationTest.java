@@ -31,6 +31,10 @@ public class AppIntegrationTest
     // Integrated test methods go here
 
 
+    /**
+        Tests the City Class. Making sure that a valid city can be created
+        to mirror the 'city' database table.
+     */
     @Test
     void testAddCity()
     {
@@ -59,6 +63,11 @@ public class AppIntegrationTest
         assertEquals(testContinent.getName(),"Asia");
     }
 
+
+    /**
+        Tests the Country Class. Making sure that a valid country can be created
+        to mirror the 'country' database table.
+     */
     @Test
     void testAddCountry()
     {
