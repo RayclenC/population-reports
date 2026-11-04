@@ -2,8 +2,8 @@ package com.napier.sem;
 
 public class City {
 
-    final String name;
     private int ID;
+    final String name;
     private String CountryCode;
     private District district;
     private double population;
