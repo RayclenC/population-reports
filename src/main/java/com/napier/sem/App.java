@@ -77,6 +77,16 @@ public class App
         {
             try
             {
+                ArrayList<City> cities = getCitiesInPopulationSizeOrder();
+                System.out.println("All cities by population (largest to smallest):");
+                for (City city : cities)
+                {
+                    System.out.println(city.GetId() + " | " + city.GetName() + " | "
+                            + city.GetCountryCode() + " | " + city.GetDistrict() + " | "
+                            + city.GetPopulation());
+                }
+
+
                 // Close connection
                 con.close();
             }
@@ -86,4 +96,44 @@ public class App
             }
         }
     }
+
+
+
+    public ArrayList<City> getCitiesInPopulationSizeOrder()
+    {
+        try
+        {
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT ID, Name, CountryCode, District, Population "
+                            + "FROM city " +
+                            "ORDER BY Population DESC";
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Return new employee if valid.
+            // Check one is returned
+
+            ArrayList<City> cities = new ArrayList<>();
+            while (rset.next())
+            {
+                City city = new City();
+                city.SetId(rset.getInt("ID"));
+                city.SetName(rset.getString("Name"));
+                city.SetCountryCode(rset.getString("CountryCode"));
+                city.SetDistrict(rset.getString("District"));
+                city.SetPopulation(rset.getInt("Population"));
+                cities.add(city);
+            }
+            return cities;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get city details");
+            return null;
+        }
+    }
+
 }
