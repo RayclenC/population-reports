@@ -68,6 +68,14 @@ public class AppIntegrationTest
 
     }
 
+    @Test
+    void testAddRegion()
+    {
+        // In progress
+        Country testCountry = new Country("North America", "North America", "Ottowa");
+        Region testRegion = new Region("Belgium", testCountry);
+    }
+
 
     @Test
     void testGetCitiesInContinent()
