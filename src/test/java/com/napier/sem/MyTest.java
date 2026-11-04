@@ -31,10 +31,12 @@ class MyTest
     }
 
     @Test
-    void PrintCitiesTestNormal(){}
-    ArrayList<City> cities = new ArrayList<>();
+    void PrintCitiesTestNormal(){
+        ArrayList<City> cities = new ArrayList<>();
+        City city = new City();
+        city.SetName("London");
+        cities.add(city);
 
-    public ArrayList<City> getCities() {
-        return cities;
+        app.PrintCities(cities);
     }
 }

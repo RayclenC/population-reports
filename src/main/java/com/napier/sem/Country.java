@@ -7,14 +7,16 @@ public class Country {
     final Continent continent;
     final Region region;
     private double population;
-    final String capital;
+    private String capital;
+    private City capitalCity;
 
 
     //The constructor automatically creates objects for its continent, region and capital
     Country(String continent, String region, String capital){
         this.continent = new Continent(continent);
         this.region = new Region(region, this);
-        this.capital = new City().GetName();
+        capitalCity.SetName(capital);
+        this.capital = (capitalCity.GetName());
     }
 
 
