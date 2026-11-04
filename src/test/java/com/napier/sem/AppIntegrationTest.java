@@ -41,6 +41,14 @@ public class AppIntegrationTest
 
     }
 
+    @Test
+    void testAddContinent()
+    {
+        Continent testContinent = new Continent("Asia");
+
+        assertEquals(testContinent.getName(),"Asia");
+    }
+
 
     @Test
     void testGetCitiesInContinent()
