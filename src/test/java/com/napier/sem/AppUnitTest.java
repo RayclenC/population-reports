@@ -4,6 +4,8 @@ import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 class AppUnitTest
 {
@@ -16,25 +18,41 @@ class AppUnitTest
 
 
     @Test
-    void printCitiesTestNull()
-    {
+    void printCitiesTest(){
+
+        // Testing when the array is null
         ArrayList<City> cities = null;
         app.printCities(cities);
-    }
 
-    @Test
-    void printCitiesTestEmpty(){
-        ArrayList<City> cities = new ArrayList<>();
+        // Testing when the array list is empty
+        cities = new ArrayList<>();
         app.printCities(cities);
-    }
 
-    @Test
-    void printCitiesTestNormal(){
-        ArrayList<City> cities = new ArrayList<>();
-        City city = new City();
-        city.setName("London");
-        cities.add(city);
+        // Testing when the city is populated
+        City testCity = new City();
+        testCity.setId(460);
+        testCity.setName("Edinburgh");
+        testCity.setCountryCode("GBR");
+        testCity.setDistrict("District");
+        testCity.setPopulation(450180);
+        cities.add(testCity);
 
         app.printCities(cities);
+
+        // Testing edge cases of Integers
+
+        // Resetting the array and city object
+        cities = new ArrayList<>();
+        testCity = new City();
+
+        testCity.setId(0);
+        testCity.setPopulation(0);
+
+        cities.add(testCity);
+
+        app.printCities(cities);
+
+
     }
+
 }

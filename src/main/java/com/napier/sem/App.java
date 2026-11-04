@@ -56,7 +56,8 @@ public class App
                     if (city.getCountryCode() != null) {city_string += " | " + city.getCountryCode();}
                     if (city.getDistrict() != null) {city_string += " | " + city.getDistrict();}
                     if (city.getPopulation() != 0) {city_string += " | " + city.getPopulation();}
-                    System.out.println(city_string);
+
+                    if(!city_string.isEmpty()) {System.out.println(city_string);}
                 }
             }
         }
