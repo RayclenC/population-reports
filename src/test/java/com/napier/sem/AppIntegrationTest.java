@@ -15,32 +15,29 @@ public class AppIntegrationTest
     @BeforeAll
     static void init()
     {
-        /*
-        App app = new App();
-        if(args.length < 1){
-            app.Connect("localhost:33060", 30000);
-        }else{
-            app.Connect(args[0], Integer.parseInt(args[1]));
-        }
 
-         */
+        app = new App();
 
+        app.Connect("localhost:33060", 30000);
     }
 
     // Integrated test methods go here
 
-    /*
 
-            ** EXAMPLE **
+    @Test
+    void GetCitiesInContinentTest()
+    {
+        Continent continent = new Continent("Asia");
 
-        @Test
-        void testGetEmployee()
-        {
-            Employee emp = app.getEmployee(255530);
-            assertEquals(emp.emp_no, 255530);
-            assertEquals(emp.first_name, "Ronghao");
-            assertEquals(emp.last_name, "Garigliano");
-        }
+        app.GetCitiesInContinent(continent);
+    }
 
-    */
+    @Test
+    void GetCitiesInContinentTestEmpty(){
+        Continent continent = null;
+
+        app.GetCitiesInContinent(continent);
+    }
+
+
 }
