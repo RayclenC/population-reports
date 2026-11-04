@@ -8,13 +8,14 @@ public class Country {
     final Region region;
     private double population;
     private String capital;
-    private City capitalCity;
 
 
     //The constructor automatically creates objects for its continent, region and capital
     Country(String continent, String region, String capital){
         this.continent = new Continent(continent);
         this.region = new Region(region, this);
+
+        City capitalCity = new City();
         capitalCity.setName(capital);
         this.capital = (capitalCity.getName());
     }

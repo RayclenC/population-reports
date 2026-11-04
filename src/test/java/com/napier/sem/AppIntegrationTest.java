@@ -49,6 +49,25 @@ public class AppIntegrationTest
         assertEquals(testContinent.getName(),"Asia");
     }
 
+    @Test
+    void testAddCountry()
+    {
+        Country testCountry = new Country("North America", "North America", "Ottowa");
+
+        testCountry.SetCode("Can");
+        testCountry.SetName("Canada");
+        testCountry.SetPopulation(31147000);
+
+        assertEquals(testCountry.GetCode(),"Can");
+        assertEquals(testCountry.GetName(),"Canada");
+//        assertEquals(testCountry.GetContinent(),"North America");
+//        assertEquals(testCountry.GetRegion(),"North America");
+        assertEquals(testCountry.GetPopulation(),31147000);
+        assertEquals(testCountry.GetCapital(),"Ottowa");
+
+
+    }
+
 
     @Test
     void testGetCitiesInContinent()
