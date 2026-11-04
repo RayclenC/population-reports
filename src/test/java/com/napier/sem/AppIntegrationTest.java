@@ -3,7 +3,10 @@ package com.napier.sem;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 /**
  *<p>
@@ -97,6 +100,20 @@ public class AppIntegrationTest
         app.getCitiesInContinent(continent);
 
 
+    }
+
+    @Test
+    void testGetCities()
+    {
+        // testing to see if the method to return by size order returns an array of populated data.
+        if(app.getCitiesInPopulationSizeOrder() instanceof ArrayList<City>)
+        {
+            assertNotEquals(app.getCitiesInPopulationSizeOrder(), null);
+        }
+        else
+        {
+            throw new IllegalArgumentException("Type Error: Expected an ArrayList but got " + app.getCitiesInPopulationSizeOrder().getClass().getSimpleName());
+        }
     }
 
 
