@@ -15,8 +15,8 @@ public class Country {
     Country(String continent, String region, String capital){
         this.continent = new Continent(continent);
         this.region = new Region(region, this);
-        capitalCity.SetName(capital);
-        this.capital = (capitalCity.GetName());
+        capitalCity.setName(capital);
+        this.capital = (capitalCity.getName());
     }
 
 

@@ -2,11 +2,6 @@ package com.napier.sem;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class AppIntegrationTest
 {
@@ -25,16 +20,24 @@ public class AppIntegrationTest
 
 
     @Test
+    void testAddCity()
+    {
+        City city = new City();
+
+    }
+
+
+    @Test
     void testGetCitiesInContinent()
     {
         Continent continent = new Continent("Asia");
 
-        app.GetCitiesInContinent(continent);
+        app.getCitiesInContinent(continent);
 
         // Testing if the city is entered is empty
         continent = null;
 
-        app.GetCitiesInContinent(continent);
+        app.getCitiesInContinent(continent);
 
 
     }

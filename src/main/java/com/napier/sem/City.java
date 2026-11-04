@@ -10,20 +10,20 @@ public class City {
 
     //getters and setters. Name does not get a setter
 
-    public int GetId(){return id;}
-    public void SetId(int id){this.id = id;}
+    public int getId(){return id;}
+    public void setId(int id){this.id = id;}
 
-    public String GetName(){return name;}
-    public void SetName(String name){this.name = name;}
+    public String getName(){return name;}
+    public void setName(String name){this.name = name;}
 
-    public String GetCountryCode(){return CountryCode;}
-    public void SetCountryCode(String CountryCode){this.CountryCode = CountryCode;}
+    public String getCountryCode(){return CountryCode;}
+    public void setCountryCode(String CountryCode){this.CountryCode = CountryCode;}
 
-    public String GetDistrict(){return district;}
-    public void SetDistrict(String district){this.district = district;}
+    public String getDistrict(){return district;}
+    public void setDistrict(String district){this.district = district;}
 
-    public double GetPopulation(){return population;}
-    public void SetPopulation(double population){this.population = population;}
+    public double getPopulation(){return population;}
+    public void setPopulation(double population){this.population = population;}
 
 }
 

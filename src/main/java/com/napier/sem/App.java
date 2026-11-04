@@ -27,7 +27,7 @@ public class App
 
         //#20
         Continent Asia = new Continent("Asia");
-        ThisApp.PrintCities(ThisApp.GetCitiesInContinent(Asia));
+        ThisApp.PrintCities(ThisApp.getCitiesInContinent(Asia));
 
         //#19
         ArrayList<City> cities = ThisApp.getCitiesInPopulationSizeOrder();
@@ -48,18 +48,18 @@ public class App
                 if (city != null) {
                     String city_string = "";
 
-                    if (city.GetId() != 0) {city_string += " | " + city.GetId();}
-                    if (city.GetName() != null) {city_string += " | " + city.GetName();}
-                    if (city.GetCountryCode() != null) {city_string += " | " + city.GetCountryCode();}
-                    if (city.GetDistrict() != null) {city_string += " | " + city.GetDistrict();}
-                    if (city.GetPopulation() != 0) {city_string += " | " + city.GetPopulation();}
+                    if (city.getId() != 0) {city_string += " | " + city.getId();}
+                    if (city.getName() != null) {city_string += " | " + city.getName();}
+                    if (city.getCountryCode() != null) {city_string += " | " + city.getCountryCode();}
+                    if (city.getDistrict() != null) {city_string += " | " + city.getDistrict();}
+                    if (city.getPopulation() != 0) {city_string += " | " + city.getPopulation();}
                     System.out.println(city_string);
                 }
             }
         }
     }
 
-    public ArrayList<City> GetCitiesInContinent(Continent continent){
+    public ArrayList<City> getCitiesInContinent(Continent continent){
         try
         {
             // Create an SQL statement
@@ -69,7 +69,7 @@ public class App
                     "SELECT city.Name, city.Population "
                             + "FROM city "
                             + "LEFT JOIN country ON city.CountryCode = country.Code "
-                            + "WHERE country.Continent LIKE '" + continent.GetName() + "'"
+                            + "WHERE country.Continent LIKE '" + continent.getName() + "'"
                             + " ORDER BY city.population ASC";
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
@@ -78,8 +78,8 @@ public class App
             while (rset.next())
             {
                 City city = new City();
-                city.SetName(rset.getString("Name"));
-                city.SetPopulation(Double.parseDouble(rset.getString("Population")));
+                city.setName(rset.getString("Name"));
+                city.setPopulation(Double.parseDouble(rset.getString("Population")));
                 cities.add(city);
             }
             return cities;
@@ -172,11 +172,11 @@ public class App
             while (rset.next())
             {
                 City city = new City();
-                city.SetId(rset.getInt("ID"));
-                city.SetName(rset.getString("Name"));
-                city.SetCountryCode(rset.getString("CountryCode"));
-                city.SetDistrict(rset.getString("District"));
-                city.SetPopulation(rset.getInt("Population"));
+                city.setId(rset.getInt("ID"));
+                city.setName(rset.getString("Name"));
+                city.setCountryCode(rset.getString("CountryCode"));
+                city.setDistrict(rset.getString("District"));
+                city.setPopulation(rset.getInt("Population"));
                 cities.add(city);
             }
             return cities;
