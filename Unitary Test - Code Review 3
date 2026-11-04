@@ -1,22 +1,24 @@
 package org.example;
-import org.exampleJv.calculatorPopulation;
+
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+public class CalculatorPopulationTest {
 
-public class CalculatorTest {
-       @Test
-       void
-    mustCalculatePercentageCorrectly() {
+    @Test
+    public void mustCalculatePercentageCorrectly() {
 
-           calculatorPopulation calc = new calculatorPopulation();
+        CalculatorPopulation calc = new CalculatorPopulation();
+        double populationCity = 50.0;
+        double populationTotal = 100.0;
 
-           double populationCity = 2.85;
-           double populationTotal = 69.93;
 
-           double result = calc.calculatePercentage(populationCity, populationTotal);
+        double result = calc.calculatePercentage(populationCity, populationTotal);
 
-           assertEquals (4.07, result, 0.001, "3 of 70 must be 4.08");
-       }
+
+
+        assertEquals( 50.0, result, " 50 of 100 must be 50%");
+
+    }
 }
 
