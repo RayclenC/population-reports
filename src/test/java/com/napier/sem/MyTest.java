@@ -50,4 +50,35 @@ class MyTest
 
         assertEquals("CHN | China | 1277558000", App.formatCountry(country));
     }
+
+    @Test
+    void sortCountriesByPopulationOrdersLargestToSmallest()
+    {
+        Country china = new Country();
+        china.SetName("China");
+        china.SetPopulation(1_400_000_000);
+
+        Country india = new Country();
+        india.SetName("India");
+        india.SetPopulation(1_300_000_000);
+
+        Country iceland = new Country();
+        iceland.SetName("Iceland");
+        iceland.SetPopulation(400_000);
+
+        ArrayList<Country> countries = new ArrayList<>();
+        countries.add(iceland);
+        countries.add(china);
+        countries.add(india);
+
+        ArrayList<Country> sortedCountries = App.sortCountriesByPopulation(countries);
+
+        assertEquals("China", sortedCountries.get(0).GetName());
+        assertEquals("India", sortedCountries.get(1).GetName());
+        assertEquals("Iceland", sortedCountries.get(2).GetName());
+        assertTrue(sortedCountries.get(0).GetPopulation()
+                >= sortedCountries.get(1).GetPopulation());
+        assertTrue(sortedCountries.get(1).GetPopulation()
+                >= sortedCountries.get(2).GetPopulation());
+    }
 }
