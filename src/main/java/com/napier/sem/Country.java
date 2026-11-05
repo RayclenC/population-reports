@@ -24,7 +24,8 @@ public class Country {
         this.continent = new Continent(continent);
         this.region = new Region(region, this);
 
-        City capitalCity = new City();
+        // creating an empty city
+        City capitalCity = new City(1, "","","",1);
         capitalCity.setName(capital);
         this.capital = (capitalCity.getName());
     }

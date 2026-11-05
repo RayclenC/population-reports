@@ -128,9 +128,11 @@ public class App
             ArrayList<City> cities = new ArrayList<>();
             while (rset.next())
             {
-                City city = new City();
-                city.setName(rset.getString("Name"));
-                city.setPopulation(Double.parseDouble(rset.getString("Population")));
+                City city = new City(   rset.getInt("ID"),
+                        rset.getString("Name"),
+                        rset.getString("CountryCode"),
+                        rset.getString("District"),
+                        rset.getInt("Population"));
                 cities.add(city);
             }
             return cities;
@@ -162,12 +164,11 @@ public class App
             ArrayList<City> cities = new ArrayList<>();
             while (rset.next())
             {
-                City city = new City();
-                city.setId(rset.getInt("ID"));
-                city.setName(rset.getString("Name"));
-                city.setCountryCode(rset.getString("CountryCode"));
-                city.setDistrict(rset.getString("District"));
-                city.setPopulation(rset.getInt("Population"));
+                City city = new City(   rset.getInt("ID"),
+                                        rset.getString("Name"),
+                                        rset.getString("CountryCode"),
+                                        rset.getString("District"),
+                                        rset.getInt("Population"));
                 cities.add(city);
             }
             return cities;

@@ -16,6 +16,15 @@ public class City {
     private String district;
     private double population;
 
+    public City(int id, String name, String countryCode, String district, double population) {
+        this.id = id;
+        this.name = name;
+        CountryCode = countryCode;
+        this.district = district;
+        this.population = population;
+    }
+
+
     //getters and setters. Name does not get a setter
 
 

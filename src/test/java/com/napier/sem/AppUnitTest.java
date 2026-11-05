@@ -45,14 +45,13 @@ class AppUnitTest
     void printCitiesTestPopulated(){
 
         ArrayList<City> cities = new ArrayList<>();
-        City testCity = new City();
 
         // Populating the city class
-        testCity.setId(460);
-        testCity.setName("Edinburgh");
-        testCity.setCountryCode("GBR");
-        testCity.setDistrict("District");
-        testCity.setPopulation(450180);
+        City testCity = new City(460,
+                "Edinburgh",
+                "GBR",
+                "District",
+                450180);
 
         // Adding the populated object to the array
         cities.add(testCity);
@@ -68,7 +67,11 @@ class AppUnitTest
     void printCitiesTestEdgeCase(){
 
         ArrayList<City> cities = new ArrayList<>();
-        City testCity = new City();
+        City testCity = new City(460,
+                "Edinburgh",
+                "GBR",
+                "District",
+                450180);
 
         testCity.setId(0);
         testCity.setPopulation(0);

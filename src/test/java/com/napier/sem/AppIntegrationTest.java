@@ -35,13 +35,11 @@ public class AppIntegrationTest {
      */
     @Test
     void testAddCity() {
-        City testCity = new City();
-
-        testCity.setId(460);
-        testCity.setName("Edinburgh");
-        testCity.setCountryCode("GBR");
-        testCity.setDistrict("District");
-        testCity.setPopulation(450180);
+        City testCity = new City(460,
+                "Edinburgh",
+                "GBR",
+                "District",
+                450180);
 
         assertEquals(testCity.getId(), 460);
         assertEquals(testCity.getName(), "Edinburgh");
@@ -74,7 +72,7 @@ public class AppIntegrationTest {
         assertEquals(testCountry.getCode(), "Can");
         assertEquals(testCountry.getName(), "Canada");
 //        assertEquals(testCountry.GetContinent(),"North America");
-//        assertEquals(testCountry.GetRegion(),"North America");
+//        assertEquals(testCountry.getRegion(),"North America");
         assertEquals(testCountry.getPopulation(), 31147000);
         assertEquals(testCountry.getCapital(), "Ottowa");
 
