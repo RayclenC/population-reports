@@ -5,6 +5,7 @@ import org.junit.jupiter.api.*;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 class AppUnitTest
@@ -76,6 +77,48 @@ class AppUnitTest
 
         app.printCities(cities);
 
+    }
+
+    @Test
+    void sortCountriesByPopulationOrdersLargestToSmallest()
+    {
+        Country china = new Country("Asia", "Eastern Asia", "Beijing");
+        china.SetName("China");
+        china.SetPopulation(1_400_000_000);
+
+        Country india = new Country("Asia", "Southern and Central Asia", "New Delhi");
+        india.SetName("India");
+        india.SetPopulation(1_300_000_000);
+
+        Country iceland = new Country("Europe", "Nordic Countries", "Reykjavik");
+        iceland.SetName("Iceland");
+        iceland.SetPopulation(400_000);
+
+        ArrayList<Country> countries = new ArrayList<>();
+        countries.add(iceland);
+        countries.add(china);
+        countries.add(india);
+
+        ArrayList<Country> sortedCountries = App.sortCountriesByPopulation(countries);
+
+        assertEquals("China", sortedCountries.get(0).GetName());
+        assertEquals("India", sortedCountries.get(1).GetName());
+        assertEquals("Iceland", sortedCountries.get(2).GetName());
+        assertTrue(sortedCountries.get(0).GetPopulation()
+                >= sortedCountries.get(1).GetPopulation());
+        assertTrue(sortedCountries.get(1).GetPopulation()
+                >= sortedCountries.get(2).GetPopulation());
+    }
+
+    @Test
+    void formatCountryIncludesCodeNameAndPopulation()
+    {
+        Country country = new Country("Asia", "Eastern Asia", "Beijing");
+        country.SetCode("CHN");
+        country.SetName("China");
+        country.SetPopulation(1_277_558_000);
+
+        assertEquals("CHN | China | 1277558000", App.formatCountry(country));
     }
 
 }

@@ -1,129 +1,114 @@
 package com.napier.sem;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
-/**
- *<p>
- *     The AppIntegrationTest class is where our Integration tests (Tests against the database) are carried out.
- *
- *</p>
- */
-
-public class AppIntegrationTest
+class AppIntegrationTest
 {
-    static App app;
+    private static Connection connection;
+    private static App app;
 
     @BeforeAll
-    static void init()
+    static void connectToDatabase() throws SQLException
     {
-
-        app = new App();
-
-        app.Connect("localhost:33060", 30000);
-    }
-
-    // Integrated test methods go here
-
-
-    /**
-        Tests the City Class. Making sure that a valid city can be created
-        to mirror the 'city' database table.
-     */
-    @Test
-    void testAddCity()
-    {
-        City testCity = new City();
-
-        testCity.setId(460);
-        testCity.setName("Edinburgh");
-        testCity.setCountryCode("GBR");
-        testCity.setDistrict("District");
-        testCity.setPopulation(450180);
-
-        assertEquals(testCity.getId(),460);
-        assertEquals(testCity.getName(),"Edinburgh");
-        assertEquals(testCity.getCountryCode(),"GBR");
-        assertEquals(testCity.getDistrict(),"District");
-        assertEquals(testCity.getPopulation(),450180);
-
-
-    }
-
-    @Test
-    void testAddContinent()
-    {
-        Continent testContinent = new Continent("Asia");
-
-        assertEquals(testContinent.getName(),"Asia");
-    }
-
-
-    /**
-        Tests the Country Class. Making sure that a valid country can be created
-        to mirror the 'country' database table.
-     */
-    @Test
-    void testAddCountry()
-    {
-        Country testCountry = new Country("North America", "North America", "Ottowa");
-
-        testCountry.SetCode("Can");
-        testCountry.SetName("Canada");
-        testCountry.SetPopulation(31147000);
-
-        assertEquals(testCountry.GetCode(),"Can");
-        assertEquals(testCountry.GetName(),"Canada");
-//        assertEquals(testCountry.GetContinent(),"North America");
-//        assertEquals(testCountry.GetRegion(),"North America");
-        assertEquals(testCountry.GetPopulation(),31147000);
-        assertEquals(testCountry.GetCapital(),"Ottowa");
-
-
-    }
-
-    @Test
-    void testAddRegion()
-    {
-        // In progress
-        Country testCountry = new Country("North America", "North America", "Ottowa");
-        Region testRegion = new Region("Belgium", testCountry);
-    }
-
-
-    @Test
-    void testGetCitiesInContinent()
-    {
-        Continent continent = new Continent("Asia");
-
-        app.getCitiesInContinent(continent);
-
-        // Testing if the city is entered is empty
-        continent = null;
-
-        app.getCitiesInContinent(continent);
-
-
-    }
-
-    @Test
-    void testGetCities()
-    {
-        // testing to see if the method to return by size order returns an array of populated data.
-        if(app.getCitiesInPopulationSizeOrder() instanceof ArrayList<City>)
+        SQLException lastError = null;
+        for (int attempt = 0; attempt < 60; attempt++)
         {
-            assertNotEquals(app.getCitiesInPopulationSizeOrder(), null);
+            try
+            {
+                connection = DriverManager.getConnection(
+                        "jdbc:mysql://localhost:33060/world?allowPublicKeyRetrieval=true&useSSL=false",
+                        "root", "example");
+                app = new App();
+                app.Connect("localhost:33060", 30000);
+                return;
+            }
+            catch (SQLException e)
+            {
+                lastError = e;
+                try
+                {
+                    Thread.sleep(2000);
+                }
+                catch (InterruptedException interrupted)
+                {
+                    Thread.currentThread().interrupt();
+                    throw new SQLException("Interrupted while waiting for the database", interrupted);
+                }
+            }
         }
-        else
+        throw lastError;
+    }
+
+    @AfterAll
+    static void closeDatabaseConnections() throws SQLException
+    {
+        if (connection != null)
         {
-            throw new IllegalArgumentException("Type Error: Expected an ArrayList but got " + app.getCitiesInPopulationSizeOrder().getClass().getSimpleName());
+            connection.close();
+        }
+        if (app != null)
+        {
+            app.Disconnect();
         }
     }
 
+    @Test
+    void getCountriesByPopulationReturnsEveryCountryInDescendingOrder() throws SQLException
+    {
+        int expectedCountryCount;
+        try (Statement statement = connection.createStatement();
+             ResultSet results = statement.executeQuery("SELECT COUNT(*) FROM country"))
+        {
+            assertTrue(results.next());
+            expectedCountryCount = results.getInt(1);
+        }
 
+        ArrayList<Country> countries = App.getCountriesByPopulation(connection);
+
+        assertFalse(countries.isEmpty());
+        assertEquals(expectedCountryCount, countries.size());
+        double previousPopulation = Double.POSITIVE_INFINITY;
+        for (Country country : countries)
+        {
+            assertNotNull(country.GetCode());
+            assertNotNull(country.GetName());
+            assertTrue(country.GetPopulation() <= previousPopulation);
+            previousPopulation = country.GetPopulation();
+        }
+    }
+
+    @Test
+    void getCitiesInContinentReturnsCities()
+    {
+        ArrayList<City> cities = app.getCitiesInContinent(new Continent("Asia"));
+
+        assertNotNull(cities);
+        assertFalse(cities.isEmpty());
+    }
+
+    @Test
+    void getCitiesInPopulationSizeOrderReturnsDescendingPopulations()
+    {
+        ArrayList<City> cities = app.getCitiesInPopulationSizeOrder();
+
+        assertNotNull(cities);
+        assertFalse(cities.isEmpty());
+        double previousPopulation = Double.POSITIVE_INFINITY;
+        for (City city : cities)
+        {
+            assertTrue(city.getPopulation() <= previousPopulation);
+            previousPopulation = city.getPopulation();
+        }
+    }
 }

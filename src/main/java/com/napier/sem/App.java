@@ -2,6 +2,7 @@ package com.napier.sem;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * <p>
@@ -26,20 +27,64 @@ public class App
             ThisApp.Connect(args[0], Integer.parseInt(args[1]));
         }
 
-        //Methods go here
+        if (ThisApp.con != null)
+        {
+            Continent asia = new Continent("Asia");
+            ThisApp.printCities(ThisApp.getCitiesInContinent(asia));
 
-        //#20
-        Continent Asia = new Continent("Asia");
-        ThisApp.printCities(ThisApp.getCitiesInContinent(Asia));
+            ArrayList<City> cities = ThisApp.getCitiesInPopulationSizeOrder();
+            System.out.println("All cities by population (largest to smallest):");
+            ThisApp.printCities(cities);
 
-        //#19
-        ArrayList<City> cities = ThisApp.getCitiesInPopulationSizeOrder();
-        System.out.println("All cities by population (largest to smallest):");
-        ThisApp.printCities(cities);
-
-
+            try
+            {
+                ArrayList<Country> countries = getCountriesByPopulation(ThisApp.con);
+                System.out.println("All countries by population (largest to smallest):");
+                for (Country country : countries)
+                {
+                    System.out.println(formatCountry(country));
+                }
+            }
+            catch (SQLException e)
+            {
+                System.err.println("Failed to get country population report: " + e.getMessage());
+            }
+        }
 
         ThisApp.Disconnect();
+    }
+
+    public static ArrayList<Country> getCountriesByPopulation(Connection connection)
+            throws SQLException
+    {
+        String query = "SELECT Code, Name, Population FROM country ORDER BY Population DESC";
+        ArrayList<Country> countries = new ArrayList<>();
+
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet results = statement.executeQuery())
+        {
+            while (results.next())
+            {
+                Country country = new Country("", "", "");
+                country.SetCode(results.getString("Code"));
+                country.SetName(results.getString("Name"));
+                country.SetPopulation(results.getInt("Population"));
+                countries.add(country);
+            }
+        }
+        return sortCountriesByPopulation(countries);
+    }
+
+    static ArrayList<Country> sortCountriesByPopulation(ArrayList<Country> countries)
+    {
+        countries.sort(Comparator.comparingDouble(Country::GetPopulation).reversed());
+        return countries;
+    }
+
+    static String formatCountry(Country country)
+    {
+        return country.GetCode() + " | " + country.GetName() + " | "
+                + (long) country.GetPopulation();
     }
 
     public void printCities(ArrayList<City> cities){
