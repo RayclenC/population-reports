@@ -1,43 +1,114 @@
 package com.napier.sem;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AppIntegrationTest
+class AppIntegrationTest
 {
-    static App app;
+    private static Connection connection;
+    private static App app;
 
     @BeforeAll
-    static void init()
+    static void connectToDatabase() throws SQLException
     {
-
-        app = new App();
-
-        app.Connect("localhost:33060", 30000);
+        SQLException lastError = null;
+        for (int attempt = 0; attempt < 60; attempt++)
+        {
+            try
+            {
+                connection = DriverManager.getConnection(
+                        "jdbc:mysql://localhost:33060/world?allowPublicKeyRetrieval=true&useSSL=false",
+                        "root", "example");
+                app = new App();
+                app.Connect("localhost:33060", 30000);
+                return;
+            }
+            catch (SQLException e)
+            {
+                lastError = e;
+                try
+                {
+                    Thread.sleep(2000);
+                }
+                catch (InterruptedException interrupted)
+                {
+                    Thread.currentThread().interrupt();
+                    throw new SQLException("Interrupted while waiting for the database", interrupted);
+                }
+            }
+        }
+        throw lastError;
     }
 
-    // Integrated test methods go here
-
+    @AfterAll
+    static void closeDatabaseConnections() throws SQLException
+    {
+        if (connection != null)
+        {
+            connection.close();
+        }
+        if (app != null)
+        {
+            app.Disconnect();
+        }
+    }
 
     @Test
-    void GetCitiesInContinentTest()
+    void getCountriesByPopulationReturnsEveryCountryInDescendingOrder() throws SQLException
     {
-        Continent continent = new Continent("Asia");
+        int expectedCountryCount;
+        try (Statement statement = connection.createStatement();
+             ResultSet results = statement.executeQuery("SELECT COUNT(*) FROM country"))
+        {
+            assertTrue(results.next());
+            expectedCountryCount = results.getInt(1);
+        }
 
-        app.GetCitiesInContinent(continent);
+        ArrayList<Country> countries = App.getCountriesByPopulation(connection);
+
+        assertFalse(countries.isEmpty());
+        assertEquals(expectedCountryCount, countries.size());
+        double previousPopulation = Double.POSITIVE_INFINITY;
+        for (Country country : countries)
+        {
+            assertNotNull(country.GetCode());
+            assertNotNull(country.GetName());
+            assertTrue(country.GetPopulation() <= previousPopulation);
+            previousPopulation = country.GetPopulation();
+        }
     }
 
     @Test
-    void GetCitiesInContinentTestEmpty(){
-        Continent continent = null;
+    void getCitiesInContinentReturnsCities()
+    {
+        ArrayList<City> cities = app.getCitiesInContinent(new Continent("Asia"));
 
-        app.GetCitiesInContinent(continent);
+        assertNotNull(cities);
+        assertFalse(cities.isEmpty());
     }
 
+    @Test
+    void getCitiesInPopulationSizeOrderReturnsDescendingPopulations()
+    {
+        ArrayList<City> cities = app.getCitiesInPopulationSizeOrder();
 
+        assertNotNull(cities);
+        assertFalse(cities.isEmpty());
+        double previousPopulation = Double.POSITIVE_INFINITY;
+        for (City city : cities)
+        {
+            assertTrue(city.getPopulation() <= previousPopulation);
+            previousPopulation = city.getPopulation();
+        }
+    }
 }
