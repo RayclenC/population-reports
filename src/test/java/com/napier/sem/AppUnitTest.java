@@ -85,17 +85,12 @@ class AppUnitTest
     @Test
     void sortCountriesByPopulationOrdersLargestToSmallest()
     {
-        Country china = new Country("Asia", "Eastern Asia", "Beijing");
-        china.setName("China");
-        china.setPopulation(1_400_000_000);
 
-        Country india = new Country("Asia", "Southern and Central Asia", "New Delhi");
-        india.setName("India");
-        india.setPopulation(1_300_000_000);
+        Country china = new Country("CHN","China","Asia","Eastern Asia",9572900.00,"Beijing");
 
-        Country iceland = new Country("Europe", "Nordic Countries", "Reykjavik");
-        iceland.setName("Iceland");
-        iceland.setPopulation(400_000);
+        Country india = new Country("IND", "India", "Asia", "Southern and Central Asia",3287263, "New Delhi");
+
+        Country iceland = new Country("ISL","Iceland","Europe","Nordic Countries", 396500, "Reykjavik");
 
         ArrayList<Country> countries = new ArrayList<>();
         countries.add(iceland);
@@ -116,10 +111,7 @@ class AppUnitTest
     @Test
     void formatCountryIncludesCodeNameAndPopulation()
     {
-        Country country = new Country("Asia", "Eastern Asia", "Beijing");
-        country.setCode("CHN");
-        country.setName("China");
-        country.setPopulation(1_277_558_000);
+        Country country = new Country("CHN","China","Asia","Eastern Asia",9572900.00,"Beijing");
 
         assertEquals("CHN | China | 1277558000", App.formatCountry(country));
     }

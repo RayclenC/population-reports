@@ -57,7 +57,7 @@ public class App
     public static ArrayList<Country> getCountriesByPopulation(Connection connection)
             throws SQLException
     {
-        String query = "SELECT Code, Name, Population FROM country ORDER BY Population DESC";
+        String query = "SELECT Code, Name, Continent, Region, Population, Capital FROM country ORDER BY Population DESC";
         ArrayList<Country> countries = new ArrayList<>();
 
         try (PreparedStatement statement = connection.prepareStatement(query);
@@ -65,10 +65,13 @@ public class App
         {
             while (results.next())
             {
-                Country country = new Country("", "", "");
-                country.setCode(results.getString("Code"));
-                country.setName(results.getString("Name"));
-                country.setPopulation(results.getInt("Population"));
+                Country country = new Country(results.getString("Code"),
+                        results.getString("Name"),
+                        results.getString("Continent"),
+                        results.getString("Region"),
+                        results.getInt("Population"),
+                        results.getString("Capital")
+                        );
                 countries.add(country);
             }
         }
@@ -117,7 +120,7 @@ public class App
             Statement stmt = con.createStatement();
             // Create string for SQL statement
             String strSelect =
-                    "SELECT city.Name, city.Population "
+                    "SELECT ID, Name, CountryCode, District, Population"
                             + "FROM city "
                             + "LEFT JOIN country ON city.CountryCode = country.Code "
                             + "WHERE country.Continent LIKE '" + continent.getName() + "'"

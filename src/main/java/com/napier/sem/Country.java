@@ -19,17 +19,18 @@ public class Country {
     private String capital;
 
 
-    //The constructor automatically creates objects for its continent, region and capital
-    Country(String continent, String region, String capital){
-        this.continent = new Continent(continent);
-        this.region = new Region(region, this);
+    public Country(String code, String name, String continentString, String regionString, double population, String capital) {
 
-        // creating an empty city
-        City capitalCity = new City(1, "","","",1);
-        capitalCity.setName(capital);
-        this.capital = (capitalCity.getName());
+        Continent continent = new Continent(continentString);
+        Region region = new Region(regionString);
+
+        this.code = code;
+        this.name = name;
+        this.continent = continent;
+        this.region = region;
+        this.population = population;
+        this.capital = capital;
     }
-
 
     //getters and setters. Values in the constructor do not get a setter
     public String getCode(){return code;}

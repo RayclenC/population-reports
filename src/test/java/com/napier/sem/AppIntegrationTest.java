@@ -63,7 +63,7 @@ public class AppIntegrationTest {
      */
     @Test
     void testAddCountry() {
-        Country testCountry = new Country("North America", "North America", "Ottowa");
+        Country testCountry = new Country("CAN","Canada","North America","North America",31147000,"Ottowa");
 
         testCountry.setCode("Can");
         testCountry.setName("Canada");
@@ -82,8 +82,8 @@ public class AppIntegrationTest {
     @Test
     void testAddRegion() {
         // In progress
-        Country testCountry = new Country("North America", "North America", "Ottowa");
-        Region testRegion = new Region("Belgium", testCountry);
+        Country testCountry = new Country("CAN","Canada","North America","North America",31147000,"Ottowa");
+        Region testRegion = new Region("Belgium");
     }
 
 
