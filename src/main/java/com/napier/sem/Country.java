@@ -1,14 +1,5 @@
 package com.napier.sem;
 
-
-/**
- *
- * <p>
- *     The Country class builds a 'country' object from the 'country' database table, allowing us to set and get different elements of the database table.
- * </p>
- *
- */
-
 public class Country {
 
     private String code;
@@ -16,17 +7,14 @@ public class Country {
     final Continent continent;
     final Region region;
     private double population;
-    private String capital;
+    final City capital;
 
-    public Country(){
-        this("", "", "");
-    }
 
     //The constructor automatically creates objects for its continent, region and capital
     Country(String continent, String region, String capital){
         this.continent = new Continent(continent);
         this.region = new Region(region, this);
-        this.capital = capital;
+        this.capital = new City(capital);
     }
 
 
@@ -44,7 +32,7 @@ public class Country {
     public double GetPopulation(){return population;}
     public void SetPopulation(double population){this.population = population;}
 
-    public String GetCapital(){return capital;}
+    public City GetCapital(){return capital;}
 
 
 }

@@ -2,15 +2,11 @@ package com.napier.sem;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Comparator;
 
 /**
  * <p>
  *     The App class establishes a connection with the local database with error handling
  *     if the request to connect takes too long or if a connection cannot be established.
- *
- *     Inside the App class is the methods used to generate reports.
- *
  * </p>
  */
 public class App
@@ -27,83 +23,30 @@ public class App
             ThisApp.Connect(args[0], Integer.parseInt(args[1]));
         }
 
-        if (ThisApp.con != null)
-        {
-            try
-            {
-                ArrayList<Country> countries = getCountriesByPopulation(ThisApp.con);
-                System.out.println("All countries by population (largest to smallest):");
-                for (Country country : countries)
-                {
-                    System.out.println(formatCountry(country));
-                }
-            }
-            catch (SQLException e)
-            {
-                System.err.println("Failed to get country population report: " + e.getMessage());
-            }
-        }
+        //Methods go here
+        Continent Asia = new Continent("Asia");
+
+        ThisApp.PrintCities(ThisApp.GetCitiesInContinent(Asia));
+
+
 
         ThisApp.Disconnect();
     }
 
-    public static ArrayList<Country> getCountriesByPopulation(Connection connection)
-            throws SQLException
-    {
-        String query = "SELECT Code, Name, Population FROM country ORDER BY Population DESC";
-        ArrayList<Country> countries = new ArrayList<>();
-
-        try (PreparedStatement statement = connection.prepareStatement(query);
-             ResultSet results = statement.executeQuery())
-        {
-            while (results.next())
-            {
-                Country country = new Country();
-                country.SetCode(results.getString("Code"));
-                country.SetName(results.getString("Name"));
-                country.SetPopulation(results.getInt("Population"));
-                countries.add(country);
-            }
-        }
-        return sortCountriesByPopulation(countries);
-    }
-
-    static ArrayList<Country> sortCountriesByPopulation(ArrayList<Country> countries)
-    {
-        countries.sort(Comparator.comparingDouble(Country::GetPopulation).reversed());
-        return countries;
-    }
-
-    static String formatCountry(Country country)
-    {
-        return country.GetCode() + " | " + country.GetName() + " | "
-                + (long) country.GetPopulation();
-    }
-
-    public void printCities(ArrayList<City> cities){
+    public void PrintCities(ArrayList<City> cities){
         if (cities == null){
             System.out.println("No cities to print");
         }
         else{
             for (City city : cities){
                 if (city != null) {
-                    String city_string = "";
-
-                    if (city.getId() != 0) {city_string += " | " + city.getId();}
-                    if (city.getName() != null) {city_string += " | " + city.getName();}
-                    if (city.getCountryCode() != null) {city_string += " | " + city.getCountryCode();}
-                    if (city.getDistrict() != null) {city_string += " | " + city.getDistrict();}
-                    if (city.getPopulation() != 0) {city_string += " | " + city.getPopulation();}
-
-                    if(!city_string.isEmpty()) {System.out.println(city_string);}
+                    System.out.println(city.GetName() + " - population: " + city.GetPopulation());
                 }
             }
         }
     }
 
-
-    // Report 20
-    public ArrayList<City> getCitiesInContinent(Continent continent){
+    public ArrayList<City> GetCitiesInContinent(Continent continent){
         try
         {
             // Create an SQL statement
@@ -113,7 +56,7 @@ public class App
                     "SELECT city.Name, city.Population "
                             + "FROM city "
                             + "LEFT JOIN country ON city.CountryCode = country.Code "
-                            + "WHERE country.Continent LIKE '" + continent.getName() + "'"
+                            + "WHERE country.Continent LIKE '" + continent.GetName() + "'"
                             + " ORDER BY city.population ASC";
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
@@ -121,9 +64,8 @@ public class App
             ArrayList<City> cities = new ArrayList<>();
             while (rset.next())
             {
-                City city = new City();
-                city.setName(rset.getString("Name"));
-                city.setPopulation(Double.parseDouble(rset.getString("Population")));
+                City city = new City(rset.getString("Name"));
+                city.SetPopulation(Double.parseDouble(rset.getString("Population")));
                 cities.add(city);
             }
             return cities;
@@ -134,45 +76,6 @@ public class App
             return null;
         }
     }
-
-    // Report 19
-    public ArrayList<City> getCitiesInPopulationSizeOrder()
-    {
-        try
-        {
-            // Create string for SQL statement
-            String strSelect =
-                    "SELECT ID, Name, CountryCode, District, Population "
-                            + "FROM city " +
-                            "ORDER BY Population DESC";
-            // Create an SQL statement
-            Statement stmt = con.createStatement();
-            // Execute SQL statement
-            ResultSet rset = stmt.executeQuery(strSelect);
-            // Return new employee if valid.
-            // Check one is returned
-
-            ArrayList<City> cities = new ArrayList<>();
-            while (rset.next())
-            {
-                City city = new City();
-                city.setId(rset.getInt("ID"));
-                city.setName(rset.getString("Name"));
-                city.setCountryCode(rset.getString("CountryCode"));
-                city.setDistrict(rset.getString("District"));
-                city.setPopulation(rset.getInt("Population"));
-                cities.add(city);
-            }
-            return cities;
-        }
-        catch (Exception e)
-        {
-            System.out.println(e.getMessage());
-            System.out.println("Failed to get city details");
-            return null;
-        }
-    }
-
 
 
     public void Connect(String location, int delay){
@@ -232,5 +135,4 @@ public class App
             }
         }
     }
-
 }

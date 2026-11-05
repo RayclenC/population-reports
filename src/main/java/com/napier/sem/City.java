@@ -1,37 +1,31 @@
 package com.napier.sem;
 
-/**
- *
- * <p>
- *     The City class builds a 'city' object from the 'city' database table, allowing us to set and get different elements of the database table.
- * </p>
- *
- */
-
 public class City {
 
-    private int id;
-    private String name;
+    private int ID;
+    final String name;
     private String CountryCode;
-    private String district;
+    private District district;
     private double population;
 
+    City(String name) {
+        this.name = name;
+    }
+
     //getters and setters. Name does not get a setter
+    public String GetName(){return name;}
 
-    public int getId(){return id;}
-    public void setId(int id){this.id = id;}
+    public int GetId(){return ID;}
+    public void SetId(int ID){this.ID = ID;}
 
-    public String getName(){return name;}
-    public void setName(String name){this.name = name;}
+    public String GetCountryCode(){return CountryCode;}
+    public void SetCountryCode(String CountryCode){this.CountryCode = CountryCode;}
 
-    public String getCountryCode(){return CountryCode;}
-    public void setCountryCode(String CountryCode){this.CountryCode = CountryCode;}
+    public District GetDistrict(){return district;}
+    public void SetDistrict(District district){this.district = district;}
 
-    public String getDistrict(){return district;}
-    public void setDistrict(String district){this.district = district;}
-
-    public double getPopulation(){return population;}
-    public void setPopulation(double population){this.population = population;}
+    public double GetPopulation(){return population;}
+    public void SetPopulation(double population){this.population = population;}
 
 }
 

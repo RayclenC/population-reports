@@ -10,11 +10,11 @@ public class Region {
         this.country = country;
     }
 
-    public String getName(){
+    public String GetName(){
         return name;
     }
 
-    public Country getCountry(){
+    public Country GetCountry(){
         return country;
     }
 }
