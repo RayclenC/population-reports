@@ -2,11 +2,18 @@ package com.napier.sem;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
+/**
+ *<p>
+ *     The AppIntegrationTest class is where our Integration tests (Tests against the database) are carried out.
+ *
+ *</p>
+ */
 
 public class AppIntegrationTest
 {
@@ -24,19 +31,98 @@ public class AppIntegrationTest
     // Integrated test methods go here
 
 
+    /**
+        Tests the City Class. Making sure that a valid city can be created
+        to mirror the 'city' database table.
+     */
     @Test
-    void GetCitiesInContinentTest()
+    void testAddCity()
     {
-        Continent continent = new Continent("Asia");
+        City testCity = new City();
 
-        app.GetCitiesInContinent(continent);
+        testCity.setId(460);
+        testCity.setName("Edinburgh");
+        testCity.setCountryCode("GBR");
+        testCity.setDistrict("District");
+        testCity.setPopulation(450180);
+
+        assertEquals(testCity.getId(),460);
+        assertEquals(testCity.getName(),"Edinburgh");
+        assertEquals(testCity.getCountryCode(),"GBR");
+        assertEquals(testCity.getDistrict(),"District");
+        assertEquals(testCity.getPopulation(),450180);
+
+
     }
 
     @Test
-    void GetCitiesInContinentTestEmpty(){
-        Continent continent = null;
+    void testAddContinent()
+    {
+        Continent testContinent = new Continent("Asia");
 
-        app.GetCitiesInContinent(continent);
+        assertEquals(testContinent.getName(),"Asia");
+    }
+
+
+    /**
+        Tests the Country Class. Making sure that a valid country can be created
+        to mirror the 'country' database table.
+     */
+    @Test
+    void testAddCountry()
+    {
+        Country testCountry = new Country("North America", "North America", "Ottowa");
+
+        testCountry.SetCode("Can");
+        testCountry.SetName("Canada");
+        testCountry.SetPopulation(31147000);
+
+        assertEquals(testCountry.GetCode(),"Can");
+        assertEquals(testCountry.GetName(),"Canada");
+//        assertEquals(testCountry.GetContinent(),"North America");
+//        assertEquals(testCountry.GetRegion(),"North America");
+        assertEquals(testCountry.GetPopulation(),31147000);
+        assertEquals(testCountry.GetCapital(),"Ottowa");
+
+
+    }
+
+    @Test
+    void testAddRegion()
+    {
+        // In progress
+        Country testCountry = new Country("North America", "North America", "Ottowa");
+        Region testRegion = new Region("Belgium", testCountry);
+    }
+
+
+    @Test
+    void testGetCitiesInContinent()
+    {
+        Continent continent = new Continent("Asia");
+
+        app.getCitiesInContinent(continent);
+
+        // Testing if the city is entered is empty
+        continent = null;
+
+        app.getCitiesInContinent(continent);
+
+
+    }
+
+    @Test
+    void testGetCities()
+    {
+        // testing to see if the method to return by size order returns an array of populated data.
+        if(app.getCitiesInPopulationSizeOrder() instanceof ArrayList<City>)
+        {
+            assertNotEquals(app.getCitiesInPopulationSizeOrder(), null);
+        }
+        else
+        {
+            throw new IllegalArgumentException("Type Error: Expected an ArrayList but got " + app.getCitiesInPopulationSizeOrder().getClass().getSimpleName());
+        }
     }
 
 
