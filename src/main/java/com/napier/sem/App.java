@@ -27,19 +27,15 @@ public class App
             ThisApp.Connect(args[0], Integer.parseInt(args[1]));
         }
 
-        //Methods go here
-
-        //#20
-        Continent Asia = new Continent("Asia");
-        ThisApp.printCities(ThisApp.getCitiesInContinent(Asia));
-
-        //#19
-        ArrayList<City> cities = ThisApp.getCitiesInPopulationSizeOrder();
-        System.out.println("All cities by population (largest to smallest):");
-        ThisApp.printCities(cities);
-
         if (ThisApp.con != null)
         {
+            Continent asia = new Continent("Asia");
+            ThisApp.printCities(ThisApp.getCitiesInContinent(asia));
+
+            ArrayList<City> cities = ThisApp.getCitiesInPopulationSizeOrder();
+            System.out.println("All cities by population (largest to smallest):");
+            ThisApp.printCities(cities);
+
             try
             {
                 ArrayList<Country> countries = getCountriesByPopulation(ThisApp.con);
