@@ -4,10 +4,11 @@ import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-class MyTest
+class AppUnitTest
 {
     static App app;
 
@@ -17,38 +18,65 @@ class MyTest
     }
 
 
+    /**
+     * Testing when the array is null
+     */
     @Test
-    void PrintCitiesTestNull()
-    {
+    void printCitiesTestNull(){
+
         ArrayList<City> cities = null;
-        app.PrintCities(cities);
+        app.printCities(cities);
     }
 
+    /**
+     *  Testing when the array list is empty
+     */
     @Test
-    void PrintCitiesTestEmpty(){
+    void printCitiesTestEmpty(){
+
         ArrayList<City> cities = new ArrayList<>();
-        app.PrintCities(cities);
+        app.printCities(cities);
     }
 
+    /**
+     *  Testing when the city is populated
+     */
     @Test
-    void PrintCitiesTestNormal(){
+    void printCitiesTestPopulated(){
+
         ArrayList<City> cities = new ArrayList<>();
-        City city = new City();
-        city.SetName("London");
-        cities.add(city);
+        City testCity = new City();
 
-        app.PrintCities(cities);
+        // Populating the city class
+        testCity.setId(460);
+        testCity.setName("Edinburgh");
+        testCity.setCountryCode("GBR");
+        testCity.setDistrict("District");
+        testCity.setPopulation(450180);
+
+        // Adding the populated object to the array
+        cities.add(testCity);
+
+        app.printCities(cities);
+
     }
 
+    /**
+     *  Testing edge cases of Integers
+     */
     @Test
-    void formatCountryTest()
-    {
-        Country country = new Country();
-        country.SetCode("CHN");
-        country.SetName("China");
-        country.SetPopulation(1277558000);
+    void printCitiesTestEdgeCase(){
 
-        assertEquals("CHN | China | 1277558000", App.formatCountry(country));
+        ArrayList<City> cities = new ArrayList<>();
+        City testCity = new City();
+
+        testCity.setId(0);
+        testCity.setPopulation(0);
+
+        cities.add(testCity);
+
+        app.printCities(cities);
+
     }
 
     @Test
@@ -81,4 +109,16 @@ class MyTest
         assertTrue(sortedCountries.get(1).GetPopulation()
                 >= sortedCountries.get(2).GetPopulation());
     }
+
+    @Test
+    void formatCountryIncludesCodeNameAndPopulation()
+    {
+        Country country = new Country();
+        country.SetCode("CHN");
+        country.SetName("China");
+        country.SetPopulation(1_277_558_000);
+
+        assertEquals("CHN | China | 1277558000", App.formatCountry(country));
+    }
+
 }

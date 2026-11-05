@@ -8,7 +8,7 @@ public class Continent {
         this.name = name;
     }
 
-    public String GetName(){
+    public String getName(){
         return name;
     }
 }

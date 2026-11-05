@@ -1,5 +1,14 @@
 package com.napier.sem;
 
+
+/**
+ *
+ * <p>
+ *     The Country class builds a 'country' object from the 'country' database table, allowing us to set and get different elements of the database table.
+ * </p>
+ *
+ */
+
 public class Country {
 
     private String code;

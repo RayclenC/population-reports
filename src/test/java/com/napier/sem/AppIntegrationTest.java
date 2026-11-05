@@ -13,9 +13,10 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AppIntegrationTest
+class AppIntegrationTest
 {
-    static Connection connection;
+    private static Connection connection;
+    private static App app;
 
     @BeforeAll
     static void connectToDatabase() throws SQLException
@@ -28,6 +29,8 @@ public class AppIntegrationTest
                 connection = DriverManager.getConnection(
                         "jdbc:mysql://localhost:33060/world?allowPublicKeyRetrieval=true&useSSL=false",
                         "root", "example");
+                app = new App();
+                app.Connect("localhost:33060", 30000);
                 return;
             }
             catch (SQLException e)
@@ -48,11 +51,15 @@ public class AppIntegrationTest
     }
 
     @AfterAll
-    static void closeDatabaseConnection() throws SQLException
+    static void closeDatabaseConnections() throws SQLException
     {
         if (connection != null)
         {
             connection.close();
+        }
+        if (app != null)
+        {
+            app.Disconnect();
         }
     }
 
@@ -81,4 +88,27 @@ public class AppIntegrationTest
         }
     }
 
+    @Test
+    void getCitiesInContinentReturnsCities()
+    {
+        ArrayList<City> cities = app.getCitiesInContinent(new Continent("Asia"));
+
+        assertNotNull(cities);
+        assertFalse(cities.isEmpty());
+    }
+
+    @Test
+    void getCitiesInPopulationSizeOrderReturnsDescendingPopulations()
+    {
+        ArrayList<City> cities = app.getCitiesInPopulationSizeOrder();
+
+        assertNotNull(cities);
+        assertFalse(cities.isEmpty());
+        double previousPopulation = Double.POSITIVE_INFINITY;
+        for (City city : cities)
+        {
+            assertTrue(city.getPopulation() <= previousPopulation);
+            previousPopulation = city.getPopulation();
+        }
+    }
 }
