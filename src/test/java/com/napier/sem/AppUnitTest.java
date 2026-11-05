@@ -78,4 +78,28 @@ class AppUnitTest
 
     }
 
+    @Test
+    void countryPopulationReportOrdersAndFormatsCountries()
+    {
+        Country small = new Country("Europe", "Europe", "Reykjavik");
+        small.SetCode("ISL");
+        small.SetName("Iceland");
+        small.SetPopulation(400_000);
+
+        Country large = new Country("Asia", "Asia", "Beijing");
+        large.SetCode("CHN");
+        large.SetName("China");
+        large.SetPopulation(1_400_000_000);
+
+        ArrayList<Country> countries = new ArrayList<>();
+        countries.add(small);
+        countries.add(large);
+
+        ArrayList<Country> sortedCountries = App.sortCountriesByPopulation(countries);
+
+        assertEquals("China", sortedCountries.get(0).GetName());
+        assertEquals("Iceland", sortedCountries.get(1).GetName());
+        assertEquals("CHN | China | 1400000000", App.formatCountry(sortedCountries.get(0)));
+    }
+
 }
