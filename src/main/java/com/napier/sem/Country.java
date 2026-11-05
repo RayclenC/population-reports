@@ -39,7 +39,7 @@ public class Country {
 
     public Continent getContinent(){return continent;}
 
-    public Region GetRegion(){return region;}
+    public Region getRegion(){return region;}
 
     public double getPopulation(){return population;}
     public void setPopulation(double population){this.population = population;}
