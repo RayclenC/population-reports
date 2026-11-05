@@ -111,7 +111,7 @@ class AppUnitTest
     @Test
     void formatCountryIncludesCodeNameAndPopulation()
     {
-        Country country = new Country("CHN","China","Asia","Eastern Asia",9572900.00,"Beijing");
+        Country country = new Country("CHN","China","Asia","Eastern Asia",1277558000,"Beijing");
 
         assertEquals("CHN | China | 1277558000", App.formatCountry(country));
     }
