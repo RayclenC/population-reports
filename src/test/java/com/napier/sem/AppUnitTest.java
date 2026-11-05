@@ -83,16 +83,16 @@ class AppUnitTest
     void sortCountriesByPopulationOrdersLargestToSmallest()
     {
         Country china = new Country("Asia", "Eastern Asia", "Beijing");
-        china.SetName("China");
-        china.SetPopulation(1_400_000_000);
+        china.setName("China");
+        china.setPopulation(1_400_000_000);
 
         Country india = new Country("Asia", "Southern and Central Asia", "New Delhi");
-        india.SetName("India");
-        india.SetPopulation(1_300_000_000);
+        india.setName("India");
+        india.setPopulation(1_300_000_000);
 
         Country iceland = new Country("Europe", "Nordic Countries", "Reykjavik");
-        iceland.SetName("Iceland");
-        iceland.SetPopulation(400_000);
+        iceland.setName("Iceland");
+        iceland.setPopulation(400_000);
 
         ArrayList<Country> countries = new ArrayList<>();
         countries.add(iceland);
@@ -101,22 +101,22 @@ class AppUnitTest
 
         ArrayList<Country> sortedCountries = App.sortCountriesByPopulation(countries);
 
-        assertEquals("China", sortedCountries.get(0).GetName());
-        assertEquals("India", sortedCountries.get(1).GetName());
-        assertEquals("Iceland", sortedCountries.get(2).GetName());
-        assertTrue(sortedCountries.get(0).GetPopulation()
-                >= sortedCountries.get(1).GetPopulation());
-        assertTrue(sortedCountries.get(1).GetPopulation()
-                >= sortedCountries.get(2).GetPopulation());
+        assertEquals("China", sortedCountries.get(0).getName());
+        assertEquals("India", sortedCountries.get(1).getName());
+        assertEquals("Iceland", sortedCountries.get(2).getName());
+        assertTrue(sortedCountries.get(0).getPopulation()
+                >= sortedCountries.get(1).getPopulation());
+        assertTrue(sortedCountries.get(1).getPopulation()
+                >= sortedCountries.get(2).getPopulation());
     }
 
     @Test
     void formatCountryIncludesCodeNameAndPopulation()
     {
         Country country = new Country("Asia", "Eastern Asia", "Beijing");
-        country.SetCode("CHN");
-        country.SetName("China");
-        country.SetPopulation(1_277_558_000);
+        country.setCode("CHN");
+        country.setName("China");
+        country.setPopulation(1_277_558_000);
 
         assertEquals("CHN | China | 1277558000", App.formatCountry(country));
     }

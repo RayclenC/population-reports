@@ -66,9 +66,9 @@ public class App
             while (results.next())
             {
                 Country country = new Country("", "", "");
-                country.SetCode(results.getString("Code"));
-                country.SetName(results.getString("Name"));
-                country.SetPopulation(results.getInt("Population"));
+                country.setCode(results.getString("Code"));
+                country.setName(results.getString("Name"));
+                country.setPopulation(results.getInt("Population"));
                 countries.add(country);
             }
         }
@@ -77,14 +77,14 @@ public class App
 
     static ArrayList<Country> sortCountriesByPopulation(ArrayList<Country> countries)
     {
-        countries.sort(Comparator.comparingDouble(Country::GetPopulation).reversed());
+        countries.sort(Comparator.comparingDouble(Country::getPopulation).reversed());
         return countries;
     }
 
     static String formatCountry(Country country)
     {
-        return country.GetCode() + " | " + country.GetName() + " | "
-                + (long) country.GetPopulation();
+        return country.getCode() + " | " + country.getName() + " | "
+                + (long) country.getPopulation();
     }
 
     public void printCities(ArrayList<City> cities){

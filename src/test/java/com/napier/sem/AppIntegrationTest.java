@@ -67,16 +67,16 @@ public class AppIntegrationTest {
     void testAddCountry() {
         Country testCountry = new Country("North America", "North America", "Ottowa");
 
-        testCountry.SetCode("Can");
-        testCountry.SetName("Canada");
-        testCountry.SetPopulation(31147000);
+        testCountry.setCode("Can");
+        testCountry.setName("Canada");
+        testCountry.setPopulation(31147000);
 
-        assertEquals(testCountry.GetCode(), "Can");
-        assertEquals(testCountry.GetName(), "Canada");
+        assertEquals(testCountry.getCode(), "Can");
+        assertEquals(testCountry.getName(), "Canada");
 //        assertEquals(testCountry.GetContinent(),"North America");
 //        assertEquals(testCountry.GetRegion(),"North America");
-        assertEquals(testCountry.GetPopulation(), 31147000);
-        assertEquals(testCountry.GetCapital(), "Ottowa");
+        assertEquals(testCountry.getPopulation(), 31147000);
+        assertEquals(testCountry.getCapital(), "Ottowa");
 
 
     }
