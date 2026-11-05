@@ -29,6 +29,13 @@ public class App
 
         if (ThisApp.con != null)
         {
+            Continent asia = new Continent("Asia");
+            ThisApp.printCities(ThisApp.getCitiesInContinent(asia));
+
+            ArrayList<City> cities = ThisApp.getCitiesInPopulationSizeOrder();
+            System.out.println("All cities by population (largest to smallest):");
+            ThisApp.printCities(cities);
+
             try
             {
                 ArrayList<Country> countries = getCountriesByPopulation(ThisApp.con);
@@ -58,7 +65,7 @@ public class App
         {
             while (results.next())
             {
-                Country country = new Country();
+                Country country = new Country("", "", "");
                 country.SetCode(results.getString("Code"));
                 country.SetName(results.getString("Name"));
                 country.SetPopulation(results.getInt("Population"));
