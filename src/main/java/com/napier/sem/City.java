@@ -25,7 +25,7 @@ public class City {
     }
 
 
-    //getters and setters. Name does not get a setter
+    //getters and setters.
 
 
     public int getId() {

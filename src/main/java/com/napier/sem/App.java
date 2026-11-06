@@ -21,61 +21,73 @@ public class App
     {
         App ThisApp = new App();
 
+        //edits connection if there is arguments
         if(args.length < 1){
             ThisApp.Connect("localhost:33060", 30000);
         }else{
             ThisApp.Connect(args[0], Integer.parseInt(args[1]));
         }
 
-        if (ThisApp.con != null)
+
+
+        /*
+        Issues here
+         */
+
+
+        //issue #20
+        Continent asia = new Continent("Asia");
+        ThisApp.printCities(ThisApp.getCitiesInContinent(asia));
+
+        //issue #19
+        ArrayList<City> cities = ThisApp.getCitiesInPopulationSizeOrder();
+        System.out.println("All cities by population (largest to smallest):");
+        ThisApp.printCities(cities);
+
+        //issue #?
+        ArrayList<Country> countries = ThisApp.getCountriesByPopulation();
+        System.out.println("All countries by population (largest to smallest):");
+        for (Country country : countries)
         {
-            Continent asia = new Continent("Asia");
-            ThisApp.printCities(ThisApp.getCitiesInContinent(asia));
-
-            ArrayList<City> cities = ThisApp.getCitiesInPopulationSizeOrder();
-            System.out.println("All cities by population (largest to smallest):");
-            ThisApp.printCities(cities);
-
-            try
-            {
-                ArrayList<Country> countries = getCountriesByPopulation(ThisApp.con);
-                System.out.println("All countries by population (largest to smallest):");
-                for (Country country : countries)
-                {
-                    System.out.println(formatCountry(country));
-                }
-            }
-            catch (SQLException e)
-            {
-                System.err.println("Failed to get country population report: " + e.getMessage());
-            }
+            System.out.println(formatCountry(country));
         }
+
+
+
+
+        /*
+        End of issues
+         */
 
         ThisApp.Disconnect();
     }
 
-    public static ArrayList<Country> getCountriesByPopulation(Connection connection)
-            throws SQLException
+    public ArrayList<Country> getCountriesByPopulation()
     {
-        String query = "SELECT Code, Name, Continent, Region, Population, Capital FROM country ORDER BY Population DESC";
-        ArrayList<Country> countries = new ArrayList<>();
+        try {
 
-        try (PreparedStatement statement = connection.prepareStatement(query);
-             ResultSet results = statement.executeQuery())
-        {
-            while (results.next())
-            {
+            String query = "SELECT Code, Name, Continent, Region, Population, Capital FROM country ORDER BY Population DESC";
+            Statement statement = con.createStatement();
+            ResultSet results = statement.executeQuery(query);
+
+            ArrayList<Country> countries = new ArrayList<>();
+            while (results.next()) {
                 Country country = new Country(results.getString("Code"),
                         results.getString("Name"),
                         results.getString("Continent"),
                         results.getString("Region"),
                         results.getInt("Population"),
                         results.getString("Capital")
-                        );
+                );
                 countries.add(country);
             }
+
+            return sortCountriesByPopulation(countries);
+
+        } catch (Exception e) {
+            System.out.println("getCountriesByPopulation error: " + e.getMessage());
+            return null;
         }
-        return sortCountriesByPopulation(countries);
     }
 
     static ArrayList<Country> sortCountriesByPopulation(ArrayList<Country> countries)
