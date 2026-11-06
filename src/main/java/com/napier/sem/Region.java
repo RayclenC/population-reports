@@ -4,7 +4,7 @@ public class Region {
 
     private String name;
 
-    Region(String name){
+    public Region(String name) {
         this.name = name;
     }
 

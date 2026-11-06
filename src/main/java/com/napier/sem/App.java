@@ -124,7 +124,7 @@ public class App
                             + "FROM city "
                             + "LEFT JOIN country ON city.CountryCode = country.Code "
                             + "WHERE country.Continent LIKE '" + continent.getName() + "'"
-                            + " ORDER BY city.population ASC";
+                            + " ORDER BY city.Population ASC";
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
             // Extract employee information
