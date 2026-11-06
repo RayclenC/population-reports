@@ -5,8 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *<p>
@@ -30,14 +29,12 @@ public class AppIntegrationTest {
 
     @Test
     void testGetCitiesInContinent() {
-        Continent continent = new Continent("Asia");
+        Continent testContinent = new Continent("Asia");
 
-        app.getCitiesInContinent(continent);
+        ArrayList<City> cities = app.getCitiesInContinent(testContinent);
 
-        // Testing if the city is entered is empty
-        continent = null;
-
-        app.getCitiesInContinent(continent);
+        assertNotNull(cities);
+        assertFalse(cities.isEmpty());
 
 
     }

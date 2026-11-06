@@ -132,7 +132,7 @@ public class App
             Statement stmt = con.createStatement();
             // Create string for SQL statement
             String strSelect =
-                    "SELECT ID, Name, CountryCode, District, Population"
+                    "SELECT city.ID, city.Name, city.CountryCode, city.District, city.Population "
                             + "FROM city "
                             + "LEFT JOIN country ON city.CountryCode = country.Code "
                             + "WHERE country.Continent LIKE '" + continent.getName() + "'"
