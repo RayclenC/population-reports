@@ -196,6 +196,34 @@ public class App
         }
     }
 
+    // Report 27
+    public ArrayList<Country> getNPopulousCitiesInRegion()
+    {
+        try {
+
+            String query = "SELECT Code, Name, Continent, Region, Population, Capital FROM country ORDER BY Population DESC";
+            Statement statement = con.createStatement();
+            ResultSet results = statement.executeQuery(query);
+
+            ArrayList<Country> countries = new ArrayList<>();
+            while (results.next()) {
+                Country country = new Country(results.getString("Code"),
+                        results.getString("Name"),
+                        results.getString("Continent"),
+                        results.getString("Region"),
+                        results.getInt("Population"),
+                        results.getString("Capital")
+                );
+                countries.add(country);
+            }
+
+            return sortCountriesByPopulation(countries);
+
+        } catch (Exception e) {
+            System.out.println("getCountriesByPopulation error: " + e.getMessage());
+            return null;
+        }
+    }
 
 
     public void Connect(String location, int delay){
