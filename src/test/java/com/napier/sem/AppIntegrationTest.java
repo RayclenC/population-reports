@@ -41,11 +41,11 @@ public class AppIntegrationTest {
                 "District",
                 450180);
 
-        assertEquals(testCity.getId(), 460);
-        assertEquals(testCity.getName(), "Edinburgh");
-        assertEquals(testCity.getCountryCode(), "GBR");
-        assertEquals(testCity.getDistrict(), "District");
-        assertEquals(testCity.getPopulation(), 450180);
+        assertEquals(460, testCity.getId());
+        assertEquals("Edinburgh", testCity.getName());
+        assertEquals("GBR", testCity.getCountryCode());
+        assertEquals("District", testCity.getDistrict());
+        assertEquals(450180, testCity.getPopulation());
 
 
     }
@@ -54,7 +54,7 @@ public class AppIntegrationTest {
     void testAddContinent() {
         Continent testContinent = new Continent("Asia");
 
-        assertEquals(testContinent.getName(), "Asia");
+        assertEquals("Asia", testContinent.getName());
     }
 
     /**
@@ -69,12 +69,12 @@ public class AppIntegrationTest {
         testCountry.setName("Canada");
         testCountry.setPopulation(31147000);
 
-        assertEquals(testCountry.getCode(), "Can");
-        assertEquals(testCountry.getName(), "Canada");
-//        assertEquals(testCountry.GetContinent(),"North America");
-//        assertEquals(testCountry.getRegion(),"North America");
-        assertEquals(testCountry.getPopulation(), 31147000);
-        assertEquals(testCountry.getCapital(), "Ottowa");
+        assertEquals("Can", testCountry.getCode());
+        assertEquals("Canada", testCountry.getName());
+        assertEquals("North America", testCountry.getContinent().getName());
+        assertEquals("North America", testCountry.getRegion().getName());
+        assertEquals(31147000, testCountry.getPopulation());
+        assertEquals("Ottowa",   testCountry.getCapital());
 
 
     }
@@ -104,8 +104,8 @@ public class AppIntegrationTest {
     @Test
     void testGetCities() {
         // testing to see if the method to return by size order returns an array of populated data.
-        if (app.getCitiesInPopulationSizeOrder() instanceof ArrayList<City>) {
-            assertNotEquals(app.getCitiesInPopulationSizeOrder(), null);
+        if (app.getCitiesInPopulationSizeOrder() != null) {
+            assertNotEquals(null, app.getCitiesInPopulationSizeOrder());
         } else {
             throw new IllegalArgumentException("Type Error: Expected an ArrayList but got " + app.getCitiesInPopulationSizeOrder().getClass().getSimpleName());
         }
