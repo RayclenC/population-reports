@@ -32,22 +32,46 @@ public class Country {
         this.capital = capital;
     }
 
-    //getters and setters. Values in the constructor do not get a setter
-    public String getCode(){return code;}
-    public void setCode(String code){this.code = code;}
 
-    public String getName(){return name;}
-    public void setName(String name){this.name = name;}
+    public String getCode() {
+        return code;
+    }
 
-    public Continent getContinent(){return continent;}
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-    public Region getRegion(){return region;}
+    public String getName() {
+        return name;
+    }
 
-    public double getPopulation(){return population;}
-    public void setPopulation(double population){this.population = population;}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public String getCapital(){return capital;}
+    public Continent getContinent() {
+        return continent;
+    }
 
+    public Region getRegion() {
+        return region;
+    }
+
+    public double getPopulation() {
+        return population;
+    }
+
+    public void setPopulation(double population) {
+        this.population = population;
+    }
+
+    public String getCapital() {
+        return capital;
+    }
+
+    public void setCapital(String capital) {
+        this.capital = capital;
+    }
 
     @Override
     public String toString() {
