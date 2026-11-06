@@ -104,8 +104,8 @@ public class AppIntegrationTest {
     @Test
     void testGetCities() {
         // testing to see if the method to return by size order returns an array of populated data.
-        if (app.getCitiesInPopulationSizeOrder() instanceof ArrayList<City>) {
-            assertNotEquals(app.getCitiesInPopulationSizeOrder(), null);
+        if (app.getCitiesInPopulationSizeOrder() != null) {
+            assertNotEquals(null, app.getCitiesInPopulationSizeOrder());
         } else {
             throw new IllegalArgumentException("Type Error: Expected an ArrayList but got " + app.getCitiesInPopulationSizeOrder().getClass().getSimpleName());
         }
