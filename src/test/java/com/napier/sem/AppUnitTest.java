@@ -263,6 +263,30 @@ class AppUnitTest
     }
 
     @Test
+    void sortCountriesInRegionByPopulationOrdersLargestToSmallest()
+    {
+        Country jamaica = new Country("JAM", "Jamaica", "North America", "Caribbean", 2583000, "Kingston");
+        Country cuba = new Country("CUB", "Cuba", "North America", "Caribbean", 11201000, "La Habana");
+        Country bahamas = new Country("BHS", "Bahamas", "North America", "Caribbean", 307000, "Nassau");
+
+        ArrayList<Country> countries = new ArrayList<>();
+        countries.add(jamaica);
+        countries.add(cuba);
+        countries.add(bahamas);
+
+        ArrayList<Country> sortedCountries = App.sortCountriesByPopulation(countries);
+
+        assertEquals("Cuba", sortedCountries.get(0).getName());
+        assertEquals("Jamaica", sortedCountries.get(1).getName());
+        assertEquals("Bahamas", sortedCountries.get(2).getName());
+        assertEquals("Caribbean", sortedCountries.get(0).getRegion().getName());
+        assertTrue(sortedCountries.get(0).getPopulation()
+                >= sortedCountries.get(1).getPopulation());
+        assertTrue(sortedCountries.get(1).getPopulation()
+                >= sortedCountries.get(2).getPopulation());
+    }
+
+    @Test
     void formatCountryIncludesCodeNameAndPopulation()
     {
         Country country = new Country("CHN","China","Asia","Eastern Asia",1277558000,"Beijing");

@@ -48,4 +48,38 @@ public class AppIntegrationTest {
             throw new IllegalArgumentException("Type Error: Expected an ArrayList but got " + app.getCitiesInPopulationSizeOrder().getClass().getSimpleName());
         }
     }
+
+    @Test
+    void getCountriesInRegionReturnsCountriesInDescendingPopulationOrder()
+    {
+        Region region = new Region("Caribbean");
+        ArrayList<Country> countries = app.getCountriesInRegion(region);
+
+        assertNotNull(countries);
+        assertFalse(countries.isEmpty());
+        double previousPopulation = Double.POSITIVE_INFINITY;
+        for (Country country : countries)
+        {
+            assertEquals("Caribbean", country.getRegion().getName());
+            assertTrue(country.getPopulation() <= previousPopulation);
+            previousPopulation = country.getPopulation();
+        }
+    }
+
+    @Test
+    void getCountriesByPopulationReturnsCountriesInDescendingPopulationOrder()
+    {
+        ArrayList<Country> countries = app.getCountriesByPopulation();
+
+        assertNotNull(countries);
+        assertFalse(countries.isEmpty());
+        double previousPopulation = Double.POSITIVE_INFINITY;
+        for (Country country : countries)
+        {
+            assertNotNull(country.getCode());
+            assertNotNull(country.getName());
+            assertTrue(country.getPopulation() <= previousPopulation);
+            previousPopulation = country.getPopulation();
+        }
+    }
 }
