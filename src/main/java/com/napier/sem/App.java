@@ -234,7 +234,11 @@ public class App
     }
 
 
-
+    /*
+    **********************************************************
+       DO NOT TOUCH THE CONNECT AND DISCONNECT METHODS
+    **********************************************************
+     */
     public void Connect(String location, int delay){
         try
         {
