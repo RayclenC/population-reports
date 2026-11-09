@@ -54,7 +54,7 @@ public class App
         System.out.println("All cities by population (largest to smallest):");
         ThisApp.printCities(cities);
 
-        //issue #?
+        //issue #16
         ArrayList<Country> countries = ThisApp.getCountriesByPopulation();
         System.out.println("All countries by population (largest to smallest):");
         for (Country country : countries)
