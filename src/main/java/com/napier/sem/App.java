@@ -37,20 +37,23 @@ public class App
 
         //issue #20
         Continent asia = new Continent("Asia");
-        ThisApp.printCities(ThisApp.getCitiesInContinent(asia));
+        //ThisApp.printCities(ThisApp.getCitiesInContinent(asia));
 
         //issue #19
         ArrayList<City> cities = ThisApp.getCitiesInPopulationSizeOrder();
         System.out.println("All cities by population (largest to smallest):");
-        ThisApp.printCities(cities);
+        //ThisApp.printCities(cities);
 
         //issue #?
         ArrayList<Country> countries = ThisApp.getCountriesByPopulation();
         System.out.println("All countries by population (largest to smallest):");
         for (Country country : countries)
         {
-            System.out.println(formatCountry(country));
+            //System.out.println(formatCountry(country));
         }
+
+        Region thisRegion = new Region("Eastern Africa");
+        ThisApp.printCountries(ThisApp.getNPopulousCountriesInRegion(5, thisRegion));
 
 
 
@@ -99,7 +102,7 @@ public class App
     static String formatCountry(Country country)
     {
         return country.getCode() + " | " + country.getName() + " | "
-                + (long) country.getPopulation();
+                + (long) country.getPopulation() + " | " + country.getRegion();
     }
 
     public void printCities(ArrayList<City> cities){
@@ -118,6 +121,28 @@ public class App
                     if (city.getPopulation() != 0) {city_string += " | " + city.getPopulation();}
 
                     if(!city_string.isEmpty()) {System.out.println(city_string);}
+                }
+            }
+        }
+    }
+
+    public void printCountries(ArrayList<Country> countries){
+        if (countries == null){
+            System.out.println("No cities to print");
+        }
+        else{
+            for (Country country : countries){
+                if (country != null) {
+                    String country_string = "";
+
+                    if (country.getCode() != null) {country_string += " | " + country.getCode();}
+                    if (country.getName() != null) {country_string += " | " + country.getName();}
+                    if (country.getContinent() != null) {country_string += " | " + country.getContinent();}
+                    if (country.getRegion() != null) {country_string += " | " + country.getRegion();}
+                    if (country.getPopulation() != 0) {country_string += " | population: " + country.getPopulation();}
+                    if (country.getCapital() != null) {country_string += " | " + country.getCapital();}
+
+                    if(!country_string.isEmpty()) {System.out.println(country_string);}
                 }
             }
         }
@@ -197,16 +222,18 @@ public class App
     }
 
     // Report 27
-    public ArrayList<Country> getNPopulousCitiesInRegion()
+    public ArrayList<Country> getNPopulousCountriesInRegion(int N, Region region)
     {
         try {
 
-            String query = "SELECT Code, Name, Continent, Region, Population, Capital FROM country ORDER BY Population DESC";
+            String query = "SELECT Code, Name, Continent, Region, Population, Capital FROM country WHERE  Region LIKE '"
+            + region.getName() + "' ORDER BY Population DESC";
             Statement statement = con.createStatement();
             ResultSet results = statement.executeQuery(query);
 
             ArrayList<Country> countries = new ArrayList<>();
-            while (results.next()) {
+            int counter = 1;
+            while (results.next() && counter <= N) {
                 Country country = new Country(results.getString("Code"),
                         results.getString("Name"),
                         results.getString("Continent"),
@@ -215,6 +242,7 @@ public class App
                         results.getString("Capital")
                 );
                 countries.add(country);
+                counter += 1;
             }
 
             return sortCountriesByPopulation(countries);
