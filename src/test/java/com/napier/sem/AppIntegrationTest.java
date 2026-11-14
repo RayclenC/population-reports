@@ -57,6 +57,12 @@ public class AppIntegrationTest {
         assertEquals("Asia", testContinent.getName());
     }
 
+    @Test
+    void testGetNPopulousCountriesInRegion() {
+        Region testRegion = new Region("Eastern Africa");
+        assertEquals("Ethiopia", app.getNPopulousCountriesInRegion(5, testRegion).get(0).getName());
+    }
+
     /**
      * Tests the Country Class. Making sure that a valid country can be created
      * to mirror the 'country' database table.

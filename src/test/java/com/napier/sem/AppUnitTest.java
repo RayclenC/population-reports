@@ -83,6 +83,25 @@ class AppUnitTest
     }
 
     @Test
+    void printCountriesTestNull(){
+        ArrayList<Country> countries = null;
+        app.printCountries(countries);
+    }
+
+    @Test
+    void printCountriesTestEmpty(){
+        ArrayList<Country> countries = new ArrayList<>();
+        app.printCountries(countries);
+    }
+
+    @Test
+    void printCountriesTestPopulated(){
+        ArrayList<Country> countries = new ArrayList<>();
+
+        //need to finish implementing this
+    }
+
+    @Test
     void sortCountriesByPopulationOrdersLargestToSmallest()
     {
 

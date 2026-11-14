@@ -102,7 +102,7 @@ public class App
     static String formatCountry(Country country)
     {
         return country.getCode() + " | " + country.getName() + " | "
-                + (long) country.getPopulation() + " | " + country.getRegion();
+                + (long) country.getPopulation();
     }
 
     public void printCities(ArrayList<City> cities){
