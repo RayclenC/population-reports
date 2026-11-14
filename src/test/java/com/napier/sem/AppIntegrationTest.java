@@ -5,8 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *<p>
@@ -95,14 +94,12 @@ public class AppIntegrationTest {
 
     @Test
     void testGetCitiesInContinent() {
-        Continent continent = new Continent("Asia");
+        Continent testContinent = new Continent("Asia");
 
-        app.getCitiesInContinent(continent);
+        ArrayList<City> cities = app.getCitiesInContinent(testContinent);
 
-        // Testing if the city is entered is empty
-        continent = null;
-
-        app.getCitiesInContinent(continent);
+        assertNotNull(cities);
+        assertFalse(cities.isEmpty());
 
 
     }
@@ -114,6 +111,40 @@ public class AppIntegrationTest {
             assertNotEquals(null, app.getCitiesInPopulationSizeOrder());
         } else {
             throw new IllegalArgumentException("Type Error: Expected an ArrayList but got " + app.getCitiesInPopulationSizeOrder().getClass().getSimpleName());
+        }
+    }
+
+    @Test
+    void getCountriesInRegionReturnsCountriesInDescendingPopulationOrder()
+    {
+        Region region = new Region("Caribbean");
+        ArrayList<Country> countries = app.getCountriesInRegion(region);
+
+        assertNotNull(countries);
+        assertFalse(countries.isEmpty());
+        double previousPopulation = Double.POSITIVE_INFINITY;
+        for (Country country : countries)
+        {
+            assertEquals("Caribbean", country.getRegion().getName());
+            assertTrue(country.getPopulation() <= previousPopulation);
+            previousPopulation = country.getPopulation();
+        }
+    }
+
+    @Test
+    void getCountriesByPopulationReturnsCountriesInDescendingPopulationOrder()
+    {
+        ArrayList<Country> countries = app.getCountriesByPopulation();
+
+        assertNotNull(countries);
+        assertFalse(countries.isEmpty());
+        double previousPopulation = Double.POSITIVE_INFINITY;
+        for (Country country : countries)
+        {
+            assertNotNull(country.getCode());
+            assertNotNull(country.getName());
+            assertTrue(country.getPopulation() <= previousPopulation);
+            previousPopulation = country.getPopulation();
         }
     }
 }
