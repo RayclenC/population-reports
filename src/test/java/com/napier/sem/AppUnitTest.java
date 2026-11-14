@@ -45,14 +45,13 @@ class AppUnitTest
     void printCitiesTestPopulated(){
 
         ArrayList<City> cities = new ArrayList<>();
-        City testCity = new City();
 
         // Populating the city class
-        testCity.setId(460);
-        testCity.setName("Edinburgh");
-        testCity.setCountryCode("GBR");
-        testCity.setDistrict("District");
-        testCity.setPopulation(450180);
+        City testCity = new City(460,
+                "Edinburgh",
+                "GBR",
+                "District",
+                450180);
 
         // Adding the populated object to the array
         cities.add(testCity);
@@ -68,7 +67,11 @@ class AppUnitTest
     void printCitiesTestEdgeCase(){
 
         ArrayList<City> cities = new ArrayList<>();
-        City testCity = new City();
+        City testCity = new City(460,
+                "Edinburgh",
+                "GBR",
+                "District",
+                450180);
 
         testCity.setId(0);
         testCity.setPopulation(0);
@@ -80,19 +83,33 @@ class AppUnitTest
     }
 
     @Test
+    void printCountriesTestNull(){
+        ArrayList<Country> countries = null;
+        app.printCountries(countries);
+    }
+
+    @Test
+    void printCountriesTestEmpty(){
+        ArrayList<Country> countries = new ArrayList<>();
+        app.printCountries(countries);
+    }
+
+    @Test
+    void printCountriesTestPopulated(){
+        ArrayList<Country> countries = new ArrayList<>();
+
+        //need to finish implementing this
+    }
+
+    @Test
     void sortCountriesByPopulationOrdersLargestToSmallest()
     {
-        Country china = new Country("Asia", "Eastern Asia", "Beijing");
-        china.SetName("China");
-        china.SetPopulation(1_400_000_000);
 
-        Country india = new Country("Asia", "Southern and Central Asia", "New Delhi");
-        india.SetName("India");
-        india.SetPopulation(1_300_000_000);
+        Country china = new Country("CHN","China","Asia","Eastern Asia",9572900.00,"Beijing");
 
-        Country iceland = new Country("Europe", "Nordic Countries", "Reykjavik");
-        iceland.SetName("Iceland");
-        iceland.SetPopulation(400_000);
+        Country india = new Country("IND", "India", "Asia", "Southern and Central Asia",3287263, "New Delhi");
+
+        Country iceland = new Country("ISL","Iceland","Europe","Nordic Countries", 396500, "Reykjavik");
 
         ArrayList<Country> countries = new ArrayList<>();
         countries.add(iceland);
@@ -101,22 +118,19 @@ class AppUnitTest
 
         ArrayList<Country> sortedCountries = App.sortCountriesByPopulation(countries);
 
-        assertEquals("China", sortedCountries.get(0).GetName());
-        assertEquals("India", sortedCountries.get(1).GetName());
-        assertEquals("Iceland", sortedCountries.get(2).GetName());
-        assertTrue(sortedCountries.get(0).GetPopulation()
-                >= sortedCountries.get(1).GetPopulation());
-        assertTrue(sortedCountries.get(1).GetPopulation()
-                >= sortedCountries.get(2).GetPopulation());
+        assertEquals("China", sortedCountries.get(0).getName());
+        assertEquals("India", sortedCountries.get(1).getName());
+        assertEquals("Iceland", sortedCountries.get(2).getName());
+        assertTrue(sortedCountries.get(0).getPopulation()
+                >= sortedCountries.get(1).getPopulation());
+        assertTrue(sortedCountries.get(1).getPopulation()
+                >= sortedCountries.get(2).getPopulation());
     }
 
     @Test
     void formatCountryIncludesCodeNameAndPopulation()
     {
-        Country country = new Country("Asia", "Eastern Asia", "Beijing");
-        country.SetCode("CHN");
-        country.SetName("China");
-        country.SetPopulation(1_277_558_000);
+        Country country = new Country("CHN","China","Asia","Eastern Asia",1277558000,"Beijing");
 
         assertEquals("CHN | China | 1277558000", App.formatCountry(country));
     }
