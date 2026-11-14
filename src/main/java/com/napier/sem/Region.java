@@ -3,23 +3,18 @@ package com.napier.sem;
 public class Region {
 
     private String name;
+    private Country country;
 
-    public Region(String name) {
+    Region(String name, Country country){
         this.name = name;
+        this.country = country;
     }
 
-    public String getName() {
+    public String getName(){
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return "Region{" +
-                "name='" + name + '\'' +
-                '}';
+    public Country getCountry(){
+        return country;
     }
 }

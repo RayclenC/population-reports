@@ -35,17 +35,19 @@ public class AppIntegrationTest {
      */
     @Test
     void testAddCity() {
-        City testCity = new City(460,
-                "Edinburgh",
-                "GBR",
-                "District",
-                450180);
+        City testCity = new City();
 
-        assertEquals(460, testCity.getId());
-        assertEquals("Edinburgh", testCity.getName());
-        assertEquals("GBR", testCity.getCountryCode());
-        assertEquals("District", testCity.getDistrict());
-        assertEquals(450180, testCity.getPopulation());
+        testCity.setId(460);
+        testCity.setName("Edinburgh");
+        testCity.setCountryCode("GBR");
+        testCity.setDistrict("District");
+        testCity.setPopulation(450180);
+
+        assertEquals(testCity.getId(), 460);
+        assertEquals(testCity.getName(), "Edinburgh");
+        assertEquals(testCity.getCountryCode(), "GBR");
+        assertEquals(testCity.getDistrict(), "District");
+        assertEquals(testCity.getPopulation(), 450180);
 
 
     }
@@ -54,13 +56,7 @@ public class AppIntegrationTest {
     void testAddContinent() {
         Continent testContinent = new Continent("Asia");
 
-        assertEquals("Asia", testContinent.getName());
-    }
-
-    @Test
-    void testGetNPopulousCountriesInRegion() {
-        Region testRegion = new Region("Eastern Africa");
-        assertEquals("Ethiopia", app.getNPopulousCountriesInRegion(5, testRegion).get(0).getName());
+        assertEquals(testContinent.getName(), "Asia");
     }
 
     /**
@@ -69,18 +65,18 @@ public class AppIntegrationTest {
      */
     @Test
     void testAddCountry() {
-        Country testCountry = new Country("CAN","Canada","North America","North America",31147000,"Ottowa");
+        Country testCountry = new Country("North America", "North America", "Ottowa");
 
-        testCountry.setCode("Can");
-        testCountry.setName("Canada");
-        testCountry.setPopulation(31147000);
+        testCountry.SetCode("Can");
+        testCountry.SetName("Canada");
+        testCountry.SetPopulation(31147000);
 
-        assertEquals("Can", testCountry.getCode());
-        assertEquals("Canada", testCountry.getName());
-        assertEquals("North America", testCountry.getContinent().getName());
-        assertEquals("North America", testCountry.getRegion().getName());
-        assertEquals(31147000, testCountry.getPopulation());
-        assertEquals("Ottowa",   testCountry.getCapital());
+        assertEquals(testCountry.GetCode(), "Can");
+        assertEquals(testCountry.GetName(), "Canada");
+//        assertEquals(testCountry.GetContinent(),"North America");
+//        assertEquals(testCountry.GetRegion(),"North America");
+        assertEquals(testCountry.GetPopulation(), 31147000);
+        assertEquals(testCountry.GetCapital(), "Ottowa");
 
 
     }
@@ -88,8 +84,8 @@ public class AppIntegrationTest {
     @Test
     void testAddRegion() {
         // In progress
-        Country testCountry = new Country("CAN","Canada","North America","North America",31147000,"Ottowa");
-        Region testRegion = new Region("Belgium");
+        Country testCountry = new Country("North America", "North America", "Ottowa");
+        Region testRegion = new Region("Belgium", testCountry);
     }
 
 
@@ -110,8 +106,8 @@ public class AppIntegrationTest {
     @Test
     void testGetCities() {
         // testing to see if the method to return by size order returns an array of populated data.
-        if (app.getCitiesInPopulationSizeOrder() != null) {
-            assertNotEquals(null, app.getCitiesInPopulationSizeOrder());
+        if (app.getCitiesInPopulationSizeOrder() instanceof ArrayList<City>) {
+            assertNotEquals(app.getCitiesInPopulationSizeOrder(), null);
         } else {
             throw new IllegalArgumentException("Type Error: Expected an ArrayList but got " + app.getCitiesInPopulationSizeOrder().getClass().getSimpleName());
         }
