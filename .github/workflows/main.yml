@@ -1,6 +1,13 @@
 name: A workflow for my App
 on: push
 
+permissions:
+  contents: write        # Needed for pushing commits, tags, or releases
+  pull-requests: write   # Needed for commenting on or creating PRs
+  issues: write          # Needed for commenting on or labelling issues
+  security-events: write # Needed for uploading code scanning / SARIF results
+  checks: write          # Needed for creating check runs
+
 jobs:
   UnitTests:
     name: Unit Test Build Action
