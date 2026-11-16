@@ -190,6 +190,73 @@ public class App
         }
     }
 
+    //Report 17
+    public ArrayList<Country> getCountriesInContinent(Continent continent){
+        try {
+
+            String query = "SELECT Code, Name, Continent, Region, Population, Capital FROM country WHERE  Region LIKE '"
+                    + continent.getName() + "' ORDER BY Population DESC";
+            Statement statement = con.createStatement();
+            ResultSet results = statement.executeQuery(query);
+
+            ArrayList<Country> countries = new ArrayList<>();
+            int counter = 1;
+            while (results.next()) {
+                Country country = new Country(results.getString("Code"),
+                        results.getString("Name"),
+                        results.getString("Continent"),
+                        results.getString("Region"),
+                        results.getInt("Population"),
+                        results.getString("Capital")
+                );
+                countries.add(country);
+                counter += 1;
+            }
+
+            return sortCountriesByPopulation(countries);
+
+        } catch (Exception e) {
+            System.out.println("getCountriesByPopulation error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    // Report 19
+    public ArrayList<City> getCitiesInPopulationSizeOrder()
+    {
+        try
+        {
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT ID, Name, CountryCode, District, Population "
+                            + "FROM city " +
+                            "ORDER BY Population DESC";
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Return new employee if valid.
+            // Check one is returned
+
+            ArrayList<City> cities = new ArrayList<>();
+            while (rset.next())
+            {
+                City city = new City(   rset.getInt("ID"),
+                        rset.getString("Name"),
+                        rset.getString("CountryCode"),
+                        rset.getString("District"),
+                        rset.getInt("Population"));
+                cities.add(city);
+            }
+            return cities;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get city details");
+            return null;
+        }
+    }
 
     // Report 20
     public ArrayList<City> getCitiesInContinent(Continent continent){
@@ -222,43 +289,6 @@ public class App
         catch (Exception e)
         {
             System.out.println("ViewCitiesInContinent failed: " + e.getMessage());
-            return null;
-        }
-    }
-
-    // Report 19
-    public ArrayList<City> getCitiesInPopulationSizeOrder()
-    {
-        try
-        {
-            // Create string for SQL statement
-            String strSelect =
-                    "SELECT ID, Name, CountryCode, District, Population "
-                            + "FROM city " +
-                            "ORDER BY Population DESC";
-            // Create an SQL statement
-            Statement stmt = con.createStatement();
-            // Execute SQL statement
-            ResultSet rset = stmt.executeQuery(strSelect);
-            // Return new employee if valid.
-            // Check one is returned
-
-            ArrayList<City> cities = new ArrayList<>();
-            while (rset.next())
-            {
-                City city = new City(   rset.getInt("ID"),
-                                        rset.getString("Name"),
-                                        rset.getString("CountryCode"),
-                                        rset.getString("District"),
-                                        rset.getInt("Population"));
-                cities.add(city);
-            }
-            return cities;
-        }
-        catch (Exception e)
-        {
-            System.out.println(e.getMessage());
-            System.out.println("Failed to get city details");
             return null;
         }
     }
