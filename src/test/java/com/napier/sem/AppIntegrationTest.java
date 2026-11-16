@@ -16,6 +16,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class AppIntegrationTest {
     static App app;
+    static City testCity;
+    static Continent testContinent;
+    static Continent testContinentIncorrect;
+    static Region testRegion;
+    static Country testCountry;
 
     @BeforeAll
     static void init() {
@@ -23,6 +28,21 @@ public class AppIntegrationTest {
         app = new App();
 
         app.Connect("localhost:33060", 30000);
+
+        testCity = new City(460,
+                "Edinburgh",
+                "GBR",
+                "District",
+                450180);
+
+        testContinent = new Continent("Asia");
+
+        testRegion = new Region("Eastern Africa");
+
+        testCountry = new Country("CAN","Canada","North America","North America",31147000,"Ottowa");
+        testCountry.setCode("Can");
+        testCountry.setName("Canada");
+        testCountry.setPopulation(31147000);
     }
 
     // Integrated test methods go here
@@ -34,31 +54,20 @@ public class AppIntegrationTest {
      */
     @Test
     void testAddCity() {
-        City testCity = new City(460,
-                "Edinburgh",
-                "GBR",
-                "District",
-                450180);
-
         assertEquals(460, testCity.getId());
         assertEquals("Edinburgh", testCity.getName());
         assertEquals("GBR", testCity.getCountryCode());
         assertEquals("District", testCity.getDistrict());
         assertEquals(450180, testCity.getPopulation());
-
-
     }
 
     @Test
     void testAddContinent() {
-        Continent testContinent = new Continent("Asia");
-
         assertEquals("Asia", testContinent.getName());
     }
 
     @Test
     void testGetNPopulousCountriesInRegion() {
-        Region testRegion = new Region("Eastern Africa");
         assertEquals("Ethiopia", app.getNPopulousCountriesInRegion(5, testRegion).get(0).getName());
     }
 
@@ -68,20 +77,12 @@ public class AppIntegrationTest {
      */
     @Test
     void testAddCountry() {
-        Country testCountry = new Country("CAN","Canada","North America","North America",31147000,"Ottowa");
-
-        testCountry.setCode("Can");
-        testCountry.setName("Canada");
-        testCountry.setPopulation(31147000);
-
         assertEquals("Can", testCountry.getCode());
         assertEquals("Canada", testCountry.getName());
         assertEquals("North America", testCountry.getContinent().getName());
         assertEquals("North America", testCountry.getRegion().getName());
         assertEquals(31147000, testCountry.getPopulation());
         assertEquals("Ottowa",   testCountry.getCapital());
-
-
     }
 
     @Test
@@ -94,14 +95,24 @@ public class AppIntegrationTest {
 
     @Test
     void testGetCitiesInContinent() {
-        Continent testContinent = new Continent("Asia");
-
         ArrayList<City> cities = app.getCitiesInContinent(testContinent);
 
         assertNotNull(cities);
         assertFalse(cities.isEmpty());
+    }
 
+    @Test
+    void testGetCountriesInContinent(){
+        ArrayList<Country> countries = app.getCountriesInContinent(testContinent);
 
+        assertNotNull(countries);
+        assertFalse(countries.isEmpty());
+    }
+
+    @Test
+    void testGetCountriesInContinentInvalidContinent(){
+        testContinentIncorrect = new Continent("Mableh");
+        app.getCountriesInContinent(testContinentIncorrect);
     }
 
     @Test
@@ -117,15 +128,14 @@ public class AppIntegrationTest {
     @Test
     void getCountriesInRegionReturnsCountriesInDescendingPopulationOrder()
     {
-        Region region = new Region("Caribbean");
-        ArrayList<Country> countries = app.getCountriesInRegion(region);
+        ArrayList<Country> countries = app.getCountriesInRegion(testRegion);
 
         assertNotNull(countries);
         assertFalse(countries.isEmpty());
         double previousPopulation = Double.POSITIVE_INFINITY;
         for (Country country : countries)
         {
-            assertEquals("Caribbean", country.getRegion().getName());
+            assertEquals("Eastern Africa", country.getRegion().getName());
             assertTrue(country.getPopulation() <= previousPopulation);
             previousPopulation = country.getPopulation();
         }
