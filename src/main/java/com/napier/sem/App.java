@@ -37,29 +37,29 @@ public class App
 
         //issue #16
         ArrayList<Country> countries = ThisApp.getCountriesByPopulation();
-        System.out.println("All countries by population (largest to smallest):");
+        //System.out.println("All countries by population (largest to smallest):");
         for (Country country : countries)
         {
             //System.out.println(formatCountry(country));
         }
 
         //issue #17
-        Continent asia = new Continent("Asia");
-        ThisApp.printCountries(ThisApp.getCountriesInContinent(asia));
+        Continent asia = new Continent("Asiaelm");
+        countries = ThisApp.getCountriesInContinent(asia);
+        //ThisApp.printCountries(countries);
 
         //issue #18
         Region region = new Region("Caribbean");
         ArrayList<Country> countriesInRegion = ThisApp.getCountriesInRegion(region);
-
-        System.out.println("Countries in " + region.getName() + " by population:");
+        //System.out.println("Countries in " + region.getName() + " by population:");
         for (Country country : countriesInRegion)
         {
-            System.out.println(formatCountry(country));
+            //System.out.println(formatCountry(country));
         }
 
         //issue #19
         ArrayList<City> cities = ThisApp.getCitiesInPopulationSizeOrder();
-        System.out.println("All cities by population (largest to smallest):");
+        //System.out.println("All cities by population (largest to smallest):");
         //ThisApp.printCities(cities);
 
         //issue #28
@@ -67,7 +67,7 @@ public class App
 
         //issue #27
         Region thisRegion = new Region("Eastern Africa");
-        ThisApp.printCountries(ThisApp.getNPopulousCountriesInRegion(5, thisRegion));
+        //ThisApp.printCountries(ThisApp.getNPopulousCountriesInRegion(5, thisRegion));
 
 
 
@@ -173,7 +173,7 @@ public class App
 
     public void printCountries(ArrayList<Country> countries){
         if (countries == null){
-            System.out.println("No cities to print");
+            System.out.println("No countries to print");
         }
         else{
             for (Country country : countries){
@@ -197,13 +197,13 @@ public class App
     public ArrayList<Country> getCountriesInContinent(Continent continent){
         try {
 
-            String query = "SELECT Code, Name, Continent, Region, Population, Capital FROM country WHERE  Region LIKE '"
+            String query = "SELECT Code, Name, Continent, Region, Population, Capital FROM country WHERE Continent LIKE '"
                     + continent.getName() + "' ORDER BY Population DESC";
             Statement statement = con.createStatement();
             ResultSet results = statement.executeQuery(query);
 
+            int counter = 0;
             ArrayList<Country> countries = new ArrayList<>();
-            int counter = 1;
             while (results.next()) {
                 Country country = new Country(results.getString("Code"),
                         results.getString("Name"),
@@ -215,6 +215,8 @@ public class App
                 countries.add(country);
                 counter += 1;
             }
+
+            if (counter == 0) { throw new Exception("No SQL query returned"); }
 
             return sortCountriesByPopulation(countries);
 
@@ -354,7 +356,7 @@ public class App
             try
             {
                 // Wait a bit for db to start
-                Thread.sleep(30000);
+                Thread.sleep(1000);
                 // Connect to database
                 con = DriverManager.getConnection("jdbc:mysql://" + location
                                 + "/world?allowPublicKeyRetrieval=true&useSSL=false",

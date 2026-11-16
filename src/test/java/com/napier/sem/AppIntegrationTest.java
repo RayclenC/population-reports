@@ -113,6 +113,12 @@ public class AppIntegrationTest {
     }
 
     @Test
+    void testGetCountriesInContinentInvalidContinent(){
+        Continent incorrectContinent = new Continent("Mableh");
+        app.getCountriesInContinent(incorrectContinent);
+    }
+
+    @Test
     void testGetCities() {
         // testing to see if the method to return by size order returns an array of populated data.
         if (app.getCitiesInPopulationSizeOrder() != null) {
