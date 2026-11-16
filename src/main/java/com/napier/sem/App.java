@@ -35,9 +35,13 @@ public class App
          */
 
 
-        //issue #20
-        Continent asia = new Continent("Asia");
-        //ThisApp.printCities(ThisApp.getCitiesInContinent(asia));
+        //issue #16
+        ArrayList<Country> countries = ThisApp.getCountriesByPopulation();
+        System.out.println("All countries by population (largest to smallest):");
+        for (Country country : countries)
+        {
+            //System.out.println(formatCountry(country));
+        }
 
         //issue #18
         Region region = new Region("Caribbean");
@@ -54,23 +58,21 @@ public class App
         System.out.println("All cities by population (largest to smallest):");
         //ThisApp.printCities(cities);
 
-        //issue #16
-        ArrayList<Country> countries = ThisApp.getCountriesByPopulation();
-        System.out.println("All countries by population (largest to smallest):");
-        for (Country country : countries)
-        {
-            //System.out.println(formatCountry(country));
-        }
+        //issue #20
+        Continent asia = new Continent("Asia");
+        //ThisApp.printCities(ThisApp.getCitiesInContinent(asia));
 
+        //issue #27
         Region thisRegion = new Region("Eastern Africa");
         ThisApp.printCountries(ThisApp.getNPopulousCountriesInRegion(5, thisRegion));
-
 
 
 
         /*
         End of issues
          */
+
+
 
         ThisApp.Disconnect();
     }
