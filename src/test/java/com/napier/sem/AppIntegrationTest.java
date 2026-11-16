@@ -100,8 +100,16 @@ public class AppIntegrationTest {
 
         assertNotNull(cities);
         assertFalse(cities.isEmpty());
+    }
 
+    @Test
+    void testGetCountriesInContinent(){
+        Continent testContinent = new Continent("Asia");
 
+        ArrayList<Country> countries = app.getCountriesInContinent(testContinent);
+
+        assertNotNull(countries);
+        assertFalse(countries.isEmpty());
     }
 
     @Test

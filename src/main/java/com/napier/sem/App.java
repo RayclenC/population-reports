@@ -43,6 +43,10 @@ public class App
             //System.out.println(formatCountry(country));
         }
 
+        //issue #17
+        Continent asia = new Continent("Asia");
+        ThisApp.printCountries(ThisApp.getCountriesInContinent(asia));
+
         //issue #18
         Region region = new Region("Caribbean");
         ArrayList<Country> countriesInRegion = ThisApp.getCountriesInRegion(region);
@@ -58,8 +62,7 @@ public class App
         System.out.println("All cities by population (largest to smallest):");
         //ThisApp.printCities(cities);
 
-        //issue #20
-        Continent asia = new Continent("Asia");
+        //issue #28
         //ThisApp.printCities(ThisApp.getCitiesInContinent(asia));
 
         //issue #27
