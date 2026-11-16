@@ -88,8 +88,8 @@ public class AppIntegrationTest {
     @Test
     void testAddRegion() {
         // In progress
-        Country testCountry = new Country("CAN","Canada","North America","North America",31147000,"Ottowa");
-        Region testRegion = new Region("Belgium");
+        Country testCountry = new Country("North America", "North America", "Ottowa");
+        Region testRegion = new Region("Belgium", testCountry);
     }
 
 
@@ -118,8 +118,8 @@ public class AppIntegrationTest {
     @Test
     void testGetCities() {
         // testing to see if the method to return by size order returns an array of populated data.
-        if (app.getCitiesInPopulationSizeOrder() != null) {
-            assertNotEquals(null, app.getCitiesInPopulationSizeOrder());
+        if (app.getCitiesInPopulationSizeOrder() instanceof ArrayList<City>) {
+            assertNotEquals(app.getCitiesInPopulationSizeOrder(), null);
         } else {
             throw new IllegalArgumentException("Type Error: Expected an ArrayList but got " + app.getCitiesInPopulationSizeOrder().getClass().getSimpleName());
         }

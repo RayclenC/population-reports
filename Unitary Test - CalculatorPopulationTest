@@ -1,0 +1,27 @@
+package org.example;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class CalculatorPopulationTest {
+
+    // // Unit test that verifies whether the percentage calculation is correct
+    @Test
+    public void mustCalculatePercentageCorrectly() {
+
+        // / Creates an instance of the CalculatorPopulation class
+        CalculatorPopulation calc = new CalculatorPopulation();
+
+        // Define the city's population
+        double populationCity = 50.0;
+
+        // Define the total population
+        double populationTotal = 100.0;
+
+        // Calculates the percentage of the city's population relative to the total
+        double result = calc.calculatePercentage(populationCity, populationTotal);
+
+        // Check whether the result of the calculation is equal to 50%
+        assertEquals(50.0, result, "50 of 100 must be 50%");
+    }
+

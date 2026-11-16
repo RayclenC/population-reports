@@ -19,17 +19,14 @@ public class Country {
     private String capital;
 
 
-    public Country(String code, String name, String continentString, String regionString, double population, String capital) {
+    //The constructor automatically creates objects for its continent, region and capital
+    Country(String continent, String region, String capital){
+        this.continent = new Continent(continent);
+        this.region = new Region(region, this);
 
-        Continent continent = new Continent(continentString);
-        Region region = new Region(regionString);
-
-        this.code = code;
-        this.name = name;
-        this.continent = continent;
-        this.region = region;
-        this.population = population;
-        this.capital = capital;
+        City capitalCity = new City();
+        capitalCity.setName(capital);
+        this.capital = (capitalCity.getName());
     }
 
 
@@ -73,15 +70,4 @@ public class Country {
         this.capital = capital;
     }
 
-    @Override
-    public String toString() {
-        return "Country{" +
-                "code='" + code + '\'' +
-                ", name='" + name + '\'' +
-                ", continent=" + continent +
-                ", region=" + region +
-                ", population=" + population +
-                ", capital='" + capital + '\'' +
-                '}';
-    }
 }
