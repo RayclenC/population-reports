@@ -29,17 +29,17 @@ public class AppIntegrationTest {
 
         app.Connect("localhost:33060", 30000);
 
-        City testCity = new City(460,
+        testCity = new City(460,
                 "Edinburgh",
                 "GBR",
                 "District",
                 450180);
 
-        Continent testContinent = new Continent("Asia");
+        testContinent = new Continent("Asia");
 
-        Region testRegion = new Region("Eastern Africa");
+        testRegion = new Region("Eastern Africa");
 
-        Country testCountry = new Country("CAN","Canada","North America","North America",31147000,"Ottowa");
+        testCountry = new Country("CAN","Canada","North America","North America",31147000,"Ottowa");
         testCountry.setCode("Can");
         testCountry.setName("Canada");
         testCountry.setPopulation(31147000);
@@ -135,7 +135,7 @@ public class AppIntegrationTest {
         double previousPopulation = Double.POSITIVE_INFINITY;
         for (Country country : countries)
         {
-            assertEquals("Caribbean", country.getRegion().getName());
+            assertEquals("Eastern Africa", country.getRegion().getName());
             assertTrue(country.getPopulation() <= previousPopulation);
             previousPopulation = country.getPopulation();
         }
