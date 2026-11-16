@@ -44,7 +44,7 @@ public class App
         }
 
         //issue #17
-        Continent asia = new Continent("Asiaelm");
+        Continent asia = new Continent("Asia");
         countries = ThisApp.getCountriesInContinent(asia);
         //ThisApp.printCountries(countries);
 
@@ -80,6 +80,7 @@ public class App
         ThisApp.Disconnect();
     }
 
+    //Issue #16
     public ArrayList<Country> getCountriesByPopulation()
     {
         try {
@@ -108,6 +109,7 @@ public class App
         }
     }
 
+    //Issue #18
     public ArrayList<Country> getCountriesInRegion(Region region)
     {
         String query = "SELECT Code, Name, Continent, Region, Population, Capital "
@@ -137,6 +139,7 @@ public class App
             return null;
         }
     }
+
 
     static ArrayList<Country> sortCountriesByPopulation(ArrayList<Country> countries)
     {
