@@ -21,70 +21,133 @@ public class App
     {
         App ThisApp = new App();
 
+        //edits connection if there is arguments
         if(args.length < 1){
             ThisApp.Connect("localhost:33060", 30000);
         }else{
             ThisApp.Connect(args[0], Integer.parseInt(args[1]));
         }
 
-        if (ThisApp.con != null)
+
+
+        /*
+        Issues here
+         */
+
+
+        //issue #16
+        ArrayList<Country> countries = ThisApp.getCountriesByPopulation();
+        //System.out.println("All countries by population (largest to smallest):");
+        for (Country country : countries)
         {
-            Continent asia = new Continent("Asia");
-            ThisApp.printCities(ThisApp.getCitiesInContinent(asia));
-
-            ArrayList<City> cities = ThisApp.getCitiesInPopulationSizeOrder();
-            System.out.println("All cities by population (largest to smallest):");
-            ThisApp.printCities(cities);
-
-            try
-            {
-                ArrayList<Country> countries = getCountriesByPopulation(ThisApp.con);
-                System.out.println("All countries by population (largest to smallest):");
-                for (Country country : countries)
-                {
-                    System.out.println(formatCountry(country));
-                }
-            }
-            catch (SQLException e)
-            {
-                System.err.println("Failed to get country population report: " + e.getMessage());
-            }
+            //System.out.println(formatCountry(country));
         }
+
+        //issue #17
+        Continent asia = new Continent("Asiaelm");
+        countries = ThisApp.getCountriesInContinent(asia);
+        //ThisApp.printCountries(countries);
+
+        //issue #18
+        Region region = new Region("Caribbean");
+        ArrayList<Country> countriesInRegion = ThisApp.getCountriesInRegion(region);
+        //System.out.println("Countries in " + region.getName() + " by population:");
+        for (Country country : countriesInRegion)
+        {
+            //System.out.println(formatCountry(country));
+        }
+
+        //issue #19
+        ArrayList<City> cities = ThisApp.getCitiesInPopulationSizeOrder();
+        //System.out.println("All cities by population (largest to smallest):");
+        //ThisApp.printCities(cities);
+
+        //issue #28
+        //ThisApp.printCities(ThisApp.getCitiesInContinent(asia));
+
+        //issue #27
+        Region thisRegion = new Region("Eastern Africa");
+        //ThisApp.printCountries(ThisApp.getNPopulousCountriesInRegion(5, thisRegion));
+
+
+
+        /*
+        End of issues
+         */
+
+
 
         ThisApp.Disconnect();
     }
 
-    public static ArrayList<Country> getCountriesByPopulation(Connection connection)
-            throws SQLException
+    public ArrayList<Country> getCountriesByPopulation()
     {
-        String query = "SELECT Code, Name, Population FROM country ORDER BY Population DESC";
-        ArrayList<Country> countries = new ArrayList<>();
+        try {
 
-        try (PreparedStatement statement = connection.prepareStatement(query);
-             ResultSet results = statement.executeQuery())
-        {
-            while (results.next())
-            {
-                Country country = new Country("", "", "");
-                country.SetCode(results.getString("Code"));
-                country.SetName(results.getString("Name"));
-                country.SetPopulation(results.getInt("Population"));
+            String query = "SELECT Code, Name, Continent, Region, Population, Capital FROM country ORDER BY Population DESC";
+            Statement statement = con.createStatement();
+            ResultSet results = statement.executeQuery(query);
+
+            ArrayList<Country> countries = new ArrayList<>();
+            while (results.next()) {
+                Country country = new Country(results.getString("Code"),
+                        results.getString("Name"),
+                        results.getString("Continent"),
+                        results.getString("Region"),
+                        results.getInt("Population"),
+                        results.getString("Capital")
+                );
                 countries.add(country);
             }
+
+            return sortCountriesByPopulation(countries);
+
+        } catch (Exception e) {
+            System.out.println("getCountriesByPopulation error: " + e.getMessage());
+            return null;
         }
-        return sortCountriesByPopulation(countries);
+    }
+
+    public ArrayList<Country> getCountriesInRegion(Region region)
+    {
+        String query = "SELECT Code, Name, Continent, Region, Population, Capital "
+                + "FROM country WHERE Region = ? ORDER BY Population DESC";
+        ArrayList<Country> countries = new ArrayList<>();
+
+        try (PreparedStatement statement = con.prepareStatement(query))
+        {
+            statement.setString(1, region.getName());
+            try (ResultSet results = statement.executeQuery())
+            {
+                while (results.next())
+                {
+                    countries.add(new Country(results.getString("Code"),
+                            results.getString("Name"),
+                            results.getString("Continent"),
+                            results.getString("Region"),
+                            results.getInt("Population"),
+                            results.getString("Capital")));
+                }
+            }
+            return sortCountriesByPopulation(countries);
+        }
+        catch (SQLException e)
+        {
+            System.out.println("getCountriesInRegion error: " + e.getMessage());
+            return null;
+        }
     }
 
     static ArrayList<Country> sortCountriesByPopulation(ArrayList<Country> countries)
     {
-        countries.sort(Comparator.comparingDouble(Country::GetPopulation).reversed());
+        countries.sort(Comparator.comparingDouble(Country::getPopulation).reversed());
         return countries;
     }
 
     static String formatCountry(Country country)
     {
-        return country.GetCode() + " | " + country.GetName() + " | "
-                + (long) country.GetPopulation();
+        return country.getCode() + " | " + country.getName() + " | "
+                + (long) country.getPopulation();
     }
 
     public void printCities(ArrayList<City> cities){
@@ -108,36 +171,57 @@ public class App
         }
     }
 
-
-    // Report 20
-    public ArrayList<City> getCitiesInContinent(Continent continent){
-        try
-        {
-            // Create an SQL statement
-            Statement stmt = con.createStatement();
-            // Create string for SQL statement
-            String strSelect =
-                    "SELECT city.Name, city.Population "
-                            + "FROM city "
-                            + "LEFT JOIN country ON city.CountryCode = country.Code "
-                            + "WHERE country.Continent LIKE '" + continent.getName() + "'"
-                            + " ORDER BY city.population ASC";
-            // Execute SQL statement
-            ResultSet rset = stmt.executeQuery(strSelect);
-            // Extract employee information
-            ArrayList<City> cities = new ArrayList<>();
-            while (rset.next())
-            {
-                City city = new City();
-                city.setName(rset.getString("Name"));
-                city.setPopulation(Double.parseDouble(rset.getString("Population")));
-                cities.add(city);
-            }
-            return cities;
+    public void printCountries(ArrayList<Country> countries){
+        if (countries == null){
+            System.out.println("No countries to print");
         }
-        catch (Exception e)
-        {
-            System.out.println("ViewCitiesInContinent failed: " + e.getMessage());
+        else{
+            for (Country country : countries){
+                if (country != null) {
+                    String country_string = "";
+
+                    if (country.getCode() != null) {country_string += " | " + country.getCode();}
+                    if (country.getName() != null) {country_string += " | " + country.getName();}
+                    if (country.getContinent() != null) {country_string += " | " + country.getContinent();}
+                    if (country.getRegion() != null) {country_string += " | " + country.getRegion();}
+                    if (country.getPopulation() != 0) {country_string += " | population: " + country.getPopulation();}
+                    if (country.getCapital() != null) {country_string += " | " + country.getCapital();}
+
+                    if(!country_string.isEmpty()) {System.out.println(country_string);}
+                }
+            }
+        }
+    }
+
+    //Report 17
+    public ArrayList<Country> getCountriesInContinent(Continent continent){
+        try {
+
+            String query = "SELECT Code, Name, Continent, Region, Population, Capital FROM country WHERE Continent LIKE '"
+                    + continent.getName() + "' ORDER BY Population DESC";
+            Statement statement = con.createStatement();
+            ResultSet results = statement.executeQuery(query);
+
+            int counter = 0;
+            ArrayList<Country> countries = new ArrayList<>();
+            while (results.next()) {
+                Country country = new Country(results.getString("Code"),
+                        results.getString("Name"),
+                        results.getString("Continent"),
+                        results.getString("Region"),
+                        results.getInt("Population"),
+                        results.getString("Capital")
+                );
+                countries.add(country);
+                counter += 1;
+            }
+
+            if (counter == 0) { throw new Exception("No SQL query returned"); }
+
+            return sortCountriesByPopulation(countries);
+
+        } catch (Exception e) {
+            System.out.println("getCountriesByPopulation error: " + e.getMessage());
             return null;
         }
     }
@@ -162,12 +246,11 @@ public class App
             ArrayList<City> cities = new ArrayList<>();
             while (rset.next())
             {
-                City city = new City();
-                city.setId(rset.getInt("ID"));
-                city.setName(rset.getString("Name"));
-                city.setCountryCode(rset.getString("CountryCode"));
-                city.setDistrict(rset.getString("District"));
-                city.setPopulation(rset.getInt("Population"));
+                City city = new City(   rset.getInt("ID"),
+                        rset.getString("Name"),
+                        rset.getString("CountryCode"),
+                        rset.getString("District"),
+                        rset.getInt("Population"));
                 cities.add(city);
             }
             return cities;
@@ -180,8 +263,78 @@ public class App
         }
     }
 
+    // Report 20
+    public ArrayList<City> getCitiesInContinent(Continent continent){
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT city.ID, city.Name, city.CountryCode, city.District, city.Population "
+                            + "FROM city "
+                            + "LEFT JOIN country ON city.CountryCode = country.Code "
+                            + "WHERE country.Continent LIKE '" + continent.getName() + "'"
+                            + " ORDER BY city.Population ASC";
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract employee information
+            ArrayList<City> cities = new ArrayList<>();
+            while (rset.next())
+            {
+                City city = new City(   rset.getInt("ID"),
+                        rset.getString("Name"),
+                        rset.getString("CountryCode"),
+                        rset.getString("District"),
+                        rset.getInt("Population"));
+                cities.add(city);
+            }
+            return cities;
+        }
+        catch (Exception e)
+        {
+            System.out.println("ViewCitiesInContinent failed: " + e.getMessage());
+            return null;
+        }
+    }
 
+    // Report 27
+    public ArrayList<Country> getNPopulousCountriesInRegion(int N, Region region)
+    {
+        try {
 
+            String query = "SELECT Code, Name, Continent, Region, Population, Capital FROM country WHERE  Region LIKE '"
+            + region.getName() + "' ORDER BY Population DESC";
+            Statement statement = con.createStatement();
+            ResultSet results = statement.executeQuery(query);
+
+            ArrayList<Country> countries = new ArrayList<>();
+            int counter = 1;
+            while (results.next() && counter <= N) {
+                Country country = new Country(results.getString("Code"),
+                        results.getString("Name"),
+                        results.getString("Continent"),
+                        results.getString("Region"),
+                        results.getInt("Population"),
+                        results.getString("Capital")
+                );
+                countries.add(country);
+                counter += 1;
+            }
+
+            return sortCountriesByPopulation(countries);
+
+        } catch (Exception e) {
+            System.out.println("getCountriesByPopulation error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /*
+    **********************************************************
+       DO NOT TOUCH THE CONNECT AND DISCONNECT METHODS
+    **********************************************************
+     */
     public void Connect(String location, int delay){
         try
         {
