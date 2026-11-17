@@ -44,20 +44,20 @@ public class City {
         this.name = name;
     }
 
-    public String getDistrict() {
-        return district;
-    }
-
-    public void setDistrict(String district) {
-        this.district = district;
-    }
-
     public String getCountryCode() {
         return CountryCode;
     }
 
     public void setCountryCode(String countryCode) {
         CountryCode = countryCode;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
     }
 
     public double getPopulation() {
@@ -67,7 +67,6 @@ public class City {
     public void setPopulation(double population) {
         this.population = population;
     }
-
 
     @Override
     public String toString() {
