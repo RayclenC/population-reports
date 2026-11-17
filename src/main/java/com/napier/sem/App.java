@@ -444,9 +444,8 @@ public class App
      * @return
      */
     //Report 30
-    public ArrayList<City> getCitiesInRegion(Region region){
-        try
-        {
+    public ArrayList<City> getCitiesInRegion(Region region) {
+        try {
             // Create an SQL statement
             Statement stmt = con.createStatement();
             // Create string for SQL statement
@@ -460,9 +459,8 @@ public class App
             ResultSet rset = stmt.executeQuery(strSelect);
             // Extract employee information
             ArrayList<City> cities = new ArrayList<>();
-            while (rset.next())
-            {
-                City city = new City(   rset.getInt("ID"),
+            while (rset.next()) {
+                City city = new City(rset.getInt("ID"),
                         rset.getString("Name"),
                         rset.getString("CountryCode"),
                         rset.getString("District"),
@@ -473,6 +471,9 @@ public class App
 
         } catch (Exception e) {
             System.out.println("getCountriesByPopulation error: " + e.getMessage());
+            return null;
+        }
+    }
           
           
           
