@@ -98,6 +98,10 @@ public class App
         //issue #39
         ThisApp.printCities(ThisApp.getNPopulousCitiesInRegion(5, thisRegion));
 
+        //issue #41
+        District thisDistrict = new District("England");
+        ThisApp.printCities(ThisApp.getNPopulousCitiesInDistrict(5, thisDistrict));
+
 
         /*
         End of issues
@@ -529,6 +533,49 @@ public class App
                             + "LEFT JOIN country ON city.CountryCode = country.Code "
                             + "WHERE country.Region LIKE '" + region.getName() + "'"
                             + " ORDER BY city.Population ASC";
+            Statement stmt = con.createStatement();
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(query);
+
+
+            ArrayList<City> cities = new ArrayList<>();
+
+            int counter = 1;
+
+            while (rset.next() && counter <= N)
+            {
+                City city = new City(   rset.getInt("ID"),
+                        rset.getString("Name"),
+                        rset.getString("CountryCode"),
+                        rset.getString("District"),
+                        rset.getInt("Population"));
+                cities.add(city);
+                counter++;
+            }
+            return cities;
+
+        } catch (Exception e) {
+            System.out.println("getCitiesByPopulation error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Report 41
+     * This method gets the top N populated cities in a district (where N is provided by the user) ordered by population
+     * @param N
+     * @param district
+     * @return Top N populated cities in a region
+     */
+    public ArrayList<City> getNPopulousCitiesInDistrict(int N, District district)
+    {
+        try {
+
+            String query =
+                    "SELECT city.ID, city.Name, city.CountryCode, city.District, city.Population "
+                            + "FROM city "
+                            + "WHERE city.District LIKE '" + district.getName() + "'"
+                            + " ORDER BY city.Population DESC";
             Statement stmt = con.createStatement();
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(query);

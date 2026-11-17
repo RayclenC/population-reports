@@ -158,4 +158,18 @@ public class AppIntegrationTest {
             assertNotNull(city.getDistrict());
         }
     }
+
+    @Test
+    void testGetNPopulousCitiesInDistrict()
+    {
+        ArrayList<City> cities = app.getNPopulousCitiesInDistrict(5, testDistrict);
+        assertNotNull(cities);
+
+        for (City city : cities)
+        {
+            assertNotNull(city.getName());
+            assertNotNull(city.getCountryCode());
+            assertNotNull(city.getDistrict());
+        }
+    }
 }
