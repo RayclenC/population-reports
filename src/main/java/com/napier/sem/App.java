@@ -108,6 +108,11 @@ public class App
         District thisDistrict = new District("England");
         ThisApp.printCities(ThisApp.getNPopulousCitiesInDistrict(5, thisDistrict));
 
+        //issue #32
+        String districtName = readLineOrDefault(input, "Enter a district (for example, England): ", "England");
+        ArrayList<City> citiesInDistrict = ThisApp.getCitiesInDistrict(new District(districtName));
+        ThisApp.printCities(citiesInDistrict);
+
         //issue #45
         ThisApp.printCities(ThisApp.getNCapitalCities(7));
 
@@ -610,6 +615,38 @@ public class App
 
         } catch (Exception e) {
             System.out.println("getCountriesByPopulation error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public ArrayList<City> getCitiesInDistrict(District district)
+    {
+        if (district == null || district.getName() == null || district.getName().trim().isEmpty())
+        {
+            throw new IllegalArgumentException("District must not be empty");
+        }
+
+        String query = "SELECT ID, Name, CountryCode, District, Population "
+                + "FROM city WHERE District = ? ORDER BY Population DESC";
+        ArrayList<City> cities = new ArrayList<>();
+
+        try (PreparedStatement statement = con.prepareStatement(query))
+        {
+            statement.setString(1, district.getName().trim());
+            ResultSet results = statement.executeQuery();
+            while (results.next())
+            {
+                cities.add(new City(results.getInt("ID"),
+                        results.getString("Name"),
+                        results.getString("CountryCode"),
+                        results.getString("District"),
+                        results.getInt("Population")));
+            }
+            return cities;
+        }
+        catch (SQLException e)
+        {
+            System.out.println("getCitiesInDistrict error: " + e.getMessage());
             return null;
         }
     }

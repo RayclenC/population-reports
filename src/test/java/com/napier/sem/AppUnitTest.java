@@ -373,6 +373,13 @@ class AppUnitTest
     }
 
     @Test
+    void getCitiesInDistrictRejectsMissingDistrict()
+    {
+        assertThrows(IllegalArgumentException.class, () -> app.getCitiesInDistrict(null));
+        assertThrows(IllegalArgumentException.class, () -> app.getCitiesInDistrict(new District(" ")));
+    }
+
+    @Test
     void getNPopulousCitiesInCountryRejectsNonPositiveLimit()
     {
         assertThrows(IllegalArgumentException.class,
