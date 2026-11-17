@@ -323,12 +323,10 @@ class AppUnitTest
     }
 
     @Test
-    void readPositiveIntegerRejectsInvalidUserInput()
+    void readPositiveIntegerAsksAgainAfterInvalidInput()
     {
-        assertThrows(IllegalArgumentException.class,
-                () -> App.readPositiveInteger(new Scanner("0"), "Top countries: ", 5));
-        assertThrows(IllegalArgumentException.class,
-                () -> App.readPositiveInteger(new Scanner("many"), "Top countries: ", 5));
+        assertEquals(3, App.readPositiveInteger(
+                new Scanner("many\n0\n3"), "Top countries: ", 5));
     }
 
     @Test
@@ -345,6 +343,15 @@ class AppUnitTest
     {
         assertThrows(IllegalArgumentException.class, () -> app.getNPopulousCountries(0));
         assertThrows(IllegalArgumentException.class, () -> app.getNPopulousCountries(-1));
+    }
+
+    @Test
+    void getNPopulousCountriesInContinentRejectsInvalidInput()
+    {
+        assertThrows(IllegalArgumentException.class,
+                () -> app.getNPopulousCountriesInContinent(0, new Continent("Asia")));
+        assertThrows(IllegalArgumentException.class,
+                () -> app.getNPopulousCountriesInContinent(5, null));
     }
 
     @Test
