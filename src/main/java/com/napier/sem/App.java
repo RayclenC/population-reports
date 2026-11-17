@@ -67,11 +67,26 @@ public class App
         //ThisApp.printCountries(ThisApp.getNPopulousCountriesInRegion(5, thisRegion));
 
         //issue #40
-        Scanner input = new Scanner(System.in);
-        System.out.print("Enter a country code (for example, CAN): ");
-        String countryCode = input.nextLine();
-        System.out.print("Enter the number of top cities to display: ");
-        int numberOfCities = Integer.parseInt(input.nextLine());
+        String countryCode;
+        int numberOfCities;
+        if (args.length >= 4) {
+            countryCode = args[2];
+            numberOfCities = Integer.parseInt(args[3]);
+        } else if (System.console() == null) {
+            countryCode = args.length >= 3 ? args[2] : "USA";
+            numberOfCities = 5;
+            System.out.println("No interactive console; showing the top 5 cities in " + countryCode + ".");
+        } else {
+            Scanner input = new Scanner(System.in);
+            if (args.length >= 3) {
+                countryCode = args[2];
+            } else {
+                System.out.print("Enter a country code (for example, CAN): ");
+                countryCode = input.nextLine();
+            }
+            System.out.print("Enter the number of top cities to display: ");
+            numberOfCities = Integer.parseInt(input.nextLine());
+        }
         ThisApp.printCities(ThisApp.getNPopulousCitiesInCountry(numberOfCities, countryCode));
 
         /*
