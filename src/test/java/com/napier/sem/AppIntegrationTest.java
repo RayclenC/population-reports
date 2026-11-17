@@ -58,6 +58,24 @@ public class AppIntegrationTest {
     }
 
     @Test
+    void getNPopulousCitiesInContinentReturnsTopCitiesInPopulationOrder()
+    {
+        ArrayList<City> allCities = app.getCitiesInContinent(testContinent);
+        ArrayList<City> topCities = app.getNPopulousCitiesInContinent(5, testContinent);
+
+        assertNotNull(allCities);
+        assertNotNull(topCities);
+        assertEquals(5, topCities.size());
+        double previousPopulation = Double.POSITIVE_INFINITY;
+        for (int i = 0; i < topCities.size(); i++)
+        {
+            assertEquals(allCities.get(i).getId(), topCities.get(i).getId());
+            assertTrue(topCities.get(i).getPopulation() <= previousPopulation);
+            previousPopulation = topCities.get(i).getPopulation();
+        }
+    }
+
+    @Test
     void testGetCapitalCities() {
         ArrayList<City> cities = app.getCapitalCities();
 

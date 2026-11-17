@@ -85,6 +85,13 @@ public class App
                 ThisApp.getNPopulousCountriesInContinent(numberOfContinentCountries, continent);
         ThisApp.printCountries(topCountriesInContinent);
 
+        //issue #38
+        int numberOfContinentCities = readPositiveInteger(
+                input, "Enter the number of top cities to display: ", 5);
+        ArrayList<City> topCitiesInContinent =
+                ThisApp.getNPopulousCitiesInContinent(numberOfContinentCities, continent);
+        ThisApp.printCities(topCitiesInContinent);
+
         //issue #39
         ThisApp.printCities(ThisApp.getNPopulousCitiesInRegion(5, thisRegion));
 
@@ -453,6 +460,26 @@ public class App
             System.out.println("ViewCitiesInContinent failed: " + e.getMessage());
             return null;
         }
+    }
+
+    // Reuse the continent report's population order and keep only the first N cities.
+    public ArrayList<City> getNPopulousCitiesInContinent(int N, Continent continent)
+    {
+        if (N <= 0)
+        {
+            throw new IllegalArgumentException("N must be greater than zero");
+        }
+        if (continent == null || continent.getName() == null || continent.getName().trim().isEmpty())
+        {
+            throw new IllegalArgumentException("Continent must not be empty");
+        }
+
+        ArrayList<City> cities = getCitiesInContinent(continent);
+        if (cities == null)
+        {
+            return null;
+        }
+        return new ArrayList<>(cities.subList(0, Math.min(N, cities.size())));
     }
 
     /**
