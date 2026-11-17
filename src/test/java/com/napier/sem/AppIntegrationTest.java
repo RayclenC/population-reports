@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  *<p>
@@ -64,7 +65,7 @@ public class AppIntegrationTest {
         assertFalse(cities.isEmpty());
     }
 
-
+    @Test
     void testGetCitiesInRegion() {
         ArrayList<City> cities = app.getCitiesInRegion(testRegion);
 
@@ -143,6 +144,25 @@ public class AppIntegrationTest {
             assertTrue(city.getPopulation() <= previousPopulation);
             previousPopulation = city.getPopulation();
         }
+    }
+
+    @Test
+    void testGetNPopulousCountriesInRegion()
+    {
+        ArrayList<Country> countries = app.getNPopulousCountriesInRegion(5, testRegion);
+        assertNotNull(countries);
+
+        for (Country country : countries)
+        {
+
+            assertNotNull(country.getCode());
+            assertNotNull(country.getName());
+            assertNotNull(country.getContinent());
+            assertNotNull(country.getRegion());
+            assertNotNull(country.getCapital());
+
+        }
+
     }
 
     @Test

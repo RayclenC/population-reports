@@ -484,8 +484,12 @@ public class App
     }
 
 
-
-              //issue #42
+    /**
+     * Issue #42
+     * This method returns all the cities in the world ordered by population
+     *      * @param region
+     *      * @return
+     */
     public ArrayList<City> getCapitalCities()
     {
         try {

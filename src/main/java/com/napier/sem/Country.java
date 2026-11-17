@@ -32,7 +32,6 @@ public class Country {
         this.capital = capital;
     }
 
-
     public String getCode() {
         return code;
     }
