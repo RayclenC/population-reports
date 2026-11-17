@@ -120,4 +120,18 @@ public class AppIntegrationTest {
             previousPopulation = country.getPopulation();
         }
     }
+
+    @Test
+    void testGetNPopulousCitiesInRegion()
+    {
+        ArrayList<City> cities = app.getNPopulousCitiesInRegion(5, testRegion);
+        assertNotNull(cities);
+
+        for (City city : cities)
+        {
+            assertNotNull(city.getName());
+            assertNotNull(city.getCountryCode());
+            assertNotNull(city.getDistrict());
+        }
+    }
 }

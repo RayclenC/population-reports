@@ -67,6 +67,9 @@ public class App
         //issue #30
         ThisApp.printCities(ThisApp.getCitiesInRegion(thisRegion));
 
+        //issue #39
+        ThisApp.printCities(ThisApp.getNPopulousCitiesInRegion(5, thisRegion));
+
 
         /*
         End of issues
@@ -365,6 +368,7 @@ public class App
         }
     }
 
+
     /**
      * This method inputs a region and it returns all the cities in the region ordered by population
      * @param region
@@ -404,6 +408,53 @@ public class App
             return null;
         }
     }
+
+
+
+    /**
+     * Report 39
+     * This method gets the top N populated cities in a region (where N is provided by the user) ordered by population
+     * @param N
+     * @param region
+     * @return Top N populated cities in a region
+     */
+    public ArrayList<City> getNPopulousCitiesInRegion(int N, Region region)
+    {
+        try {
+
+            String query =
+                    "SELECT city.ID, city.Name, city.CountryCode, city.District, city.Population "
+                            + "FROM city "
+                            + "LEFT JOIN country ON city.CountryCode = country.Code "
+                            + "WHERE country.Region LIKE '" + region.getName() + "'"
+                            + " ORDER BY city.Population ASC";
+            Statement stmt = con.createStatement();
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(query);
+
+
+            ArrayList<City> cities = new ArrayList<>();
+
+            int counter = 1;
+
+            while (rset.next() && counter <= N)
+            {
+                City city = new City(   rset.getInt("ID"),
+                        rset.getString("Name"),
+                        rset.getString("CountryCode"),
+                        rset.getString("District"),
+                        rset.getInt("Population"));
+                cities.add(city);
+                counter++;
+            }
+            return cities;
+
+        } catch (Exception e) {
+            System.out.println("getCitiesByPopulation error: " + e.getMessage());
+            return null;
+        }
+    }
+
 
     /*
     **********************************************************
