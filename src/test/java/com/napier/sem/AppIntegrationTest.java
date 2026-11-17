@@ -59,12 +59,12 @@ public class AppIntegrationTest {
     @Test
     void testGetCapitalCities() {
         ArrayList<City> cities = app.getCapitalCities();
-      
+
         assertNotNull(cities);
         assertFalse(cities.isEmpty());
     }
-      
-      
+
+
     void testGetCitiesInRegion() {
         ArrayList<City> cities = app.getCitiesInRegion(testRegion);
 
@@ -142,6 +142,20 @@ public class AppIntegrationTest {
             assertEquals("USA", city.getCountryCode());
             assertTrue(city.getPopulation() <= previousPopulation);
             previousPopulation = city.getPopulation();
+        }
+    }
+
+    @Test
+    void testGetNPopulousCitiesInRegion()
+    {
+        ArrayList<City> cities = app.getNPopulousCitiesInRegion(5, testRegion);
+        assertNotNull(cities);
+
+        for (City city : cities)
+        {
+            assertNotNull(city.getName());
+            assertNotNull(city.getCountryCode());
+            assertNotNull(city.getDistrict());
         }
     }
 }
