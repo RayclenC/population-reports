@@ -362,4 +362,12 @@ class AppUnitTest
         assertThrows(IllegalArgumentException.class,
                 () -> app.getNPopulousCitiesInCountry(5, null));
     }
+
+    @Test
+    void printCountriesTest(){
+        ArrayList<Country> testCountries = new ArrayList<>();
+        app.printCountries(testCountries);
+        testCountries.add(testCountry);
+        app.printCountries(testCountries);
+    }
 }

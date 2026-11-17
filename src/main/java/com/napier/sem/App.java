@@ -68,6 +68,9 @@ public class App
 
         Scanner input = new Scanner(System.in);
 
+        //issue #42
+        ThisApp.printCities(ThisApp.getCapitalCities());
+
         //issue #40
         String countryCode = args.length >= 3
                 ? args[2]
@@ -85,6 +88,13 @@ public class App
                 ? Integer.parseInt(args[4])
                 : readPositiveInteger(input, "Enter the number of top countries to display: ", 5);
         ThisApp.printCountries(ThisApp.getNPopulousCountries(numberOfCountries));
+
+        //issue #39
+        ThisApp.printCities(ThisApp.getNPopulousCitiesInRegion(5, thisRegion));
+
+        //issue #41
+        District thisDistrict = new District("England");
+        ThisApp.printCities(ThisApp.getNPopulousCitiesInDistrict(5, thisDistrict));
 
         /*
         End of issues
@@ -383,7 +393,7 @@ public class App
                             + "FROM city "
                             + "LEFT JOIN country ON city.CountryCode = country.Code "
                             + "WHERE country.Continent LIKE '" + continent.getName() + "'"
-                            + " ORDER BY city.Population ASC";
+                            + " ORDER BY city.Population DESC";
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
             // Extract employee information
@@ -489,9 +499,8 @@ public class App
      * @return
      */
     //Report 30
-    public ArrayList<City> getCitiesInRegion(Region region){
-        try
-        {
+    public ArrayList<City> getCitiesInRegion(Region region) {
+        try {
             // Create an SQL statement
             Statement stmt = con.createStatement();
             // Create string for SQL statement
@@ -500,20 +509,53 @@ public class App
                             + "FROM city "
                             + "LEFT JOIN country ON city.CountryCode = country.Code "
                             + "WHERE country.Region LIKE '" + region.getName() + "'"
-                            + " ORDER BY city.Population ASC";
+                            + " ORDER BY city.Population DESC";
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
             // Extract employee information
             ArrayList<City> cities = new ArrayList<>();
-            while (rset.next())
-            {
-                City city = new City(   rset.getInt("ID"),
+            while (rset.next()) {
+                City city = new City(rset.getInt("ID"),
                         rset.getString("Name"),
                         rset.getString("CountryCode"),
                         rset.getString("District"),
                         rset.getInt("Population"));
                 cities.add(city);
             }
+            return cities;
+
+        } catch (Exception e) {
+            System.out.println("getCountriesByPopulation error: " + e.getMessage());
+            return null;
+        }
+    }
+
+
+    /**
+     * Issue #42
+     * This method returns all the cities in the world ordered by population
+     *      * @param region
+     *      * @return
+     */
+    public ArrayList<City> getCapitalCities()
+    {
+        try {
+
+            String query = "SELECT ID, city.Name, CountryCode, District, city.Population FROM country "
+            + "LEFT JOIN city ON city.ID = country.Capital ORDER BY Population DESC";
+            Statement statement = con.createStatement();
+            ResultSet rset = statement.executeQuery(query);
+
+            ArrayList<City> cities = new ArrayList<>();
+            while (rset.next()) {
+                City city = new City(rset.getInt("ID"),
+                        rset.getString("City.Name"),
+                        rset.getString("CountryCode"),
+                        rset.getString("District"),
+                        rset.getInt("Population"));
+                cities.add(city);
+            }
+
             return cities;
         }
         catch (Exception e)
@@ -522,6 +564,96 @@ public class App
             return null;
         }
     }
+
+
+
+    /**
+     * Report 39
+     * This method gets the top N populated cities in a region (where N is provided by the user) ordered by population
+     * @param N
+     * @param region
+     * @return Top N populated cities in a region
+     */
+    public ArrayList<City> getNPopulousCitiesInRegion(int N, Region region)
+    {
+        try {
+
+            String query =
+                    "SELECT city.ID, city.Name, city.CountryCode, city.District, city.Population "
+                            + "FROM city "
+                            + "LEFT JOIN country ON city.CountryCode = country.Code "
+                            + "WHERE country.Region LIKE '" + region.getName() + "'"
+                            + " ORDER BY city.Population DESC";
+            Statement stmt = con.createStatement();
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(query);
+
+
+            ArrayList<City> cities = new ArrayList<>();
+
+            int counter = 1;
+
+            while (rset.next() && counter <= N)
+            {
+                City city = new City(   rset.getInt("ID"),
+                        rset.getString("Name"),
+                        rset.getString("CountryCode"),
+                        rset.getString("District"),
+                        rset.getInt("Population"));
+                cities.add(city);
+                counter++;
+            }
+            return cities;
+
+        } catch (Exception e) {
+            System.out.println("getCitiesByPopulation error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Report 41
+     * This method gets the top N populated cities in a district (where N is provided by the user) ordered by population
+     * @param N
+     * @param district
+     * @return Top N populated cities in a region
+     */
+    public ArrayList<City> getNPopulousCitiesInDistrict(int N, District district)
+    {
+        try {
+
+            String query =
+                    "SELECT city.ID, city.Name, city.CountryCode, city.District, city.Population "
+                            + "FROM city "
+                            + "WHERE city.District LIKE '" + district.getName() + "'"
+                            + " ORDER BY city.Population DESC";
+            Statement stmt = con.createStatement();
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(query);
+
+
+            ArrayList<City> cities = new ArrayList<>();
+
+            int counter = 1;
+
+            while (rset.next() && counter <= N)
+            {
+                City city = new City(   rset.getInt("ID"),
+                        rset.getString("Name"),
+                        rset.getString("CountryCode"),
+                        rset.getString("District"),
+                        rset.getInt("Population"));
+                cities.add(city);
+                counter++;
+            }
+            return cities;
+
+        } catch (Exception e) {
+            System.out.println("getCitiesByPopulation error: " + e.getMessage());
+            return null;
+        }
+    }
+
 
     /*
     **********************************************************

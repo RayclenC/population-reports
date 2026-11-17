@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  *<p>
@@ -51,6 +52,14 @@ public class AppIntegrationTest {
     @Test
     void testGetCitiesInContinent() {
         ArrayList<City> cities = app.getCitiesInContinent(testContinent);
+
+        assertNotNull(cities);
+        assertFalse(cities.isEmpty());
+    }
+
+    @Test
+    void testGetCapitalCities() {
+        ArrayList<City> cities = app.getCapitalCities();
 
         assertNotNull(cities);
         assertFalse(cities.isEmpty());
@@ -151,6 +160,53 @@ public class AppIntegrationTest {
             assertNotNull(country.getName());
             assertTrue(country.getPopulation() <= previousPopulation);
             previousPopulation = country.getPopulation();
+        }
+    }
+
+    @Test
+    void testGetNPopulousCountriesInRegion()
+    {
+        ArrayList<Country> countries = app.getNPopulousCountriesInRegion(5, testRegion);
+        assertNotNull(countries);
+
+        for (Country country : countries)
+        {
+
+            assertNotNull(country.getCode());
+            assertNotNull(country.getName());
+            assertNotNull(country.getContinent());
+            assertNotNull(country.getRegion());
+            assertNotNull(country.getCapital());
+
+        }
+
+    }
+
+    @Test
+    void testGetNPopulousCitiesInRegion()
+    {
+        ArrayList<City> cities = app.getNPopulousCitiesInRegion(5, testRegion);
+        assertNotNull(cities);
+
+        for (City city : cities)
+        {
+            assertNotNull(city.getName());
+            assertNotNull(city.getCountryCode());
+            assertNotNull(city.getDistrict());
+        }
+    }
+
+    @Test
+    void testGetNPopulousCitiesInDistrict()
+    {
+        ArrayList<City> cities = app.getNPopulousCitiesInDistrict(5, testDistrict);
+        assertNotNull(cities);
+
+        for (City city : cities)
+        {
+            assertNotNull(city.getName());
+            assertNotNull(city.getCountryCode());
+            assertNotNull(city.getDistrict());
         }
     }
 }
