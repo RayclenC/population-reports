@@ -11,12 +11,32 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class AppUnitTest
 {
     static App app;
+    static City testCity;
+    static Continent testContinent;
+    static Continent testContinentIncorrect;
+    static Region testRegion;
+    static Country testCountry;
+    static District testDistrict;
 
     @BeforeAll
-    static void init(){
-        app = new App();
-    }
+    static void init() {
 
+        app = new App();
+
+        testCity = new City(460,
+                "Edinburgh",
+                "GBR",
+                "Scotland",
+                450180);
+
+        testContinent = new Continent("Asia");
+
+        testRegion = new Region("Caribbean");
+
+        testDistrict = new District("England");
+
+        testCountry = new Country("CAN","Canada","North America","North America",31147000,"Ottowa");
+    }
     /**
      * Tests the City Class. Making sure that a valid city can be created
      * to mirror the "city" database table.
@@ -25,12 +45,6 @@ class AppUnitTest
     void testAddCity() {
 
         // Testing Constructors
-        City testCity = new City(460,
-                "Edinburgh",
-                "GBR",
-                "Scotland",
-                450180);
-
         assertEquals(460, testCity.getId());
         assertEquals("Edinburgh", testCity.getName());
         assertEquals("GBR", testCity.getCountryCode());
@@ -67,10 +81,7 @@ class AppUnitTest
     void testAddContinent() {
 
         // Testing Constructors
-        Continent testContinent = new Continent("Asia");
-
         assertEquals("Asia", testContinent.getName());
-
 
         // Testing Setters
         testContinent.setName("Europe");
@@ -93,8 +104,6 @@ class AppUnitTest
     void testAddCountry() {
 
         // Testing Constructors
-        Country testCountry = new Country("CAN","Canada","North America","North America",31147000,"Ottowa");
-
         assertEquals("CAN", testCountry.getCode());
         assertEquals("Canada", testCountry.getName());
         assertEquals("North America", testCountry.getContinent().getName());
@@ -132,8 +141,6 @@ class AppUnitTest
     void testAddDistrict() {
 
         // Testing Constructors
-        District testDistrict = new District("England");
-
         assertEquals("England", testDistrict.getName());
 
         // Testing Setters
@@ -154,8 +161,6 @@ class AppUnitTest
     void testAddRegion() {
 
         // Testing Constructors
-        Region testRegion = new Region("Caribbean");
-
         assertEquals("Caribbean", testRegion.getName());
 
         // Testing Setters
