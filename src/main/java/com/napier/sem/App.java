@@ -29,6 +29,9 @@ public class App
         }
 
 
+        Continent asia = new Continent("Asia");
+        Region region = new Region("Caribbean");
+
 
         /*
         Issues here
@@ -38,24 +41,16 @@ public class App
         //issue #16
         ArrayList<Country> countries = ThisApp.getCountriesByPopulation();
         //System.out.println("All countries by population (largest to smallest):");
-        for (Country country : countries)
-        {
-            //System.out.println(formatCountry(country));
-        }
+        //ThisApp.printCountries(countries);
 
         //issue #17
-        Continent asia = new Continent("Asia");
         countries = ThisApp.getCountriesInContinent(asia);
         //ThisApp.printCountries(countries);
 
         //issue #18
-        Region region = new Region("Caribbean");
         ArrayList<Country> countriesInRegion = ThisApp.getCountriesInRegion(region);
         //System.out.println("Countries in " + region.getName() + " by population:");
-        for (Country country : countriesInRegion)
-        {
-            //System.out.println(formatCountry(country));
-        }
+        ThisApp.printCountries(countriesInRegion);
 
         //issue #19
         ArrayList<City> cities = ThisApp.getCitiesInPopulationSizeOrder();
@@ -80,6 +75,72 @@ public class App
         ThisApp.Disconnect();
     }
 
+    /**
+     * This method for every city in cities prints the fields of the city that aren't null
+     * @param cities
+     */
+    public void printCities(ArrayList<City> cities){
+        if (cities == null){
+            System.out.println("No cities to print");
+        }
+        else{
+            for (City city : cities){
+                if (city != null) {
+                    String city_string = "";
+
+                    if (city.getId() != 0) {city_string += " | " + city.getId();}
+                    if (city.getName() != null) {city_string += " | " + city.getName();}
+                    if (city.getCountryCode() != null) {city_string += " | " + city.getCountryCode();}
+                    if (city.getDistrict() != null) {city_string += " | " + city.getDistrict();}
+                    if (city.getPopulation() != 0) {city_string += " | " + city.getPopulation();}
+
+                    if(!city_string.isEmpty()) {System.out.println(city_string);}
+                }
+            }
+        }
+    }
+
+    /**
+     * This method for every country in countries prints the fields of the country that aren't null
+     * @param countries
+     */
+    public void printCountries(ArrayList<Country> countries){
+        if (countries == null){
+            System.out.println("No countries to print");
+        }
+        else{
+            for (Country country : countries){
+                if (country != null) {
+                    String country_string = "";
+
+                    if (country.getCode() != null) {country_string += " | " + country.getCode();}
+                    if (country.getName() != null) {country_string += " | " + country.getName();}
+                    if (country.getContinent() != null) {country_string += " | " + country.getContinent();}
+                    if (country.getRegion() != null) {country_string += " | " + country.getRegion();}
+                    if (country.getPopulation() != 0) {country_string += " | population: " + country.getPopulation();}
+                    if (country.getCapital() != null) {country_string += " | " + country.getCapital();}
+
+                    if(!country_string.isEmpty()) {System.out.println(country_string);}
+                }
+            }
+        }
+    }
+
+    /**
+     * This method takes a list of countries and outputs a list of countries sorted by population
+     * @param countries
+     * @return
+     */
+    static ArrayList<Country> sortCountriesByPopulation(ArrayList<Country> countries)
+    {
+        countries.sort(Comparator.comparingDouble(Country::getPopulation).reversed());
+        return countries;
+    }
+
+    /**
+     * This method returns a list of all countries sorted by population
+     * @return
+     */
     //Issue #16
     public ArrayList<Country> getCountriesByPopulation()
     {
@@ -109,6 +170,11 @@ public class App
         }
     }
 
+    /**
+     * This method inputs a region and returns a list of all the countries in that region
+     * @param region
+     * @return
+     */
     //Issue #18
     public ArrayList<Country> getCountriesInRegion(Region region)
     {
@@ -140,62 +206,11 @@ public class App
         }
     }
 
-
-    static ArrayList<Country> sortCountriesByPopulation(ArrayList<Country> countries)
-    {
-        countries.sort(Comparator.comparingDouble(Country::getPopulation).reversed());
-        return countries;
-    }
-
-    static String formatCountry(Country country)
-    {
-        return country.getCode() + " | " + country.getName() + " | "
-                + (long) country.getPopulation();
-    }
-
-    public void printCities(ArrayList<City> cities){
-        if (cities == null){
-            System.out.println("No cities to print");
-        }
-        else{
-            for (City city : cities){
-                if (city != null) {
-                    String city_string = "";
-
-                    if (city.getId() != 0) {city_string += " | " + city.getId();}
-                    if (city.getName() != null) {city_string += " | " + city.getName();}
-                    if (city.getCountryCode() != null) {city_string += " | " + city.getCountryCode();}
-                    if (city.getDistrict() != null) {city_string += " | " + city.getDistrict();}
-                    if (city.getPopulation() != 0) {city_string += " | " + city.getPopulation();}
-
-                    if(!city_string.isEmpty()) {System.out.println(city_string);}
-                }
-            }
-        }
-    }
-
-    public void printCountries(ArrayList<Country> countries){
-        if (countries == null){
-            System.out.println("No countries to print");
-        }
-        else{
-            for (Country country : countries){
-                if (country != null) {
-                    String country_string = "";
-
-                    if (country.getCode() != null) {country_string += " | " + country.getCode();}
-                    if (country.getName() != null) {country_string += " | " + country.getName();}
-                    if (country.getContinent() != null) {country_string += " | " + country.getContinent();}
-                    if (country.getRegion() != null) {country_string += " | " + country.getRegion();}
-                    if (country.getPopulation() != 0) {country_string += " | population: " + country.getPopulation();}
-                    if (country.getCapital() != null) {country_string += " | " + country.getCapital();}
-
-                    if(!country_string.isEmpty()) {System.out.println(country_string);}
-                }
-            }
-        }
-    }
-
+    /**
+     * This method inputs a coninent and returns a list of all the countries in that continent
+     * @param continent
+     * @return
+     */
     //Report 17
     public ArrayList<Country> getCountriesInContinent(Continent continent){
         try {
@@ -229,6 +244,10 @@ public class App
         }
     }
 
+    /**
+     * This method returns a list of every city in the world sorted by population
+     * @return
+     */
     // Report 19
     public ArrayList<City> getCitiesInPopulationSizeOrder()
     {
@@ -266,6 +285,11 @@ public class App
         }
     }
 
+    /**
+     * This method inputs a continent and returns a list of all the cities in that continent
+     * @param continent
+     * @return
+     */
     // Report 20
     public ArrayList<City> getCitiesInContinent(Continent continent){
         try
@@ -301,6 +325,12 @@ public class App
         }
     }
 
+    /**
+     * This method gets the top N countries from the list of countries in a continent sorted by population
+     * @param N
+     * @param region
+     * @return
+     */
     // Report 27
     public ArrayList<Country> getNPopulousCountriesInRegion(int N, Region region)
     {
@@ -337,6 +367,12 @@ public class App
     **********************************************************
        DO NOT TOUCH THE CONNECT AND DISCONNECT METHODS
     **********************************************************
+     */
+
+    /**
+     * This method connects to the database
+     * @param location
+     * @param delay
      */
     public void Connect(String location, int delay){
         try
@@ -381,6 +417,9 @@ public class App
         }
     }
 
+    /**
+     * This method disconnects from any database connection
+     */
     public void Disconnect(){
         if (con != null)
         {
