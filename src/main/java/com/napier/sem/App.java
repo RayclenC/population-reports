@@ -339,7 +339,7 @@ public class App
                             + "FROM city "
                             + "LEFT JOIN country ON city.CountryCode = country.Code "
                             + "WHERE country.Continent LIKE '" + continent.getName() + "'"
-                            + " ORDER BY city.Population ASC";
+                            + " ORDER BY city.Population DESC";
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
             // Extract employee information
@@ -462,7 +462,7 @@ public class App
                             + "FROM city "
                             + "LEFT JOIN country ON city.CountryCode = country.Code "
                             + "WHERE country.Region LIKE '" + region.getName() + "'"
-                            + " ORDER BY city.Population ASC";
+                            + " ORDER BY city.Population DESC";
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
             // Extract employee information
@@ -491,7 +491,7 @@ public class App
         try {
 
             String query = "SELECT ID, city.Name, CountryCode, District, city.Population FROM country "
-            + "LEFT JOIN city ON city.ID = country.Capital ORDER BY Population ASC";
+            + "LEFT JOIN city ON city.ID = country.Capital ORDER BY Population DESC";
             Statement statement = con.createStatement();
             ResultSet rset = statement.executeQuery(query);
 
@@ -532,7 +532,7 @@ public class App
                             + "FROM city "
                             + "LEFT JOIN country ON city.CountryCode = country.Code "
                             + "WHERE country.Region LIKE '" + region.getName() + "'"
-                            + " ORDER BY city.Population ASC";
+                            + " ORDER BY city.Population DESC";
             Statement stmt = con.createStatement();
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(query);
