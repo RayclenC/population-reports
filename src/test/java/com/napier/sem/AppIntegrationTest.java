@@ -128,6 +128,22 @@ public class AppIntegrationTest {
     }
 
     @Test
+    void getCitiesInDistrictReturnsCitiesInDescendingPopulationOrder()
+    {
+        ArrayList<City> cities = app.getCitiesInDistrict(testDistrict);
+
+        assertNotNull(cities);
+        assertFalse(cities.isEmpty());
+        double previousPopulation = Double.POSITIVE_INFINITY;
+        for (City city : cities)
+        {
+            assertEquals(testDistrict.getName(), city.getDistrict());
+            assertTrue(city.getPopulation() <= previousPopulation);
+            previousPopulation = city.getPopulation();
+        }
+    }
+
+    @Test
     void testGetCountriesInContinent(){
         ArrayList<Country> countries = app.getCountriesInContinent(testContinent);
 
