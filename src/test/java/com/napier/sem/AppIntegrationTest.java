@@ -90,6 +90,18 @@ public class AppIntegrationTest {
     }
 
     @Test
+    void testGetNCapitalCitiesInRegion() {
+
+        ArrayList<City> cities = app.getNCapitalCitiesInRegion(7, testRegion);
+
+        assertNotNull(cities);
+        assertFalse(cities.isEmpty());
+
+        // Testing to see if the N param works
+        assertEquals(7, cities.size());
+    }
+
+    @Test
     void testGetCitiesInRegion() {
         ArrayList<City> cities = app.getCitiesInRegion(testRegion);
 

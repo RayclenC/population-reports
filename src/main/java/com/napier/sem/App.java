@@ -100,6 +100,9 @@ public class App
         // issue #46
         ThisApp.printCities(ThisApp.getNCapitalCitiesInContinent(7, thisContinent));
 
+        // issue #47
+        ThisApp.printCities(ThisApp.getNCapitalCitiesInRegion(7, thisRegion));
+
 
         /*
         End of issues
@@ -779,6 +782,51 @@ public class App
             return null;
         }
     }
+
+    /**
+     * Issue #47
+     * This method returns the top N populated capital cities in the world in a region
+     * @param N
+     * @param region
+     * @return
+     */
+    public ArrayList<City> getNCapitalCitiesInRegion(int N, Region region)
+    {
+        try {
+
+            String query =
+                    "SELECT city.ID, city.Name, CountryCode, District, city.Population "
+                            + "FROM country "
+                            + "LEFT JOIN city ON city.ID = country.Capital "
+                            + "WHERE country.Region LIKE '" + region.getName() + "'"
+                            + " ORDER BY city.Population DESC";
+
+            Statement statement = con.createStatement();
+            ResultSet rset = statement.executeQuery(query);
+
+            ArrayList<City> cities = new ArrayList<>();
+
+            int counter = 1;
+
+            while (rset.next() && counter <= N) {
+                City city = new City(rset.getInt("ID"),
+                        rset.getString("City.Name"),
+                        rset.getString("CountryCode"),
+                        rset.getString("District"),
+                        rset.getInt("Population"));
+                cities.add(city);
+                counter++;
+            }
+
+            return cities;
+        }
+        catch (Exception e)
+        {
+            System.out.println("ViewCitiesInRegion failed: " + e.getMessage());
+            return null;
+        }
+    }
+
 
 
     /*
