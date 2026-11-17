@@ -66,34 +66,28 @@ public class App
         Region thisRegion = new Region("Eastern Africa");
         //ThisApp.printCountries(ThisApp.getNPopulousCountriesInRegion(5, thisRegion));
 
+        Scanner input = new Scanner(System.in);
+
         //issue #42
         ThisApp.printCities(ThisApp.getCapitalCities());
 
         //issue #40
-        String countryCode;
-        int numberOfCities;
-        if (args.length >= 4) {
-            countryCode = args[2];
-            numberOfCities = Integer.parseInt(args[3]);
-        } else if (System.console() == null) {
-            countryCode = args.length >= 3 ? args[2] : "USA";
-            numberOfCities = 5;
-            System.out.println("No interactive console; showing the top 5 cities in " + countryCode + ".");
-        } else {
-            Scanner input = new Scanner(System.in);
-            if (args.length >= 3) {
-                countryCode = args[2];
-            } else {
-                System.out.print("Enter a country code (for example, CAN): ");
-                countryCode = input.nextLine();
-            }
-            System.out.print("Enter the number of top cities to display: ");
-            numberOfCities = Integer.parseInt(input.nextLine());
-        }
+        String countryCode = args.length >= 3
+                ? args[2]
+                : readLineOrDefault(input, "Enter a country code (for example, CAN): ", "USA");
+        int numberOfCities = args.length >= 4
+                ? Integer.parseInt(args[3])
+                : readPositiveInteger(input, "Enter the number of top cities to display: ", 5);
         ThisApp.printCities(ThisApp.getNPopulousCitiesInCountry(numberOfCities, countryCode));
 
         //issue #30
         ThisApp.printCities(ThisApp.getCitiesInRegion(thisRegion));
+
+        //issue #25
+        int numberOfCountries = args.length >= 5
+                ? Integer.parseInt(args[4])
+                : readPositiveInteger(input, "Enter the number of top countries to display: ", 5);
+        ThisApp.printCountries(ThisApp.getNPopulousCountries(numberOfCountries));
 
         //issue #39
         ThisApp.printCities(ThisApp.getNPopulousCitiesInRegion(5, thisRegion));
@@ -101,7 +95,6 @@ public class App
         //issue #41
         District thisDistrict = new District("England");
         ThisApp.printCities(ThisApp.getNPopulousCitiesInDistrict(5, thisDistrict));
-
 
         /*
         End of issues
@@ -174,6 +167,52 @@ public class App
         return countries;
     }
 
+    private static Country mapCountry(ResultSet results) throws SQLException
+    {
+        return new Country(results.getString("Code"),
+                results.getString("Name"),
+                results.getString("Continent"),
+                results.getString("Region"),
+                results.getInt("Population"),
+                results.getString("Capital"));
+    }
+
+    static String readLineOrDefault(Scanner input, String prompt, String defaultValue)
+    {
+        System.out.print(prompt);
+        if (input.hasNextLine())
+        {
+            return input.nextLine().trim();
+        }
+        System.out.println("No input available; using " + defaultValue + ".");
+        return defaultValue;
+    }
+
+    static int readPositiveInteger(Scanner input, String prompt, int defaultValue)
+    {
+        System.out.print(prompt);
+        if (!input.hasNextLine())
+        {
+            System.out.println("No input available; using " + defaultValue + ".");
+            return defaultValue;
+        }
+
+        String value = input.nextLine().trim();
+        try
+        {
+            int number = Integer.parseInt(value);
+            if (number <= 0)
+            {
+                throw new IllegalArgumentException("N must be greater than zero");
+            }
+            return number;
+        }
+        catch (NumberFormatException e)
+        {
+            throw new IllegalArgumentException("N must be a positive whole number", e);
+        }
+    }
+
     /**
      * Issue #16
      * This method returns a list of all countries sorted by population
@@ -189,20 +228,49 @@ public class App
 
             ArrayList<Country> countries = new ArrayList<>();
             while (results.next()) {
-                Country country = new Country(results.getString("Code"),
-                        results.getString("Name"),
-                        results.getString("Continent"),
-                        results.getString("Region"),
-                        results.getInt("Population"),
-                        results.getString("Capital")
-                );
-                countries.add(country);
+                countries.add(mapCountry(results));
             }
 
             return sortCountriesByPopulation(countries);
 
         } catch (Exception e) {
             System.out.println("getCountriesByPopulation error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Returns the N most populous countries in the world.
+     * @param N maximum number of countries to return
+     * @return countries ordered by population from largest to smallest
+     */
+    // Report 25
+    public ArrayList<Country> getNPopulousCountries(int N)
+    {
+        if (N <= 0)
+        {
+            throw new IllegalArgumentException("N must be greater than zero");
+        }
+
+        String query = "SELECT Code, Name, Continent, Region, Population, Capital "
+                + "FROM country ORDER BY Population DESC LIMIT ?";
+        ArrayList<Country> countries = new ArrayList<>();
+
+        try (PreparedStatement statement = con.prepareStatement(query))
+        {
+            statement.setInt(1, N);
+            try (ResultSet results = statement.executeQuery())
+            {
+                while (results.next())
+                {
+                    countries.add(mapCountry(results));
+                }
+            }
+            return countries;
+        }
+        catch (SQLException e)
+        {
+            System.out.println("getNPopulousCountries error: " + e.getMessage());
             return null;
         }
     }
@@ -226,12 +294,7 @@ public class App
             {
                 while (results.next())
                 {
-                    countries.add(new Country(results.getString("Code"),
-                            results.getString("Name"),
-                            results.getString("Continent"),
-                            results.getString("Region"),
-                            results.getInt("Population"),
-                            results.getString("Capital")));
+                    countries.add(mapCountry(results));
                 }
             }
             return sortCountriesByPopulation(countries);
@@ -257,21 +320,12 @@ public class App
             Statement statement = con.createStatement();
             ResultSet results = statement.executeQuery(query);
 
-            int counter = 0;
             ArrayList<Country> countries = new ArrayList<>();
             while (results.next()) {
-                Country country = new Country(results.getString("Code"),
-                        results.getString("Name"),
-                        results.getString("Continent"),
-                        results.getString("Region"),
-                        results.getInt("Population"),
-                        results.getString("Capital")
-                );
-                countries.add(country);
-                counter += 1;
+                countries.add(mapCountry(results));
             }
 
-            if (counter == 0) { throw new Exception("No SQL query returned"); }
+            if (countries.isEmpty()) { throw new Exception("No SQL query returned"); }
 
             return sortCountriesByPopulation(countries);
 
@@ -427,14 +481,7 @@ public class App
             ArrayList<Country> countries = new ArrayList<>();
             int counter = 1;
             while (results.next() && counter <= N) {
-                Country country = new Country(results.getString("Code"),
-                        results.getString("Name"),
-                        results.getString("Continent"),
-                        results.getString("Region"),
-                        results.getInt("Population"),
-                        results.getString("Capital")
-                );
-                countries.add(country);
+                countries.add(mapCountry(results));
                 counter += 1;
             }
 
