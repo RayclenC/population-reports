@@ -365,6 +365,11 @@ public class App
         }
     }
 
+    /**
+     * This method inputs a region and it returns all the cities in the region ordered by population
+     * @param region
+     * @return
+     */
     //Report 30
     public ArrayList<City> getCitiesInRegion(Region region){
         try
