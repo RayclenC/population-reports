@@ -187,27 +187,30 @@ public class App
 
     static int readPositiveInteger(Scanner input, String prompt, int defaultValue)
     {
-        System.out.print(prompt);
-        System.out.flush();
-        if (!input.hasNextLine())
+        while (true)
         {
-            System.out.println("No input available; using " + defaultValue + ".");
-            return defaultValue;
-        }
-
-        String value = input.nextLine().trim();
-        try
-        {
-            int number = Integer.parseInt(value);
-            if (number <= 0)
+            System.out.print(prompt);
+            System.out.flush();
+            if (!input.hasNextLine())
             {
-                throw new IllegalArgumentException("N must be greater than zero");
+                System.out.println("No input available; using " + defaultValue + ".");
+                return defaultValue;
             }
-            return number;
-        }
-        catch (NumberFormatException e)
-        {
-            throw new IllegalArgumentException("N must be a positive whole number", e);
+
+            try
+            {
+                int number = Integer.parseInt(input.nextLine().trim());
+                if (number > 0)
+                {
+                    return number;
+                }
+            }
+            catch (NumberFormatException e)
+            {
+                // Ask again below when the input is not a number.
+            }
+
+            System.out.println("Please enter a positive whole number.");
         }
     }
 

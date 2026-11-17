@@ -323,12 +323,10 @@ class AppUnitTest
     }
 
     @Test
-    void readPositiveIntegerRejectsInvalidUserInput()
+    void readPositiveIntegerAsksAgainAfterInvalidInput()
     {
-        assertThrows(IllegalArgumentException.class,
-                () -> App.readPositiveInteger(new Scanner("0"), "Top countries: ", 5));
-        assertThrows(IllegalArgumentException.class,
-                () -> App.readPositiveInteger(new Scanner("many"), "Top countries: ", 5));
+        assertEquals(3, App.readPositiveInteger(
+                new Scanner("many\n0\n3"), "Top countries: ", 5));
     }
 
     @Test
