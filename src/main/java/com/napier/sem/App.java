@@ -50,7 +50,7 @@ public class App
         //issue #18
         ArrayList<Country> countriesInRegion = ThisApp.getCountriesInRegion(region);
         //System.out.println("Countries in " + region.getName() + " by population:");
-        ThisApp.printCountries(countriesInRegion);
+        //ThisApp.printCountries(countriesInRegion);
 
         //issue #19
         ArrayList<City> cities = ThisApp.getCitiesInPopulationSizeOrder();
@@ -64,6 +64,8 @@ public class App
         Region thisRegion = new Region("Eastern Africa");
         //ThisApp.printCountries(ThisApp.getNPopulousCountriesInRegion(5, thisRegion));
 
+        //issue #30
+        ThisApp.printCities(ThisApp.getCitiesInRegion(thisRegion));
 
 
         /*
@@ -363,6 +365,46 @@ public class App
         }
     }
 
+    /**
+     * This method inputs a region and it returns all the cities in the region ordered by population
+     * @param region
+     * @return
+     */
+    //Report 30
+    public ArrayList<City> getCitiesInRegion(Region region){
+        try
+        {
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create string for SQL statement
+            String strSelect =
+                    "SELECT city.ID, city.Name, city.CountryCode, city.District, city.Population "
+                            + "FROM city "
+                            + "LEFT JOIN country ON city.CountryCode = country.Code "
+                            + "WHERE country.Region LIKE '" + region.getName() + "'"
+                            + " ORDER BY city.Population ASC";
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract employee information
+            ArrayList<City> cities = new ArrayList<>();
+            while (rset.next())
+            {
+                City city = new City(   rset.getInt("ID"),
+                        rset.getString("Name"),
+                        rset.getString("CountryCode"),
+                        rset.getString("District"),
+                        rset.getInt("Population"));
+                cities.add(city);
+            }
+            return cities;
+        }
+        catch (Exception e)
+        {
+            System.out.println("ViewCitiesInRegion failed: " + e.getMessage());
+            return null;
+        }
+    }
+
     /*
     **********************************************************
        DO NOT TOUCH THE CONNECT AND DISCONNECT METHODS
@@ -395,7 +437,7 @@ public class App
             try
             {
                 // Wait a bit for db to start
-                Thread.sleep(30000);
+                Thread.sleep(1000);
                 // Connect to database
                 con = DriverManager.getConnection("jdbc:mysql://" + location
                                 + "/world?allowPublicKeyRetrieval=true&useSSL=false",

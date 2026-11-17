@@ -57,6 +57,14 @@ public class AppIntegrationTest {
     }
 
     @Test
+    void testGetCitiesInRegion() {
+        ArrayList<City> cities = app.getCitiesInRegion(testRegion);
+
+        assertNotNull(cities);
+        assertFalse(cities.isEmpty());
+    }
+
+    @Test
     void testGetCountriesInContinent(){
         ArrayList<Country> countries = app.getCountriesInContinent(testContinent);
 
