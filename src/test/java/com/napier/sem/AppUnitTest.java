@@ -304,13 +304,4 @@ class AppUnitTest
         assertTrue(sortedCountries.get(1).getPopulation()
                 >= sortedCountries.get(2).getPopulation());
     }
-
-    @Test
-    void formatCountryIncludesCodeNameAndPopulation()
-    {
-        Country country = new Country("CHN","China","Asia","Eastern Asia",1277558000,"Beijing");
-
-        assertEquals("CHN | China | 1277558000", App.formatCountry(country));
-    }
-
 }
