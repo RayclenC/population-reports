@@ -57,6 +57,14 @@ public class AppIntegrationTest {
     }
 
     @Test
+    void testGetCapitalCities() {
+        ArrayList<City> cities = app.getCapitalCities();
+
+        assertNotNull(cities);
+        assertFalse(cities.isEmpty());
+    }
+
+    @Test
     void testGetCountriesInContinent(){
         ArrayList<Country> countries = app.getCountriesInContinent(testContinent);
 

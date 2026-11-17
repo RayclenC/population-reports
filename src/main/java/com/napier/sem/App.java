@@ -363,6 +363,34 @@ public class App
         }
     }
 
+    //issue #42
+    public ArrayList<City> getCapitalCities()
+    {
+        try {
+
+            String query = "SELECT ID, Capital.Name, CountryCode, District, Population FROM country "
+            + "LEFT JOIN city ON city.Name = country.Capital ORDER BY Population DESC";
+            Statement statement = con.createStatement();
+            ResultSet rset = statement.executeQuery(query);
+
+            ArrayList<City> cities = new ArrayList<>();
+            while (rset.next()) {
+                City city = new City(rset.getInt("ID"),
+                        rset.getString("Name"),
+                        rset.getString("CountryCode"),
+                        rset.getString("District"),
+                        rset.getInt("Population"));
+                cities.add(city);
+            }
+
+            return cities;
+
+        } catch (Exception e) {
+            System.out.println("getCountriesByPopulation error: " + e.getMessage());
+            return null;
+        }
+    }
+
     /*
     **********************************************************
        DO NOT TOUCH THE CONNECT AND DISCONNECT METHODS
