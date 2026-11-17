@@ -31,8 +31,8 @@ public class App
         }
 
 
-        Continent asia = new Continent("Asia");
-        Region region = new Region("Caribbean");
+        Continent thisContinent = new Continent("Asia");
+        Region thisRegion = new Region("Eastern Africa");
 
 
         /*
@@ -46,11 +46,11 @@ public class App
         //ThisApp.printCountries(countries);
 
         //issue #17
-        countries = ThisApp.getCountriesInContinent(asia);
+        countries = ThisApp.getCountriesInContinent(thisContinent);
         //ThisApp.printCountries(countries);
 
         //issue #18
-        ArrayList<Country> countriesInRegion = ThisApp.getCountriesInRegion(region);
+        ArrayList<Country> countriesInRegion = ThisApp.getCountriesInRegion(thisRegion);
         //System.out.println("Countries in " + region.getName() + " by population:");
         //ThisApp.printCountries(countriesInRegion);
 
@@ -60,9 +60,11 @@ public class App
         //ThisApp.printCities(cities);
 
         //issue #28
-        //ThisApp.printCities(ThisApp.getCitiesInContinent(asia));
+        //ThisApp.printCities(ThisApp.getCitiesInContinent(thisContinent));
 
-        Region thisRegion = new Region("Eastern Africa");
+        //issue #27
+        //ThisApp.printCountries(ThisApp.getNPopulousCountriesInRegion(5, thisRegion));
+
         Scanner input = new Scanner(System.in);
 
         //issue #40
@@ -94,6 +96,9 @@ public class App
 
         //issue #45
         ThisApp.printCities(ThisApp.getNCapitalCities(7));
+
+        // issue #46
+        ThisApp.printCities(ThisApp.getNCapitalCitiesInContinent(7, thisContinent));
 
 
         /*
@@ -705,6 +710,50 @@ public class App
 
             String query = "SELECT ID, city.Name, CountryCode, District, city.Population FROM country "
                     + "LEFT JOIN city ON city.ID = country.Capital ORDER BY Population DESC";
+            Statement statement = con.createStatement();
+            ResultSet rset = statement.executeQuery(query);
+
+            ArrayList<City> cities = new ArrayList<>();
+
+            int counter = 1;
+
+            while (rset.next() && counter <= N) {
+                City city = new City(rset.getInt("ID"),
+                        rset.getString("City.Name"),
+                        rset.getString("CountryCode"),
+                        rset.getString("District"),
+                        rset.getInt("Population"));
+                cities.add(city);
+                counter++;
+            }
+
+            return cities;
+        }
+        catch (Exception e)
+        {
+            System.out.println("ViewCitiesInRegion failed: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Issue #46
+     * This method returns the top N populated capital cities in the world in a continent
+     * @param N
+     * @param continent
+     * @return
+     */
+    public ArrayList<City> getNCapitalCitiesInContinent(int N, Continent continent)
+    {
+        try {
+
+            String query =
+                    "SELECT city.ID, city.Name, CountryCode, District, city.Population "
+                            + "FROM country "
+                            + "LEFT JOIN city ON city.ID = country.Capital "
+                            + "WHERE country.Continent LIKE '" + continent.getName() + "'"
+                            + " ORDER BY city.Population DESC";
+
             Statement statement = con.createStatement();
             ResultSet rset = statement.executeQuery(query);
 
