@@ -50,7 +50,7 @@ public class App
         //issue #18
         ArrayList<Country> countriesInRegion = ThisApp.getCountriesInRegion(region);
         //System.out.println("Countries in " + region.getName() + " by population:");
-        ThisApp.printCountries(countriesInRegion);
+        //ThisApp.printCountries(countriesInRegion);
 
         //issue #19
         ArrayList<City> cities = ThisApp.getCitiesInPopulationSizeOrder();
@@ -64,6 +64,8 @@ public class App
         Region thisRegion = new Region("Eastern Africa");
         //ThisApp.printCountries(ThisApp.getNPopulousCountriesInRegion(5, thisRegion));
 
+        //issue #42
+        ThisApp.printCities(ThisApp.getCapitalCities());
 
 
         /*
@@ -368,15 +370,15 @@ public class App
     {
         try {
 
-            String query = "SELECT ID, Capital.Name, CountryCode, District, Population FROM country "
-            + "LEFT JOIN city ON city.Name = country.Capital ORDER BY Population DESC";
+            String query = "SELECT ID, city.Name, CountryCode, District, city.Population FROM country "
+            + "LEFT JOIN city ON city.ID = country.Capital ORDER BY Population ASC";
             Statement statement = con.createStatement();
             ResultSet rset = statement.executeQuery(query);
 
             ArrayList<City> cities = new ArrayList<>();
             while (rset.next()) {
                 City city = new City(rset.getInt("ID"),
-                        rset.getString("Name"),
+                        rset.getString("City.Name"),
                         rset.getString("CountryCode"),
                         rset.getString("District"),
                         rset.getInt("Population"));
@@ -423,7 +425,7 @@ public class App
             try
             {
                 // Wait a bit for db to start
-                Thread.sleep(30000);
+                Thread.sleep(1000);
                 // Connect to database
                 con = DriverManager.getConnection("jdbc:mysql://" + location
                                 + "/world?allowPublicKeyRetrieval=true&useSSL=false",
