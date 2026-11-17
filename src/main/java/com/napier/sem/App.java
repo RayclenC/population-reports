@@ -62,32 +62,28 @@ public class App
         //issue #28
         //ThisApp.printCities(ThisApp.getCitiesInContinent(asia));
 
-        //issue #27
         Region thisRegion = new Region("Eastern Africa");
-        //ThisApp.printCountries(ThisApp.getNPopulousCountriesInRegion(5, thisRegion));
-
         Scanner input = new Scanner(System.in);
 
-        //issue #42
-        ThisApp.printCities(ThisApp.getCapitalCities());
-
         //issue #40
-        String countryCode = args.length >= 3
-                ? args[2]
-                : readLineOrDefault(input, "Enter a country code (for example, CAN): ", "USA");
-        int numberOfCities = args.length >= 4
-                ? Integer.parseInt(args[3])
-                : readPositiveInteger(input, "Enter the number of top cities to display: ", 5);
-        ThisApp.printCities(ThisApp.getNPopulousCitiesInCountry(numberOfCities, countryCode));
-
-        //issue #30
-        ThisApp.printCities(ThisApp.getCitiesInRegion(thisRegion));
+        String countryCode = readLineOrDefault(input, "Enter a country code (for example, CAN): ", "USA");
+        int numberOfCities = readPositiveInteger(input, "Enter the number of top cities to display: ", 5);
+        ArrayList<City> topCities = ThisApp.getNPopulousCitiesInCountry(numberOfCities, countryCode);
+        ThisApp.printCities(topCities);
 
         //issue #25
-        int numberOfCountries = args.length >= 5
-                ? Integer.parseInt(args[4])
-                : readPositiveInteger(input, "Enter the number of top countries to display: ", 5);
-        ThisApp.printCountries(ThisApp.getNPopulousCountries(numberOfCountries));
+        int numberOfCountries = readPositiveInteger(input, "Enter the number of top countries to display: ", 5);
+        ArrayList<Country> topCountries = ThisApp.getNPopulousCountries(numberOfCountries);
+        ThisApp.printCountries(topCountries);
+
+        //issue #26
+        String continentName = readLineOrDefault(input, "Enter a continent (for example, Asia): ", "Asia");
+        int numberOfContinentCountries = readPositiveInteger(
+                input, "Enter the number of top countries to display: ", 5);
+        Continent continent = new Continent(continentName);
+        ArrayList<Country> topCountriesInContinent =
+                ThisApp.getNPopulousCountriesInContinent(numberOfContinentCountries, continent);
+        ThisApp.printCountries(topCountriesInContinent);
 
         //issue #39
         ThisApp.printCities(ThisApp.getNPopulousCitiesInRegion(5, thisRegion));
@@ -180,6 +176,7 @@ public class App
     static String readLineOrDefault(Scanner input, String prompt, String defaultValue)
     {
         System.out.print(prompt);
+        System.out.flush();
         if (input.hasNextLine())
         {
             return input.nextLine().trim();
@@ -191,6 +188,7 @@ public class App
     static int readPositiveInteger(Scanner input, String prompt, int defaultValue)
     {
         System.out.print(prompt);
+        System.out.flush();
         if (!input.hasNextLine())
         {
             System.out.println("No input available; using " + defaultValue + ".");
@@ -271,6 +269,40 @@ public class App
         catch (SQLException e)
         {
             System.out.println("getNPopulousCountries error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    // Report 26
+    public ArrayList<Country> getNPopulousCountriesInContinent(int N, Continent continent)
+    {
+        if (N <= 0)
+        {
+            throw new IllegalArgumentException("N must be greater than zero");
+        }
+        if (continent == null || continent.getName() == null || continent.getName().trim().isEmpty())
+        {
+            throw new IllegalArgumentException("Continent must not be empty");
+        }
+
+        String query = "SELECT Code, Name, Continent, Region, Population, Capital "
+                + "FROM country WHERE Continent = ? ORDER BY Population DESC LIMIT ?";
+        ArrayList<Country> countries = new ArrayList<>();
+
+        try (PreparedStatement statement = con.prepareStatement(query))
+        {
+            statement.setString(1, continent.getName().trim());
+            statement.setInt(2, N);
+            ResultSet results = statement.executeQuery();
+            while (results.next())
+            {
+                countries.add(mapCountry(results));
+            }
+            return countries;
+        }
+        catch (SQLException e)
+        {
+            System.out.println("getNPopulousCountriesInContinent error: " + e.getMessage());
             return null;
         }
     }

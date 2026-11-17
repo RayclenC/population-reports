@@ -348,6 +348,15 @@ class AppUnitTest
     }
 
     @Test
+    void getNPopulousCountriesInContinentRejectsInvalidInput()
+    {
+        assertThrows(IllegalArgumentException.class,
+                () -> app.getNPopulousCountriesInContinent(0, new Continent("Asia")));
+        assertThrows(IllegalArgumentException.class,
+                () -> app.getNPopulousCountriesInContinent(5, null));
+    }
+
+    @Test
     void getNPopulousCitiesInCountryRejectsNonPositiveLimit()
     {
         assertThrows(IllegalArgumentException.class,

@@ -164,6 +164,22 @@ public class AppIntegrationTest {
     }
 
     @Test
+    void getNPopulousCountriesInContinentReturnsTopCountriesInPopulationOrder()
+    {
+        ArrayList<Country> countries = app.getNPopulousCountriesInContinent(5, testContinent);
+
+        assertNotNull(countries);
+        assertEquals(5, countries.size());
+        double previousPopulation = Double.POSITIVE_INFINITY;
+        for (Country country : countries)
+        {
+            assertEquals(testContinent.getName(), country.getContinent().getName());
+            assertTrue(country.getPopulation() <= previousPopulation);
+            previousPopulation = country.getPopulation();
+        }
+    }
+
+    @Test
     void testGetNPopulousCountriesInRegion()
     {
         ArrayList<Country> countries = app.getNPopulousCountriesInRegion(5, testRegion);
