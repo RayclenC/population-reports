@@ -96,6 +96,10 @@ public class App
         District thisDistrict = new District("England");
         ThisApp.printCities(ThisApp.getNPopulousCitiesInDistrict(5, thisDistrict));
 
+        //issue #45
+        ThisApp.printCities(ThisApp.getNCapitalCities(7));
+
+
         /*
         End of issues
          */
@@ -650,6 +654,44 @@ public class App
 
         } catch (Exception e) {
             System.out.println("getCitiesByPopulation error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Issue #45
+     * This method returns the top N populated capital cities in the world
+     * @param N
+     * @return
+     */
+    public ArrayList<City> getNCapitalCities(int N)
+    {
+        try {
+
+            String query = "SELECT ID, city.Name, CountryCode, District, city.Population FROM country "
+                    + "LEFT JOIN city ON city.ID = country.Capital ORDER BY Population DESC";
+            Statement statement = con.createStatement();
+            ResultSet rset = statement.executeQuery(query);
+
+            ArrayList<City> cities = new ArrayList<>();
+
+            int counter = 1;
+
+            while (rset.next() && counter <= N) {
+                City city = new City(rset.getInt("ID"),
+                        rset.getString("City.Name"),
+                        rset.getString("CountryCode"),
+                        rset.getString("District"),
+                        rset.getInt("Population"));
+                cities.add(city);
+                counter++;
+            }
+
+            return cities;
+        }
+        catch (Exception e)
+        {
+            System.out.println("ViewCitiesInRegion failed: " + e.getMessage());
             return null;
         }
     }
