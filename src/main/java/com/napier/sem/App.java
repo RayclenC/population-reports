@@ -62,9 +62,6 @@ public class App
         //issue #28
         //ThisApp.printCities(ThisApp.getCitiesInContinent(thisContinent));
 
-        //issue #27
-        //ThisApp.printCountries(ThisApp.getNPopulousCountriesInRegion(5, thisRegion));
-
         Scanner input = new Scanner(System.in);
 
         //issue #40
@@ -86,6 +83,16 @@ public class App
         ArrayList<Country> topCountriesInContinent =
                 ThisApp.getNPopulousCountriesInContinent(numberOfContinentCountries, continent);
         ThisApp.printCountries(topCountriesInContinent);
+
+        //issue #36
+        String regionName = readLineOrDefault(input, "Enter a region (for example, Eastern Africa): ",
+                "Eastern Africa");
+        int numberOfRegionCountries = readPositiveInteger(
+                input, "Enter the number of top countries to display: ", 5);
+        Region reportRegion = new Region(regionName);
+        ArrayList<Country> topCountriesInRegion =
+                ThisApp.getNPopulousCountriesInRegion(numberOfRegionCountries, reportRegion);
+        ThisApp.printCountries(topCountriesInRegion);
 
         //issue #38
         int numberOfContinentCities = readPositiveInteger(
@@ -536,33 +543,36 @@ public class App
         }
     }
 
-    /**
-     * Report 27
-     * This method gets the top N countries from the list of countries in a continent sorted by population
-     * @param N
-     * @param region
-     * @return
-     */
+    // Report 27
     public ArrayList<Country> getNPopulousCountriesInRegion(int N, Region region)
     {
-        try {
+        if (N <= 0)
+        {
+            throw new IllegalArgumentException("N must be greater than zero");
+        }
+        if (region == null || region.getName() == null || region.getName().trim().isEmpty())
+        {
+            throw new IllegalArgumentException("Region must not be empty");
+        }
 
-            String query = "SELECT Code, Name, Continent, Region, Population, Capital FROM country WHERE  Region LIKE '"
-            + region.getName() + "' ORDER BY Population DESC";
-            Statement statement = con.createStatement();
-            ResultSet results = statement.executeQuery(query);
+        String query = "SELECT Code, Name, Continent, Region, Population, Capital "
+                + "FROM country WHERE Region = ? ORDER BY Population DESC LIMIT ?";
+        ArrayList<Country> countries = new ArrayList<>();
 
-            ArrayList<Country> countries = new ArrayList<>();
-            int counter = 1;
-            while (results.next() && counter <= N) {
+        try (PreparedStatement statement = con.prepareStatement(query))
+        {
+            statement.setString(1, region.getName().trim());
+            statement.setInt(2, N);
+            ResultSet results = statement.executeQuery();
+            while (results.next())
+            {
                 countries.add(mapCountry(results));
-                counter += 1;
             }
-
-            return sortCountriesByPopulation(countries);
-
-        } catch (Exception e) {
-            System.out.println("getCountriesByPopulation error: " + e.getMessage());
+            return countries;
+        }
+        catch (SQLException e)
+        {
+            System.out.println("getNPopulousCountriesInRegion error: " + e.getMessage());
             return null;
         }
     }

@@ -238,18 +238,17 @@ public class AppIntegrationTest {
     {
         ArrayList<Country> countries = app.getNPopulousCountriesInRegion(5, testRegion);
         assertNotNull(countries);
+        assertEquals(5, countries.size());
 
+        double previousPopulation = Double.POSITIVE_INFINITY;
         for (Country country : countries)
         {
-
             assertNotNull(country.getCode());
             assertNotNull(country.getName());
-            assertNotNull(country.getContinent());
-            assertNotNull(country.getRegion());
-            assertNotNull(country.getCapital());
-
+            assertEquals(testRegion.getName(), country.getRegion().getName());
+            assertTrue(country.getPopulation() <= previousPopulation);
+            previousPopulation = country.getPopulation();
         }
-
     }
 
     @Test
