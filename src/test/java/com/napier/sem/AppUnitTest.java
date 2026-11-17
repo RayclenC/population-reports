@@ -5,6 +5,7 @@ import org.junit.jupiter.api.*;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
@@ -308,5 +309,21 @@ class AppUnitTest
                 >= sortedCountries.get(1).getPopulation());
         assertTrue(sortedCountries.get(1).getPopulation()
                 >= sortedCountries.get(2).getPopulation());
+    }
+
+    @Test
+    void getNPopulousCitiesInCountryRejectsNonPositiveLimit()
+    {
+        assertThrows(IllegalArgumentException.class,
+                () -> app.getNPopulousCitiesInCountry(0, "CAN"));
+    }
+
+    @Test
+    void getNPopulousCitiesInCountryRejectsMissingCountryCode()
+    {
+        assertThrows(IllegalArgumentException.class,
+                () -> app.getNPopulousCitiesInCountry(5, " "));
+        assertThrows(IllegalArgumentException.class,
+                () -> app.getNPopulousCitiesInCountry(5, null));
     }
 }
