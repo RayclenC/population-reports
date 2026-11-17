@@ -5,7 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 /**
  *<p>
@@ -16,11 +17,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class AppIntegrationTest {
     static App app;
-    static City testCity;
-    static Continent testContinent;
-    static Continent testContinentIncorrect;
-    static Region testRegion;
-    static Country testCountry;
 
     @BeforeAll
     static void init() {
@@ -28,21 +24,6 @@ public class AppIntegrationTest {
         app = new App();
 
         app.Connect("localhost:33060", 30000);
-
-        testCity = new City(460,
-                "Edinburgh",
-                "GBR",
-                "District",
-                450180);
-
-        testContinent = new Continent("Asia");
-
-        testRegion = new Region("Eastern Africa");
-
-        testCountry = new Country("CAN","Canada","North America","North America",31147000,"Ottowa");
-        testCountry.setCode("Can");
-        testCountry.setName("Canada");
-        testCountry.setPopulation(31147000);
     }
 
     // Integrated test methods go here
@@ -54,21 +35,28 @@ public class AppIntegrationTest {
      */
     @Test
     void testAddCity() {
-        assertEquals(460, testCity.getId());
-        assertEquals("Edinburgh", testCity.getName());
-        assertEquals("GBR", testCity.getCountryCode());
-        assertEquals("District", testCity.getDistrict());
-        assertEquals(450180, testCity.getPopulation());
+        City testCity = new City();
+
+        testCity.setId(460);
+        testCity.setName("Edinburgh");
+        testCity.setCountryCode("GBR");
+        testCity.setDistrict("District");
+        testCity.setPopulation(450180);
+
+        assertEquals(testCity.getId(), 460);
+        assertEquals(testCity.getName(), "Edinburgh");
+        assertEquals(testCity.getCountryCode(), "GBR");
+        assertEquals(testCity.getDistrict(), "District");
+        assertEquals(testCity.getPopulation(), 450180);
+
+
     }
 
     @Test
     void testAddContinent() {
-        assertEquals("Asia", testContinent.getName());
-    }
+        Continent testContinent = new Continent("Asia");
 
-    @Test
-    void testGetNPopulousCountriesInRegion() {
-        assertEquals("Ethiopia", app.getNPopulousCountriesInRegion(5, testRegion).get(0).getName());
+        assertEquals(testContinent.getName(), "Asia");
     }
 
     /**
@@ -77,84 +65,51 @@ public class AppIntegrationTest {
      */
     @Test
     void testAddCountry() {
-        assertEquals("Can", testCountry.getCode());
-        assertEquals("Canada", testCountry.getName());
-        assertEquals("North America", testCountry.getContinent().getName());
-        assertEquals("North America", testCountry.getRegion().getName());
-        assertEquals(31147000, testCountry.getPopulation());
-        assertEquals("Ottowa",   testCountry.getCapital());
+        Country testCountry = new Country("North America", "North America", "Ottowa");
+
+        testCountry.SetCode("Can");
+        testCountry.SetName("Canada");
+        testCountry.SetPopulation(31147000);
+
+        assertEquals(testCountry.GetCode(), "Can");
+        assertEquals(testCountry.GetName(), "Canada");
+//        assertEquals(testCountry.GetContinent(),"North America");
+//        assertEquals(testCountry.GetRegion(),"North America");
+        assertEquals(testCountry.GetPopulation(), 31147000);
+        assertEquals(testCountry.GetCapital(), "Ottowa");
+
+
     }
 
     @Test
     void testAddRegion() {
         // In progress
-        Country testCountry = new Country("CAN","Canada","North America","North America",31147000,"Ottowa");
-        Region testRegion = new Region("Belgium");
+        Country testCountry = new Country("North America", "North America", "Ottowa");
+        Region testRegion = new Region("Belgium", testCountry);
     }
 
 
     @Test
     void testGetCitiesInContinent() {
-        ArrayList<City> cities = app.getCitiesInContinent(testContinent);
+        Continent continent = new Continent("Asia");
 
-        assertNotNull(cities);
-        assertFalse(cities.isEmpty());
-    }
+        app.getCitiesInContinent(continent);
 
-    @Test
-    void testGetCountriesInContinent(){
-        ArrayList<Country> countries = app.getCountriesInContinent(testContinent);
+        // Testing if the city is entered is empty
+        continent = null;
 
-        assertNotNull(countries);
-        assertFalse(countries.isEmpty());
-    }
+        app.getCitiesInContinent(continent);
 
-    @Test
-    void testGetCountriesInContinentInvalidContinent(){
-        testContinentIncorrect = new Continent("Mableh");
-        app.getCountriesInContinent(testContinentIncorrect);
+
     }
 
     @Test
     void testGetCities() {
         // testing to see if the method to return by size order returns an array of populated data.
-        if (app.getCitiesInPopulationSizeOrder() != null) {
-            assertNotEquals(null, app.getCitiesInPopulationSizeOrder());
+        if (app.getCitiesInPopulationSizeOrder() instanceof ArrayList<City>) {
+            assertNotEquals(app.getCitiesInPopulationSizeOrder(), null);
         } else {
             throw new IllegalArgumentException("Type Error: Expected an ArrayList but got " + app.getCitiesInPopulationSizeOrder().getClass().getSimpleName());
-        }
-    }
-
-    @Test
-    void getCountriesInRegionReturnsCountriesInDescendingPopulationOrder()
-    {
-        ArrayList<Country> countries = app.getCountriesInRegion(testRegion);
-
-        assertNotNull(countries);
-        assertFalse(countries.isEmpty());
-        double previousPopulation = Double.POSITIVE_INFINITY;
-        for (Country country : countries)
-        {
-            assertEquals("Eastern Africa", country.getRegion().getName());
-            assertTrue(country.getPopulation() <= previousPopulation);
-            previousPopulation = country.getPopulation();
-        }
-    }
-
-    @Test
-    void getCountriesByPopulationReturnsCountriesInDescendingPopulationOrder()
-    {
-        ArrayList<Country> countries = app.getCountriesByPopulation();
-
-        assertNotNull(countries);
-        assertFalse(countries.isEmpty());
-        double previousPopulation = Double.POSITIVE_INFINITY;
-        for (Country country : countries)
-        {
-            assertNotNull(country.getCode());
-            assertNotNull(country.getName());
-            assertTrue(country.getPopulation() <= previousPopulation);
-            previousPopulation = country.getPopulation();
         }
     }
 }

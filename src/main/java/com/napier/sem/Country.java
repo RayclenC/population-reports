@@ -19,69 +19,32 @@ public class Country {
     private String capital;
 
 
-    public Country(String code, String name, String continentString, String regionString, double population, String capital) {
+    //The constructor automatically creates objects for its continent, region and capital
+    Country(String continent, String region, String capital){
+        this.continent = new Continent(continent);
+        this.region = new Region(region, this);
 
-        Continent continent = new Continent(continentString);
-        Region region = new Region(regionString);
-
-        this.code = code;
-        this.name = name;
-        this.continent = continent;
-        this.region = region;
-        this.population = population;
-        this.capital = capital;
+        City capitalCity = new City();
+        capitalCity.setName(capital);
+        this.capital = (capitalCity.getName());
     }
 
 
-    public String getCode() {
-        return code;
-    }
+    //getters and setters. Values in the constructor do not get a setter
+    public String GetCode(){return code;}
+    public void SetCode(String code){this.code = code;}
 
-    public void setCode(String code) {
-        this.code = code;
-    }
+    public String GetName(){return name;}
+    public void SetName(String name){this.name = name;}
 
-    public String getName() {
-        return name;
-    }
+    public Continent GetContinent(){return continent;}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public Region GetRegion(){return region;}
 
-    public Continent getContinent() {
-        return continent;
-    }
+    public double GetPopulation(){return population;}
+    public void SetPopulation(double population){this.population = population;}
 
-    public Region getRegion() {
-        return region;
-    }
+    public String GetCapital(){return capital;}
 
-    public double getPopulation() {
-        return population;
-    }
 
-    public void setPopulation(double population) {
-        this.population = population;
-    }
-
-    public String getCapital() {
-        return capital;
-    }
-
-    public void setCapital(String capital) {
-        this.capital = capital;
-    }
-
-    @Override
-    public String toString() {
-        return "Country{" +
-                "code='" + code + '\'' +
-                ", name='" + name + '\'' +
-                ", continent=" + continent +
-                ", region=" + region +
-                ", population=" + population +
-                ", capital='" + capital + '\'' +
-                '}';
-    }
 }
