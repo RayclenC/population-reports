@@ -66,6 +66,9 @@ public class App
         Region thisRegion = new Region("Eastern Africa");
         //ThisApp.printCountries(ThisApp.getNPopulousCountriesInRegion(5, thisRegion));
 
+        //issue #42
+        ThisApp.printCities(ThisApp.getCapitalCities());
+      
         //issue #40
         String countryCode;
         int numberOfCities;
@@ -434,7 +437,7 @@ public class App
             return null;
         }
     }
-
+                                     
     /**
      * This method inputs a region and it returns all the cities in the region ordered by population
      * @param region
@@ -466,6 +469,33 @@ public class App
                         rset.getInt("Population"));
                 cities.add(city);
             }
+            return cities;
+
+        } catch (Exception e) {
+            System.out.println("getCountriesByPopulation error: " + e.getMessage());
+          
+          
+          
+              //issue #42
+    public ArrayList<City> getCapitalCities()
+    {
+        try {
+
+            String query = "SELECT ID, city.Name, CountryCode, District, city.Population FROM country "
+            + "LEFT JOIN city ON city.ID = country.Capital ORDER BY Population ASC";
+            Statement statement = con.createStatement();
+            ResultSet rset = statement.executeQuery(query);
+
+            ArrayList<City> cities = new ArrayList<>();
+            while (rset.next()) {
+                City city = new City(rset.getInt("ID"),
+                        rset.getString("City.Name"),
+                        rset.getString("CountryCode"),
+                        rset.getString("District"),
+                        rset.getInt("Population"));
+                cities.add(city);
+            }                       
+
             return cities;
         }
         catch (Exception e)
