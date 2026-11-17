@@ -3,6 +3,7 @@ package com.napier.sem;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -309,6 +310,41 @@ class AppUnitTest
                 >= sortedCountries.get(1).getPopulation());
         assertTrue(sortedCountries.get(1).getPopulation()
                 >= sortedCountries.get(2).getPopulation());
+    }
+
+    @Test
+    void readPositiveIntegerAcceptsMultipleUserInputsFromOneScanner()
+    {
+        Scanner input = new Scanner("USA\n2\n7\n");
+
+        assertEquals("USA", App.readLineOrDefault(input, "Country: ", "CAN"));
+        assertEquals(2, App.readPositiveInteger(input, "Top cities: ", 5));
+        assertEquals(7, App.readPositiveInteger(input, "Top countries: ", 5));
+    }
+
+    @Test
+    void readPositiveIntegerRejectsInvalidUserInput()
+    {
+        assertThrows(IllegalArgumentException.class,
+                () -> App.readPositiveInteger(new Scanner("0"), "Top countries: ", 5));
+        assertThrows(IllegalArgumentException.class,
+                () -> App.readPositiveInteger(new Scanner("many"), "Top countries: ", 5));
+    }
+
+    @Test
+    void inputReadersUseDefaultsWhenStandardInputIsClosed()
+    {
+        Scanner input = new Scanner("");
+
+        assertEquals("USA", App.readLineOrDefault(input, "Country: ", "USA"));
+        assertEquals(5, App.readPositiveInteger(input, "Top countries: ", 5));
+    }
+
+    @Test
+    void getNPopulousCountriesRejectsNonPositiveLimit()
+    {
+        assertThrows(IllegalArgumentException.class, () -> app.getNPopulousCountries(0));
+        assertThrows(IllegalArgumentException.class, () -> app.getNPopulousCountries(-1));
     }
 
     @Test
