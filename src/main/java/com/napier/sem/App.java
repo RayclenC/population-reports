@@ -138,10 +138,10 @@ public class App
     }
 
     /**
+     * Issue #16
      * This method returns a list of all countries sorted by population
      * @return
      */
-    //Issue #16
     public ArrayList<Country> getCountriesByPopulation()
     {
         try {
@@ -171,11 +171,11 @@ public class App
     }
 
     /**
+     * Issue #18
      * This method inputs a region and returns a list of all the countries in that region
      * @param region
      * @return
      */
-    //Issue #18
     public ArrayList<Country> getCountriesInRegion(Region region)
     {
         String query = "SELECT Code, Name, Continent, Region, Population, Capital "
@@ -207,11 +207,11 @@ public class App
     }
 
     /**
+     * Report 17
      * This method inputs a coninent and returns a list of all the countries in that continent
      * @param continent
      * @return
      */
-    //Report 17
     public ArrayList<Country> getCountriesInContinent(Continent continent){
         try {
 
@@ -245,10 +245,10 @@ public class App
     }
 
     /**
+     * Report 19
      * This method returns a list of every city in the world sorted by population
      * @return
      */
-    // Report 19
     public ArrayList<City> getCitiesInPopulationSizeOrder()
     {
         try
@@ -286,11 +286,11 @@ public class App
     }
 
     /**
+     * Report 20
      * This method inputs a continent and returns a list of all the cities in that continent
      * @param continent
      * @return
      */
-    // Report 20
     public ArrayList<City> getCitiesInContinent(Continent continent){
         try
         {
@@ -326,12 +326,12 @@ public class App
     }
 
     /**
+     * Report 27
      * This method gets the top N countries from the list of countries in a continent sorted by population
      * @param N
      * @param region
      * @return
      */
-    // Report 27
     public ArrayList<Country> getNPopulousCountriesInRegion(int N, Region region)
     {
         try {
