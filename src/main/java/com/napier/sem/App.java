@@ -3,6 +3,8 @@ package com.napier.sem;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Locale;
+import java.util.Scanner;
 
 /**
  * <p>
@@ -64,7 +66,13 @@ public class App
         Region thisRegion = new Region("Eastern Africa");
         //ThisApp.printCountries(ThisApp.getNPopulousCountriesInRegion(5, thisRegion));
 
-
+        //issue #40
+        Scanner input = new Scanner(System.in);
+        System.out.print("Enter a country code (for example, CAN): ");
+        String countryCode = input.nextLine();
+        System.out.print("Enter the number of top cities to display: ");
+        int numberOfCities = Integer.parseInt(input.nextLine());
+        ThisApp.printCities(ThisApp.getNPopulousCitiesInCountry(numberOfCities, countryCode));
 
         /*
         End of issues
@@ -321,6 +329,52 @@ public class App
         catch (Exception e)
         {
             System.out.println("ViewCitiesInContinent failed: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Returns the N most populous cities in a country.
+     * @param N maximum number of cities to return
+     * @param countryCode code of the country whose cities should be returned
+     * @return cities ordered by population from largest to smallest
+     */
+    // Report 40
+    public ArrayList<City> getNPopulousCitiesInCountry(int N, String countryCode)
+    {
+        if (N <= 0)
+        {
+            throw new IllegalArgumentException("N must be greater than zero");
+        }
+        if (countryCode == null || countryCode.trim().isEmpty())
+        {
+            throw new IllegalArgumentException("A country code is required");
+        }
+
+        String query = "SELECT ID, Name, CountryCode, District, Population "
+                + "FROM city WHERE CountryCode = ? ORDER BY Population DESC LIMIT ?";
+        ArrayList<City> cities = new ArrayList<>();
+
+        try (PreparedStatement statement = con.prepareStatement(query))
+        {
+            statement.setString(1, countryCode.trim().toUpperCase(Locale.ROOT));
+            statement.setInt(2, N);
+            try (ResultSet results = statement.executeQuery())
+            {
+                while (results.next())
+                {
+                    cities.add(new City(results.getInt("ID"),
+                            results.getString("Name"),
+                            results.getString("CountryCode"),
+                            results.getString("District"),
+                            results.getInt("Population")));
+                }
+            }
+            return cities;
+        }
+        catch (SQLException e)
+        {
+            System.out.println("getNPopulousCitiesInCountry error: " + e.getMessage());
             return null;
         }
     }

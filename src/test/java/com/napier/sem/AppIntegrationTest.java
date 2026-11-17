@@ -112,4 +112,20 @@ public class AppIntegrationTest {
             previousPopulation = country.getPopulation();
         }
     }
+
+    @Test
+    void getNPopulousCitiesInCountryReturnsLimitedCitiesInDescendingPopulationOrder()
+    {
+        ArrayList<City> cities = app.getNPopulousCitiesInCountry(5, "USA");
+
+        assertNotNull(cities);
+        assertEquals(5, cities.size());
+        double previousPopulation = Double.POSITIVE_INFINITY;
+        for (City city : cities)
+        {
+            assertEquals("USA", city.getCountryCode());
+            assertTrue(city.getPopulation() <= previousPopulation);
+            previousPopulation = city.getPopulation();
+        }
+    }
 }
