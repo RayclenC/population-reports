@@ -307,7 +307,7 @@ public class App
         try {
 
             String query = "SELECT Code, Name, Continent, Region, Population, Capital FROM country WHERE  Region LIKE '"
-            + region.getName() + "' ORDER BY Population DESC";
+                    + region.getName() + "' ORDER BY Population DESC";
             Statement statement = con.createStatement();
             ResultSet results = statement.executeQuery(query);
 
