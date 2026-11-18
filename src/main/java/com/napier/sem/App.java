@@ -33,7 +33,11 @@ public class App
 
         Scanner input = new Scanner(System.in);
 
-
+        City thisCity = new City(460,
+                "Edinburgh",
+                "GBR",
+                "District",
+                450180);
         Country thisCountry = new Country("CAN","Canada","North America","North America",31147000,"Ottowa");
         Continent thisContinent = new Continent("Asia");
         Region thisRegion = new Region("Eastern Africa");
@@ -45,99 +49,102 @@ public class App
          */
 
 
-        //Report #16
-        ArrayList<Country> countries = ThisApp.getCountriesByPopulation();
-        ThisApp.printCountries(countries);
-
-        //Report #17
-        countries = ThisApp.getCountriesInContinent(thisContinent);
-        ThisApp.printCountries(countries);
-
-        //Report #18
-        ArrayList<Country> countriesInRegion = ThisApp.getCountriesInRegion(thisRegion);
-        ThisApp.printCountries(countriesInRegion);
-
-        //Report #19
-        ArrayList<City> cities = ThisApp.getCitiesInPopulationSizeOrder();
-        ThisApp.printCities(cities);
-
-        //Report #25
-        int numberOfCountries = readPositiveInteger(input, "Enter the number of top countries to display: ", 5);
-        ArrayList<Country> topCountries = ThisApp.getNPopulousCountries(numberOfCountries);
-        ThisApp.printCountries(topCountries);
-
-        //Report #26
-        String continentName = readLineOrDefault(input, "Enter a continent (for example, Asia): ", "Asia");
-        int numberOfContinentCountries = readPositiveInteger(
-                input, "Enter the number of top countries to display: ", 5);
-        Continent continent = new Continent(continentName);
-        ArrayList<Country> topCountriesInContinent =
-                ThisApp.getNPopulousCountriesInContinent(numberOfContinentCountries, continent);
-        ThisApp.printCountries(topCountriesInContinent);
-
-        //Report #28
-        ThisApp.printCities(ThisApp.getCitiesInContinent(thisContinent));
-
-        //Report #32
-        String districtName = readLineOrDefault(input, "Enter a district (for example, England): ", "England");
-        ArrayList<City> citiesInDistrict = ThisApp.getCitiesInDistrict(new District(districtName));
-        ThisApp.printCities(citiesInDistrict);
-
-        //Report #36
-        String regionName = readLineOrDefault(input, "Enter a region (for example, Eastern Africa): ",
-                "Eastern Africa");
-        int numberOfRegionCountries = readPositiveInteger(
-                input, "Enter the number of top countries to display: ", 5);
-        Region reportRegion = new Region(regionName);
-        ArrayList<Country> topCountriesInRegion =
-                ThisApp.getNPopulousCountriesInRegion(numberOfRegionCountries, reportRegion);
-        ThisApp.printCountries(topCountriesInRegion);
-
-        //Report #38
-        int numberOfContinentCities = readPositiveInteger(
-                input, "Enter the number of top cities to display: ", 5);
-        ArrayList<City> topCitiesInContinent =
-                ThisApp.getNPopulousCitiesInContinent(numberOfContinentCities, continent);
-        ThisApp.printCities(topCitiesInContinent);
-
-        //Report #39
-        ThisApp.printCities(ThisApp.getNPopulousCitiesInRegion(5, thisRegion));
-
-        //Report #40
-        String countryCode = readLineOrDefault(input, "Enter a country code (for example, CAN): ", "USA");
-        int numberOfCities = readPositiveInteger(input, "Enter the number of top cities to display: ", 5);
-        ArrayList<City> topCities = ThisApp.getNPopulousCitiesInCountry(numberOfCities, countryCode);
-        ThisApp.printCities(topCities);
-
-        //Report #41
-        ThisApp.printCities(ThisApp.getNPopulousCitiesInDistrict(5, thisDistrict));
-
-        //Report #42
-        ThisApp.printCities(ThisApp.getCapitalCities());
-
-        //Report #45
-        ThisApp.printCities(ThisApp.getNCapitalCities(7));
-
-        // Report #46
-        ThisApp.printCities(ThisApp.getNCapitalCitiesInContinent(7, thisContinent));
-
-        // Report #47
-        ThisApp.printCities(ThisApp.getNCapitalCitiesInRegion(7, thisRegion));
-
-        // Report #51
-        System.out.println(ThisApp.getTotalPopulation());
-
-        // Report #52
-        System.out.println(ThisApp.getTotalPopulationByContinent(thisContinent));
-
-        // Report #53
-        System.out.println(ThisApp.getTotalPopulationByRegion(thisRegion));
-
-        // Report #54
-        System.out.println(ThisApp.getTotalPopulationByCountry(thisCountry));
-
-        // Report #55
-        System.out.println(ThisApp.getTotalPopulationByDistrict(thisDistrict));
+//        //Report #16
+//        ArrayList<Country> countries = ThisApp.getCountriesByPopulation();
+//        ThisApp.printCountries(countries);
+//
+//        //Report #17
+//        countries = ThisApp.getCountriesInContinent(thisContinent);
+//        ThisApp.printCountries(countries);
+//
+//        //Report #18
+//        ArrayList<Country> countriesInRegion = ThisApp.getCountriesInRegion(thisRegion);
+//        ThisApp.printCountries(countriesInRegion);
+//
+//        //Report #19
+//        ArrayList<City> cities = ThisApp.getCitiesInPopulationSizeOrder();
+//        ThisApp.printCities(cities);
+//
+//        //Report #25
+//        int numberOfCountries = readPositiveInteger(input, "Enter the number of top countries to display: ", 5);
+//        ArrayList<Country> topCountries = ThisApp.getNPopulousCountries(numberOfCountries);
+//        ThisApp.printCountries(topCountries);
+//
+//        //Report #26
+//        String continentName = readLineOrDefault(input, "Enter a continent (for example, Asia): ", "Asia");
+//        int numberOfContinentCountries = readPositiveInteger(
+//                input, "Enter the number of top countries to display: ", 5);
+//        Continent continent = new Continent(continentName);
+//        ArrayList<Country> topCountriesInContinent =
+//                ThisApp.getNPopulousCountriesInContinent(numberOfContinentCountries, continent);
+//        ThisApp.printCountries(topCountriesInContinent);
+//
+//        //Report #28
+//        ThisApp.printCities(ThisApp.getCitiesInContinent(thisContinent));
+//
+//        //Report #32
+//        String districtName = readLineOrDefault(input, "Enter a district (for example, England): ", "England");
+//        ArrayList<City> citiesInDistrict = ThisApp.getCitiesInDistrict(new District(districtName));
+//        ThisApp.printCities(citiesInDistrict);
+//
+//        //Report #36
+//        String regionName = readLineOrDefault(input, "Enter a region (for example, Eastern Africa): ",
+//                "Eastern Africa");
+//        int numberOfRegionCountries = readPositiveInteger(
+//                input, "Enter the number of top countries to display: ", 5);
+//        Region reportRegion = new Region(regionName);
+//        ArrayList<Country> topCountriesInRegion =
+//                ThisApp.getNPopulousCountriesInRegion(numberOfRegionCountries, reportRegion);
+//        ThisApp.printCountries(topCountriesInRegion);
+//
+//        //Report #38
+//        int numberOfContinentCities = readPositiveInteger(
+//                input, "Enter the number of top cities to display: ", 5);
+//        ArrayList<City> topCitiesInContinent =
+//                ThisApp.getNPopulousCitiesInContinent(numberOfContinentCities, continent);
+//        ThisApp.printCities(topCitiesInContinent);
+//
+//        //Report #39
+//        ThisApp.printCities(ThisApp.getNPopulousCitiesInRegion(5, thisRegion));
+//
+//        //Report #40
+//        String countryCode = readLineOrDefault(input, "Enter a country code (for example, CAN): ", "USA");
+//        int numberOfCities = readPositiveInteger(input, "Enter the number of top cities to display: ", 5);
+//        ArrayList<City> topCities = ThisApp.getNPopulousCitiesInCountry(numberOfCities, countryCode);
+//        ThisApp.printCities(topCities);
+//
+//        //Report #41
+//        ThisApp.printCities(ThisApp.getNPopulousCitiesInDistrict(5, thisDistrict));
+//
+//        //Report #42
+//        ThisApp.printCities(ThisApp.getCapitalCities());
+//
+//        //Report #45
+//        ThisApp.printCities(ThisApp.getNCapitalCities(7));
+//
+//        // Report #46
+//        ThisApp.printCities(ThisApp.getNCapitalCitiesInContinent(7, thisContinent));
+//
+//        // Report #47
+//        ThisApp.printCities(ThisApp.getNCapitalCitiesInRegion(7, thisRegion));
+//
+//        // Report #51
+//        System.out.println(ThisApp.getTotalPopulation());
+//
+//        // Report #52
+//        System.out.println(ThisApp.getTotalPopulationByContinent(thisContinent));
+//
+//        // Report #53
+//        System.out.println(ThisApp.getTotalPopulationByRegion(thisRegion));
+//
+//        // Report #54
+//        System.out.println(ThisApp.getTotalPopulationByCountry(thisCountry));
+//
+//        // Report #55
+//        System.out.println(ThisApp.getTotalPopulationByDistrict(thisDistrict));
+//
+        // Report #56
+        System.out.println(ThisApp.getTotalPopulationByCity(thisCity));
 
         /*
         End of Reports
@@ -1103,6 +1110,45 @@ public class App
                     "SELECT SUM(Population) AS total "
                             + "FROM country "
                             + "WHERE country.District LIKE '" + district.getName() + "'";
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(query);
+
+            /*
+                Using a 'long' instead of Int because a total population
+                of a large dataset could exceed the standard limit of Int and
+             */
+            long totalPop = 0;
+
+            while(rset.next()){
+                totalPop = rset.getLong("total");
+            }
+
+            return totalPop;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get total population");
+            return 0;
+        }
+    }
+
+    /**
+     * Report #55
+     * View the total population of a district
+     */
+    public long getTotalPopulationByCity(City city)
+    {
+        try
+        {
+            // Create string for SQL statement
+            String query =
+                    "SELECT SUM(country.Population) AS total "
+                            + "FROM city "
+                            + "LEFT JOIN country ON country.Code = city.CountryCode "
+                            + "WHERE city.Name LIKE '" + city.getName() + "'";
             // Create an SQL statement
             Statement stmt = con.createStatement();
             // Execute SQL statement
