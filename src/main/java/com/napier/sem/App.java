@@ -129,6 +129,9 @@ public class App
         // Report #46
         ThisApp.printCities(ThisApp.getNCapitalCitiesInContinent(7, thisContinent));
 
+        // All capital cities in the configured continent
+        ThisApp.printCities(ThisApp.getCapitalCitiesInContinent(thisContinent));
+
         // Report #47
         ThisApp.printCities(ThisApp.getNCapitalCitiesInRegion(7, thisRegion));
 
@@ -941,6 +944,46 @@ public class App
         catch (Exception e)
         {
             System.out.println("ViewCitiesInRegion failed: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Returns all capital cities in a continent ordered by population from largest to smallest.
+     * @param continent continent whose capital cities should be returned
+     * @return capital cities in the continent ordered by population
+     */
+    public ArrayList<City> getCapitalCitiesInContinent(Continent continent)
+    {
+        if (continent == null || continent.getName() == null || continent.getName().trim().isEmpty())
+        {
+            throw new IllegalArgumentException("A continent is required");
+        }
+
+        String query = "SELECT city.ID, city.Name, city.CountryCode, city.District, city.Population "
+                + "FROM country JOIN city ON city.ID = country.Capital "
+                + "WHERE country.Continent = ? ORDER BY city.Population DESC";
+        ArrayList<City> cities = new ArrayList<>();
+
+        try (PreparedStatement statement = con.prepareStatement(query))
+        {
+            statement.setString(1, continent.getName().trim());
+            try (ResultSet results = statement.executeQuery())
+            {
+                while (results.next())
+                {
+                    cities.add(new City(results.getInt("ID"),
+                            results.getString("Name"),
+                            results.getString("CountryCode"),
+                            results.getString("District"),
+                            results.getInt("Population")));
+                }
+            }
+            return cities;
+        }
+        catch (SQLException e)
+        {
+            System.out.println("getCapitalCitiesInContinent error: " + e.getMessage());
             return null;
         }
     }
