@@ -101,6 +101,11 @@ public class App
                 ThisApp.getNPopulousCountriesInRegion(numberOfRegionCountries, reportRegion);
         ThisApp.printCountries(topCountriesInRegion);
 
+        //Report #37
+        int numberOfWorldCities = readPositiveInteger(
+                input, "Enter the number of top cities worldwide to display: ", 5);
+        ThisApp.printTopCitiesWorldwide(numberOfWorldCities);
+
         //Report #38
         int numberOfContinentCities = readPositiveInteger(
                 input, "Enter the number of top cities to display: ", 5);
@@ -250,6 +255,47 @@ public class App
         }
         System.out.println("No input available; using " + defaultValue + ".");
         return defaultValue;
+    }
+
+    /**
+     * Report #37. Prints up to the requested number of cities worldwide, largest first.
+     * @param limit maximum number of cities to display
+     */
+    public void printTopCitiesWorldwide(int limit)
+    {
+        if (limit <= 0)
+        {
+            throw new IllegalArgumentException("The number of the cities must be greater than zero");
+        }
+        if (con == null)
+        {
+            System.out.println("Cannot retrieve the cities because the database connection is unavailable.");
+            return;
+        }
+
+        String query = "SELECT city.Name AS city_name, country.Name AS country_name, " + "city.District, city.Population " + "FROM city JOIN country ON city.CountryCode = country.Code " + "ORDER BY city.Population DESC, city.ID ASC LIMIT ?";
+
+        try (PreparedStatement statement = con.prepareStatement(query))
+        {
+            statement.setInt(1, limit);
+            try (ResultSet results = statement.executeQuery())
+            {
+                System.out.printf("%nTop %d cities worldwide by population%n", limit);
+                System.out.printf("%-35s %-52s %-20s %12s%n", "Name", "Country", "District", "Population");
+                while (results.next())
+                {
+                    System.out.printf("%-35s %-52s %-20s %,12d%n",
+                            results.getString("city_name"),
+                            results.getString("country_name"),
+                            results.getString("District"),
+                            results.getInt("Population"));
+                }
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println("Could not retrieve the top cities worldwide: " + e.getMessage());
+        }
     }
 
     static int readPositiveInteger(Scanner input, String prompt, int defaultValue)
