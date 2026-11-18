@@ -547,16 +547,10 @@ public class App
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
 
-            ArrayList<City> cities = new ArrayList<>();
-            while (rset.next()) {
-                City city = new City(rset.getInt("ID"),
-                        rset.getString("Name"),
-                        rset.getString("CountryCode"),
-                        rset.getString("District"),
-                        rset.getInt("Population"));
-                cities.add(city);
-            }
-            return cities;
+            String query = "SELECT Code, Name, Continent, Region, Population, Capital FROM country WHERE  Region LIKE '"
+                    + region.getName() + "' ORDER BY Population DESC";
+            Statement statement = con.createStatement();
+            ResultSet results = statement.executeQuery(query);
 
         } catch (Exception e) {
             System.out.println("getCountriesByPopulation error: " + e.getMessage());
