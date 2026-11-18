@@ -380,6 +380,15 @@ class AppUnitTest
     }
 
     @Test
+    void getCitiesInCountryRejectsMissingCountryCode()
+    {
+        assertThrows(IllegalArgumentException.class, () -> app.getCitiesInCountry(null));
+        Country countryWithoutCode = new Country(" ", "Canada", "North America",
+                "North America", 31147000, "Ottawa");
+        assertThrows(IllegalArgumentException.class, () -> app.getCitiesInCountry(countryWithoutCode));
+    }
+
+    @Test
     void getNPopulousCitiesInCountryRejectsNonPositiveLimit()
     {
         assertThrows(IllegalArgumentException.class,

@@ -87,6 +87,10 @@ public class App
         ArrayList<City> citiesInDistrict = ThisApp.getCitiesInDistrict(new District(districtName));
         ThisApp.printCities(citiesInDistrict);
 
+        //Report #31
+        ArrayList<City> citiesInCountry = ThisApp.getCitiesInCountry(thisCountry);
+        ThisApp.printCities(citiesInCountry);
+
         //Report #36
         String regionName = readLineOrDefault(input, "Enter a region (for example, Eastern Africa): ",
                 "Eastern Africa");
@@ -696,6 +700,46 @@ public class App
             return null;
         }
     }
+
+    /**
+     * Report 31: Returns all cities in a country ordered by population from largest to smallest.
+     * @param country country whose cities should be returned
+     * @return cities in the country ordered by population
+     */
+    public ArrayList<City> getCitiesInCountry(Country country)
+    {
+        if (country == null || country.getCode() == null || country.getCode().trim().isEmpty())
+        {
+            throw new IllegalArgumentException("A country with a valid code is required");
+        }
+
+        String query = "SELECT ID, Name, CountryCode, District, Population "
+                + "FROM city WHERE CountryCode = ? ORDER BY Population DESC";
+        ArrayList<City> cities = new ArrayList<>();
+
+        try (PreparedStatement statement = con.prepareStatement(query))
+        {
+            statement.setString(1, country.getCode().trim().toUpperCase(Locale.ROOT));
+            try (ResultSet results = statement.executeQuery())
+            {
+                while (results.next())
+                {
+                    cities.add(new City(results.getInt("ID"),
+                            results.getString("Name"),
+                            results.getString("CountryCode"),
+                            results.getString("District"),
+                            results.getInt("Population")));
+                }
+            }
+            return cities;
+        }
+        catch (SQLException e)
+        {
+            System.out.println("getCitiesInCountry error: " + e.getMessage());
+            return null;
+        }
+    }
+
 
     /**
      * Report 40
