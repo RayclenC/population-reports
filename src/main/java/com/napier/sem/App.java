@@ -122,6 +122,9 @@ public class App
         // Report #47
         ThisApp.printCities(ThisApp.getNCapitalCitiesInRegion(7, thisRegion));
 
+        // Report #51
+        System.out.println(ThisApp.getTotalPopulation());
+
 
         /*
         End of Reports
@@ -919,6 +922,44 @@ public class App
         {
             System.out.println("ViewCitiesInRegion failed: " + e.getMessage());
             return null;
+        }
+    }
+
+    /**
+     * Report #51
+     * View the total population of the world
+     */
+    public long getTotalPopulation()
+    {
+        try
+        {
+            // Create string for SQL statement
+            // Query from country to get the total population of everyone in the world
+            String query =
+                    "SELECT SUM(Population) AS total "
+                            + "FROM country ";
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(query);
+
+            /*
+                Using a 'long' instead of Int because a total population
+                of a large dataset could exceed the standard limit of Int and
+             */
+            long totalPop = 0;
+
+            while(rset.next()){
+                totalPop = rset.getLong("total");
+            }
+
+            return totalPop;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get total population");
+            return 0;
         }
     }
 
