@@ -948,6 +948,7 @@ public class App
     /**
      * Report #51
      * View the total population of the world
+     * @return the total population of every country in the world
      */
     public long getTotalPopulation()
     {
@@ -986,6 +987,8 @@ public class App
     /**
      * Report #52
      * View the total population of a continent
+     * @param continent the continent that you want to filter by.
+     * @return the total population of the continent inputted
      */
     public long getTotalPopulationByContinent(Continent continent)
     {
@@ -1023,7 +1026,9 @@ public class App
 
     /**
      * Report #53
-     * View the total population of a region
+     * View the total population of a Region
+     * @param region the Region that you want to filter by.
+     * @return the total population of the Region inputted
      */
     public long getTotalPopulationByRegion(Region region)
     {
@@ -1061,7 +1066,9 @@ public class App
 
     /**
      * Report #54
-     * View the total population of a country
+     * View the total population of a Country
+     * @param country the Country that you want to filter by.
+     * @return the total population of the Country inputted
      */
     public long getTotalPopulationByCountry(Country country)
     {
@@ -1137,7 +1144,9 @@ public class App
 
     /**
      * Report #55
-     * View the total population of a district
+     * View the total population of a City
+     * @param city the City that you want to filter by.
+     * @return the total population of the City inputted
      */
     public long getTotalPopulationByCity(City city)
     {
