@@ -211,4 +211,16 @@ public class AppIntegrationTest {
 
     }
 
+    @Test
+    void testGetTotalPopulationByContinent()
+    {
+        long continentPop = app.getTotalPopulationByContinent(testContinent);
+
+        // Checking to see if there is a valid population
+        assertNotEquals(0, continentPop);
+
+    }
+
+
+
 }
