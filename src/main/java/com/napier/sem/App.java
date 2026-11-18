@@ -128,6 +128,9 @@ public class App
         // Report #52
         System.out.println(ThisApp.getTotalPopulationByContinent(thisContinent));
 
+        // Report #53
+        System.out.println(ThisApp.getTotalPopulationByRegion(thisRegion));
+
 
         /*
         End of Reports
@@ -979,6 +982,44 @@ public class App
                     "SELECT SUM(Population) AS total "
                             + "FROM country "
                             + "WHERE country.Continent LIKE '" + continent.getName() + "'";
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(query);
+
+            /*
+                Using a 'long' instead of Int because a total population
+                of a large dataset could exceed the standard limit of Int and
+             */
+            long totalPop = 0;
+
+            while(rset.next()){
+                totalPop = rset.getLong("total");
+            }
+
+            return totalPop;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get total population");
+            return 0;
+        }
+    }
+
+    /**
+     * Report #53
+     * View the total population of a region
+     */
+    public long getTotalPopulationByRegion(Region region)
+    {
+        try
+        {
+            // Create string for SQL statement
+            String query =
+                    "SELECT SUM(Population) AS total "
+                            + "FROM country "
+                            + "WHERE country.Region LIKE '" + region.getName() + "'";
             // Create an SQL statement
             Statement stmt = con.createStatement();
             // Execute SQL statement

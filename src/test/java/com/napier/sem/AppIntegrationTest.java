@@ -221,6 +221,16 @@ public class AppIntegrationTest {
 
     }
 
+    @Test
+    void testGetTotalPopulationByRegion()
+    {
+        long regionPop = app.getTotalPopulationByRegion(testRegion);
+
+        // Checking to see if there is a valid population
+        assertNotEquals(0, regionPop);
+
+    }
+
 
 
 }
