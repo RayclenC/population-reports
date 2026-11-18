@@ -144,6 +144,9 @@ public class App
         // Report #52
         System.out.println(ThisApp.getTotalPopulationByContinent(thisContinent));
 
+        // Report #48
+        ThisApp.printPopulationBreakdownsByContinent();
+
         // Report #53
         System.out.println(ThisApp.getTotalPopulationByRegion(thisRegion));
 
@@ -1152,6 +1155,54 @@ public class App
             System.out.println("Failed to get total population");
             return 0;
         }
+    }
+
+    // Report #48
+    public void printPopulationBreakdownsByContinent()
+    {
+        String query = "SELECT country.Continent, "
+                + "SUM(country.Population) AS total_population, "
+                + "COALESCE(SUM(city_population), 0) AS urban_population "
+                + "FROM country "
+                + "LEFT JOIN (SELECT CountryCode, SUM(Population) AS city_population "
+                + "FROM city GROUP BY CountryCode) AS city_totals "
+                + "ON country.Code = city_totals.CountryCode "
+                + "GROUP BY country.Continent ORDER BY country.Continent";
+
+        try
+        {
+            Statement statement = con.createStatement();
+            ResultSet results = statement.executeQuery(query);
+
+            while(results.next())
+            {
+                String continent = results.getString("Continent");
+                long total = results.getLong("total_population");
+                long cityPopulation = results.getLong("urban_population");
+                long nonCityPopulation = total - cityPopulation;
+
+                double cityPercent = getPopulationPercentage(cityPopulation, total);
+                double nonCityPercent = getPopulationPercentage(nonCityPopulation, total);
+
+                System.out.println(continent + ": total population " + total
+                        + ", living in cities " + cityPopulation + " (" + cityPercent + "%)"
+                        + ", not living in cities " + nonCityPopulation
+                        + " (" + nonCityPercent + "%)");
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    static double getPopulationPercentage(long population, long totalPopulation)
+    {
+        if(totalPopulation == 0)
+        {
+            return 0;
+        }
+        return population * 100.0 / totalPopulation;
     }
 
     /**
