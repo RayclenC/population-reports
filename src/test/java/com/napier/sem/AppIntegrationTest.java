@@ -250,4 +250,13 @@ public class AppIntegrationTest {
 
     }
 
+    @Test
+    void testGetTotalPopulationByCity() {
+        long cityPop = app.getTotalPopulationByCity(testCity);
+
+        // Checking to see if there is a valid population
+        assertNotEquals(0, cityPop);
+
+    }
+
 }
