@@ -199,4 +199,16 @@ public class AppIntegrationTest {
             previousPopulation = country.getPopulation();
         }
     }
+
+
+    @Test
+    void testGetTotalPopulation()
+    {
+        long totalPop = app.getTotalPopulation();
+
+        // Checking to see if there is a valid population
+        assertNotEquals(0, totalPop);
+
+    }
+
 }
