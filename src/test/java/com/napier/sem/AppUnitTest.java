@@ -405,6 +405,18 @@ class AppUnitTest
     }
 
     @Test
+    void populationPercentagesAddUpToOneHundred()
+    {
+        double cityPercent = App.getPopulationPercentage(400, 1000);
+        double nonCityPercent = App.getPopulationPercentage(600, 1000);
+
+        assertEquals(40.0, cityPercent);
+        assertEquals(60.0, nonCityPercent);
+        assertEquals(100.0, cityPercent + nonCityPercent);
+        assertEquals(0.0, App.getPopulationPercentage(0, 0));
+    }
+
+    @Test
     void getNPopulousCitiesInCountryRejectsNonPositiveLimit()
     {
         assertThrows(IllegalArgumentException.class,

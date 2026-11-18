@@ -3,6 +3,9 @@ package com.napier.sem;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -279,6 +282,28 @@ public class AppIntegrationTest {
         // Checking to see if there is a valid population
         assertNotEquals(0, continentPop);
 
+    }
+
+    @Test
+    void printPopulationBreakdownsByContinentDisplaysPopulationAndPercentages()
+    {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        PrintStream originalOutput = System.out;
+        try
+        {
+            System.setOut(new PrintStream(output));
+            app.printPopulationBreakdownsByContinent();
+        }
+        finally
+        {
+            System.setOut(originalOutput);
+        }
+
+        String report = new String(output.toByteArray(), StandardCharsets.UTF_8);
+        assertTrue(report.contains("Asia: total population"));
+        assertTrue(report.contains("living in cities"));
+        assertTrue(report.contains("not living in cities"));
+        assertTrue(report.contains("%"));
     }
 
     @Test
