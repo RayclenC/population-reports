@@ -33,6 +33,8 @@ public class App
 
         Scanner input = new Scanner(System.in);
 
+
+        Country thisCountry = new Country("CAN","Canada","North America","North America",31147000,"Ottowa");
         Continent thisContinent = new Continent("Asia");
         Region thisRegion = new Region("Eastern Africa");
         District thisDistrict = new District("England");
@@ -131,6 +133,8 @@ public class App
         // Report #53
         System.out.println(ThisApp.getTotalPopulationByRegion(thisRegion));
 
+        // Report #54
+        System.out.println(ThisApp.getTotalPopulationByCountry(thisCountry));
 
         /*
         End of Reports
@@ -1020,6 +1024,44 @@ public class App
                     "SELECT SUM(Population) AS total "
                             + "FROM country "
                             + "WHERE country.Region LIKE '" + region.getName() + "'";
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(query);
+
+            /*
+                Using a 'long' instead of Int because a total population
+                of a large dataset could exceed the standard limit of Int and
+             */
+            long totalPop = 0;
+
+            while(rset.next()){
+                totalPop = rset.getLong("total");
+            }
+
+            return totalPop;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get total population");
+            return 0;
+        }
+    }
+
+    /**
+     * Report #54
+     * View the total population of a country
+     */
+    public long getTotalPopulationByCountry(Country country)
+    {
+        try
+        {
+            // Create string for SQL statement
+            String query =
+                    "SELECT SUM(Population) AS total "
+                            + "FROM country "
+                            + "WHERE country.Name LIKE '" + country.getName() + "'";
             // Create an SQL statement
             Statement stmt = con.createStatement();
             // Execute SQL statement
