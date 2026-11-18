@@ -120,6 +120,22 @@ public class AppIntegrationTest {
     }
 
     @Test
+    void getCapitalCitiesInContinentReturnsAllCapitalsInDescendingPopulationOrder()
+    {
+        ArrayList<City> cities = app.getCapitalCitiesInContinent(testContinent);
+
+        assertNotNull(cities);
+        assertTrue(cities.size() > 7);
+        double previousPopulation = Double.POSITIVE_INFINITY;
+        for (City city : cities)
+        {
+            assertNotNull(city.getCountryCode());
+            assertTrue(city.getPopulation() <= previousPopulation);
+            previousPopulation = city.getPopulation();
+        }
+    }
+
+    @Test
     void testGetNCapitalCitiesInRegion() {
 
         ArrayList<City> cities = app.getNCapitalCitiesInRegion(7, testRegion);
