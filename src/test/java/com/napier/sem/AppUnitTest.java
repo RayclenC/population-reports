@@ -381,6 +381,14 @@ class AppUnitTest
     }
 
     @Test
+    void getCapitalCitiesInRegionRejectsInvalidInput()
+    {
+        assertThrows(IllegalArgumentException.class, () -> app.getCapitalCitiesInRegion(null));
+        assertThrows(IllegalArgumentException.class,
+                () -> app.getCapitalCitiesInRegion(new Region(" ")));
+    }
+
+    @Test
     void getCitiesInDistrictRejectsMissingDistrict()
     {
         assertThrows(IllegalArgumentException.class, () -> app.getCitiesInDistrict(null));
