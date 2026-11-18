@@ -241,6 +241,13 @@ public class AppIntegrationTest {
 
     }
 
+    @Test
+    void testGetTotalPopulationByDistrict() {
+        long districtPop = app.getTotalPopulationByDistrict(testDistrict);
 
+        // Checking to see if there is a valid population
+        assertNotEquals(0, districtPop);
+
+    }
 
 }
