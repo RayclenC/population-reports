@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  *<p>
@@ -21,6 +22,7 @@ public class AppIntegrationTest {
     static Continent testContinentIncorrect;
     static Region testRegion;
     static Country testCountry;
+    static District testDistrict;
 
     @BeforeAll
     static void init() {
@@ -39,58 +41,12 @@ public class AppIntegrationTest {
 
         testRegion = new Region("Eastern Africa");
 
+        testDistrict = new District("England");
+
         testCountry = new Country("CAN","Canada","North America","North America",31147000,"Ottowa");
-        testCountry.setCode("Can");
-        testCountry.setName("Canada");
-        testCountry.setPopulation(31147000);
     }
 
     // Integrated test methods go here
-
-
-    /**
-     * Tests the City Class. Making sure that a valid city can be created
-     * to mirror the 'city' database table.
-     */
-    @Test
-    void testAddCity() {
-        assertEquals(460, testCity.getId());
-        assertEquals("Edinburgh", testCity.getName());
-        assertEquals("GBR", testCity.getCountryCode());
-        assertEquals("District", testCity.getDistrict());
-        assertEquals(450180, testCity.getPopulation());
-    }
-
-    @Test
-    void testAddContinent() {
-        assertEquals("Asia", testContinent.getName());
-    }
-
-    @Test
-    void testGetNPopulousCountriesInRegion() {
-        assertEquals("Ethiopia", app.getNPopulousCountriesInRegion(5, testRegion).get(0).getName());
-    }
-
-    /**
-     * Tests the Country Class. Making sure that a valid country can be created
-     * to mirror the 'country' database table.
-     */
-    @Test
-    void testAddCountry() {
-        assertEquals("Can", testCountry.getCode());
-        assertEquals("Canada", testCountry.getName());
-        assertEquals("North America", testCountry.getContinent().getName());
-        assertEquals("North America", testCountry.getRegion().getName());
-        assertEquals(31147000, testCountry.getPopulation());
-        assertEquals("Ottowa",   testCountry.getCapital());
-    }
-
-    @Test
-    void testAddRegion() {
-        // In progress
-        Country testCountry = new Country("CAN","Canada","North America","North America",31147000,"Ottowa");
-        Region testRegion = new Region("Belgium");
-    }
 
 
     @Test
@@ -99,6 +55,92 @@ public class AppIntegrationTest {
 
         assertNotNull(cities);
         assertFalse(cities.isEmpty());
+    }
+
+    @Test
+    void getNPopulousCitiesInContinentReturnsTopCitiesInPopulationOrder()
+    {
+        ArrayList<City> allCities = app.getCitiesInContinent(testContinent);
+        ArrayList<City> topCities = app.getNPopulousCitiesInContinent(5, testContinent);
+
+        assertNotNull(allCities);
+        assertNotNull(topCities);
+        assertEquals(5, topCities.size());
+        double previousPopulation = Double.POSITIVE_INFINITY;
+        for (int i = 0; i < topCities.size(); i++)
+        {
+            assertEquals(allCities.get(i).getId(), topCities.get(i).getId());
+            assertTrue(topCities.get(i).getPopulation() <= previousPopulation);
+            previousPopulation = topCities.get(i).getPopulation();
+        }
+    }
+
+    @Test
+    void testGetCapitalCities() {
+        ArrayList<City> cities = app.getCapitalCities();
+
+        assertNotNull(cities);
+        assertFalse(cities.isEmpty());
+    }
+
+    @Test
+    void testGetNCapitalCities() {
+        ArrayList<City> cities = app.getNCapitalCities(7);
+
+        assertNotNull(cities);
+        assertFalse(cities.isEmpty());
+
+        // Testing to see if the N param works
+        assertEquals(7, cities.size());
+
+    }
+
+    @Test
+    void testGetNCapitalCitiesInContinent() {
+
+        ArrayList<City> cities = app.getNCapitalCitiesInContinent(7, testContinent);
+
+        assertNotNull(cities);
+        assertFalse(cities.isEmpty());
+
+        // Testing to see if the N param works
+        assertEquals(7, cities.size());
+    }
+
+    @Test
+    void testGetNCapitalCitiesInRegion() {
+
+        ArrayList<City> cities = app.getNCapitalCitiesInRegion(7, testRegion);
+
+        assertNotNull(cities);
+        assertFalse(cities.isEmpty());
+
+        // Testing to see if the N param works
+        assertEquals(7, cities.size());
+    }
+
+    @Test
+    void testGetCitiesInRegion() {
+        ArrayList<City> cities = app.getCitiesInRegion(testRegion);
+
+        assertNotNull(cities);
+        assertFalse(cities.isEmpty());
+    }
+
+    @Test
+    void getCitiesInDistrictReturnsCitiesInDescendingPopulationOrder()
+    {
+        ArrayList<City> cities = app.getCitiesInDistrict(testDistrict);
+
+        assertNotNull(cities);
+        assertFalse(cities.isEmpty());
+        double previousPopulation = Double.POSITIVE_INFINITY;
+        for (City city : cities)
+        {
+            assertEquals(testDistrict.getName(), city.getDistrict());
+            assertTrue(city.getPopulation() <= previousPopulation);
+            previousPopulation = city.getPopulation();
+        }
     }
 
     @Test

@@ -1,5 +1,12 @@
 package com.napier.sem;
 
+/**
+ *
+ * <p>
+ *     The Continent class builds a 'continent' object with getters, setters and toString method
+ * </p>
+ *
+ */
 public class Continent {
 
     private String name;

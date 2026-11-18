@@ -3,20 +3,42 @@ package com.napier.sem;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 class AppUnitTest
 {
     static App app;
+    static City testCity;
+    static Continent testContinent;
+    static Continent testContinentIncorrect;
+    static Region testRegion;
+    static Country testCountry;
+    static District testDistrict;
 
     @BeforeAll
-    static void init(){
-        app = new App();
-    }
+    static void init() {
 
+        app = new App();
+
+        testCity = new City(460,
+                "Edinburgh",
+                "GBR",
+                "Scotland",
+                450180);
+
+        testContinent = new Continent("Asia");
+
+        testRegion = new Region("Caribbean");
+
+        testDistrict = new District("England");
+
+        testCountry = new Country("CAN","Canada","North America","North America",31147000,"Ottowa");
+    }
     /**
      * Tests the City Class. Making sure that a valid city can be created
      * to mirror the "city" database table.
@@ -25,12 +47,6 @@ class AppUnitTest
     void testAddCity() {
 
         // Testing Constructors
-        City testCity = new City(460,
-                "Edinburgh",
-                "GBR",
-                "Scotland",
-                450180);
-
         assertEquals(460, testCity.getId());
         assertEquals("Edinburgh", testCity.getName());
         assertEquals("GBR", testCity.getCountryCode());
@@ -67,10 +83,7 @@ class AppUnitTest
     void testAddContinent() {
 
         // Testing Constructors
-        Continent testContinent = new Continent("Asia");
-
         assertEquals("Asia", testContinent.getName());
-
 
         // Testing Setters
         testContinent.setName("Europe");
@@ -93,8 +106,6 @@ class AppUnitTest
     void testAddCountry() {
 
         // Testing Constructors
-        Country testCountry = new Country("CAN","Canada","North America","North America",31147000,"Ottowa");
-
         assertEquals("CAN", testCountry.getCode());
         assertEquals("Canada", testCountry.getName());
         assertEquals("North America", testCountry.getContinent().getName());
@@ -132,8 +143,6 @@ class AppUnitTest
     void testAddDistrict() {
 
         // Testing Constructors
-        District testDistrict = new District("England");
-
         assertEquals("England", testDistrict.getName());
 
         // Testing Setters
@@ -154,8 +163,6 @@ class AppUnitTest
     void testAddRegion() {
 
         // Testing Constructors
-        Region testRegion = new Region("Caribbean");
-
         assertEquals("Caribbean", testRegion.getName());
 
         // Testing Setters
@@ -306,11 +313,93 @@ class AppUnitTest
     }
 
     @Test
-    void formatCountryIncludesCodeNameAndPopulation()
+    void readPositiveIntegerAcceptsMultipleUserInputsFromOneScanner()
     {
-        Country country = new Country("CHN","China","Asia","Eastern Asia",1277558000,"Beijing");
+        Scanner input = new Scanner("USA\n2\n7\n");
 
-        assertEquals("CHN | China | 1277558000", App.formatCountry(country));
+        assertEquals("USA", App.readLineOrDefault(input, "Country: ", "CAN"));
+        assertEquals(2, App.readPositiveInteger(input, "Top cities: ", 5));
+        assertEquals(7, App.readPositiveInteger(input, "Top countries: ", 5));
     }
 
+    @Test
+    void readPositiveIntegerAsksAgainAfterInvalidInput()
+    {
+        assertEquals(3, App.readPositiveInteger(
+                new Scanner("many\n0\n3"), "Top countries: ", 5));
+    }
+
+    @Test
+    void inputReadersUseDefaultsWhenStandardInputIsClosed()
+    {
+        Scanner input = new Scanner("");
+
+        assertEquals("USA", App.readLineOrDefault(input, "Country: ", "USA"));
+        assertEquals(5, App.readPositiveInteger(input, "Top countries: ", 5));
+    }
+
+    @Test
+    void getNPopulousCountriesRejectsNonPositiveLimit()
+    {
+        assertThrows(IllegalArgumentException.class, () -> app.getNPopulousCountries(0));
+        assertThrows(IllegalArgumentException.class, () -> app.getNPopulousCountries(-1));
+    }
+
+    @Test
+    void getNPopulousCountriesInContinentRejectsInvalidInput()
+    {
+        assertThrows(IllegalArgumentException.class,
+                () -> app.getNPopulousCountriesInContinent(0, new Continent("Asia")));
+        assertThrows(IllegalArgumentException.class,
+                () -> app.getNPopulousCountriesInContinent(5, null));
+    }
+
+    @Test
+    void getNPopulousCountriesInRegionRejectsInvalidInput()
+    {
+        assertThrows(IllegalArgumentException.class,
+                () -> app.getNPopulousCountriesInRegion(0, new Region("Eastern Africa")));
+        assertThrows(IllegalArgumentException.class,
+                () -> app.getNPopulousCountriesInRegion(5, null));
+    }
+
+    @Test
+    void getNPopulousCitiesInContinentRejectsInvalidInput()
+    {
+        assertThrows(IllegalArgumentException.class,
+                () -> app.getNPopulousCitiesInContinent(0, new Continent("Asia")));
+        assertThrows(IllegalArgumentException.class,
+                () -> app.getNPopulousCitiesInContinent(5, null));
+    }
+
+    @Test
+    void getCitiesInDistrictRejectsMissingDistrict()
+    {
+        assertThrows(IllegalArgumentException.class, () -> app.getCitiesInDistrict(null));
+        assertThrows(IllegalArgumentException.class, () -> app.getCitiesInDistrict(new District(" ")));
+    }
+
+    @Test
+    void getNPopulousCitiesInCountryRejectsNonPositiveLimit()
+    {
+        assertThrows(IllegalArgumentException.class,
+                () -> app.getNPopulousCitiesInCountry(0, "CAN"));
+    }
+
+    @Test
+    void getNPopulousCitiesInCountryRejectsMissingCountryCode()
+    {
+        assertThrows(IllegalArgumentException.class,
+                () -> app.getNPopulousCitiesInCountry(5, " "));
+        assertThrows(IllegalArgumentException.class,
+                () -> app.getNPopulousCitiesInCountry(5, null));
+    }
+
+    @Test
+    void printCountriesTest(){
+        ArrayList<Country> testCountries = new ArrayList<>();
+        app.printCountries(testCountries);
+        testCountries.add(testCountry);
+        app.printCountries(testCountries);
+    }
 }

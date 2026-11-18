@@ -1,5 +1,12 @@
 package com.napier.sem;
 
+/**
+ *
+ * <p>
+ *     The District class builds a 'district' object with getters, setters and toString method
+ * </p>
+ *
+ */
 public class District {
     public String name;
 

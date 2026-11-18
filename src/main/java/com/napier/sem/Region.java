@@ -1,5 +1,12 @@
 package com.napier.sem;
 
+/**
+ *
+ * <p>
+ *     The Region class builds a 'region' object with getters, setters and toString method
+ * </p>
+ *
+ */
 public class Region {
 
     private String name;
