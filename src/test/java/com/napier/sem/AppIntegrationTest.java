@@ -27,11 +27,16 @@ public class AppIntegrationTest {
     static Country testCountry;
     static District testDistrict;
 
+    /**
+     * Initializing variables and establishing a connection to the database.
+     * This is then reused throughout the testing.
+     */
     @BeforeAll
     static void init() {
 
         app = new App();
 
+        // Connecting to the database
         app.Connect("localhost:33060", 30000);
 
         testCity = new City(460,
@@ -40,6 +45,8 @@ public class AppIntegrationTest {
                 "District",
                 450180);
 
+
+        // Creating Test objects of each class to be re-used instead of creating duplicate instances.
         testContinent = new Continent("Asia");
 
         testRegion = new Region("Eastern Africa");
@@ -51,13 +58,16 @@ public class AppIntegrationTest {
 
     // Integrated test methods go here
 
-
+    /**
+     * Verifies that {@link App#getCitiesInContinent(Continent)} returns a valid list of cities
+     */
     @Test
     void testGetCitiesInContinent() {
         ArrayList<City> cities = app.getCitiesInContinent(testContinent);
 
         assertNotNull(cities);
         assertFalse(cities.isEmpty());
+
     }
 
     @Test
@@ -78,6 +88,10 @@ public class AppIntegrationTest {
         }
     }
 
+    /**
+     * Verifies that {@link App#getNPopulousCitiesInDistrict(int, District)}
+     * returns a valid list of cities of the N length provided
+     */
     @Test
     void testGetNPopulousCitiesInDistrict() {
 
@@ -90,6 +104,9 @@ public class AppIntegrationTest {
         assertEquals(7, cities.size());
     }
 
+    /**
+     * Verifies that {@link App#getCapitalCities()} returns a valid list of cities
+     */
     @Test
     void testGetCapitalCities() {
         ArrayList<City> cities = app.getCapitalCities();
@@ -98,6 +115,9 @@ public class AppIntegrationTest {
         assertFalse(cities.isEmpty());
     }
 
+    /**
+     * Verifies that {@link App#getNCapitalCities(int N)} returns a valid list of cities of the N length provided
+     */
     @Test
     void testGetNCapitalCities() {
         ArrayList<City> cities = app.getNCapitalCities(7);
@@ -110,6 +130,9 @@ public class AppIntegrationTest {
 
     }
 
+    /**
+     * Verifies that {@link App#getNCapitalCitiesInContinent(int, Continent)} returns a valid list of cities of the N length provided
+     */
     @Test
     void testGetNCapitalCitiesInContinent() {
 
@@ -122,8 +145,11 @@ public class AppIntegrationTest {
         assertEquals(7, cities.size());
     }
 
+    /**
+     * Verifies that {@link App#getCapitalCitiesInContinent(Continent)} returns all the capital cities in descending order.
+     */
     @Test
-    void getCapitalCitiesInContinentReturnsAllCapitalsInDescendingPopulationOrder()
+    void testGetCapitalCitiesInContinent()
     {
         ArrayList<City> cities = app.getCapitalCitiesInContinent(testContinent);
 
@@ -138,8 +164,11 @@ public class AppIntegrationTest {
         }
     }
 
+    /**
+     * Verifies that {@link App#getCapitalCitiesInRegion(Region)} returns all the capital cities in descending order.
+     */
     @Test
-    void getCapitalCitiesInRegionReturnsAllCapitalsInDescendingPopulationOrder()
+    void testGetCapitalCitiesInRegion()
     {
         ArrayList<City> cities = app.getCapitalCitiesInRegion(testRegion);
 
@@ -154,6 +183,9 @@ public class AppIntegrationTest {
         }
     }
 
+    /**
+     * Verifies that {@link App#getNCapitalCitiesInRegion(int, Region)} returns a valid list of cities of the N length provided
+     */
     @Test
     void testGetNCapitalCitiesInRegion() {
 
@@ -166,6 +198,9 @@ public class AppIntegrationTest {
         assertEquals(7, cities.size());
     }
 
+    /**
+     * Verifies that {@link App#getCitiesInRegion(Region)} returns a valid list of cities
+     */
     @Test
     void testGetCitiesInRegion() {
         ArrayList<City> cities = app.getCitiesInRegion(testRegion);
@@ -174,8 +209,11 @@ public class AppIntegrationTest {
         assertFalse(cities.isEmpty());
     }
 
+    /**
+     * Verifies that {@link App#getCitiesInDistrict(District)} returns all the cities in descending order.
+     */
     @Test
-    void getCitiesInDistrictReturnsCitiesInDescendingPopulationOrder()
+    void testGetCitiesInDistrict()
     {
         ArrayList<City> cities = app.getCitiesInDistrict(testDistrict);
 
@@ -190,8 +228,11 @@ public class AppIntegrationTest {
         }
     }
 
+    /**
+     * Verifies that {@link App#getCitiesInCountry(Country)} returns all the cities in descending order.
+     */
     @Test
-    void getCitiesInCountryReturnsAllCitiesInDescendingPopulationOrder()
+    void testGetCitiesInCountry()
     {
         ArrayList<City> cities = app.getCitiesInCountry(testCountry);
 
@@ -206,20 +247,23 @@ public class AppIntegrationTest {
         }
     }
 
+    /**
+     * Verifies that {@link App#getCountriesInContinent(Continent)} returns a valid list of countries
+     */
     @Test
     void testGetCountriesInContinent(){
         ArrayList<Country> countries = app.getCountriesInContinent(testContinent);
 
         assertNotNull(countries);
         assertFalse(countries.isEmpty());
-    }
 
-    @Test
-    void testGetCountriesInContinentInvalidContinent(){
         testContinentIncorrect = new Continent("Mableh");
-        app.getCountriesInContinent(testContinentIncorrect);
+        assertNull(app.getCountriesInContinent(testContinentIncorrect));
     }
 
+    /**
+     * Verifies that {@link App#getCitiesInPopulationSizeOrder()} returns a valid list of cities in the correct size order
+     */
     @Test
     void testGetCities() {
         // testing to see if the method to return by size order returns an array of populated data.
@@ -230,8 +274,11 @@ public class AppIntegrationTest {
         }
     }
 
+    /**
+     * Verifies that {@link App#getCountriesInRegion(Region)} returns all the countries in descending order.
+     */
     @Test
-    void getCountriesInRegionReturnsCountriesInDescendingPopulationOrder()
+    void testGetCountriesInRegion()
     {
         ArrayList<Country> countries = app.getCountriesInRegion(testRegion);
 
@@ -246,8 +293,11 @@ public class AppIntegrationTest {
         }
     }
 
+    /**
+     * Verifies that {@link App#getCountriesByPopulation} returns all the countries in descending population order.
+     */
     @Test
-    void getCountriesByPopulationReturnsCountriesInDescendingPopulationOrder()
+    void testGetCountriesByPopulation()
     {
         ArrayList<Country> countries = app.getCountriesByPopulation();
 
@@ -263,7 +313,9 @@ public class AppIntegrationTest {
         }
     }
 
-
+    /**
+     * Verifies that {@link App#getTotalPopulation()} returns a positive integer.
+     */
     @Test
     void testGetTotalPopulation()
     {
@@ -274,6 +326,9 @@ public class AppIntegrationTest {
 
     }
 
+    /**
+     * Verifies that {@link App#getTotalPopulationByContinent(Continent)} returns a positive integer.
+     */
     @Test
     void testGetTotalPopulationByContinent()
     {
@@ -375,6 +430,9 @@ public class AppIntegrationTest {
         assertTrue(report.contains("% of world population)"));
     }
 
+    /**
+     * Verifies that {@link App#getTotalPopulationByRegion(Region)} returns a positive integer.
+     */
     @Test
     void testGetTotalPopulationByRegion()
     {
@@ -385,6 +443,9 @@ public class AppIntegrationTest {
 
     }
 
+    /**
+     * Verifies that {@link App#getTotalPopulationByCountry(Country)} returns a positive integer.
+     */
     @Test
     void testGetTotalPopulationByCountry()
     {
@@ -395,6 +456,9 @@ public class AppIntegrationTest {
 
     }
 
+    /**
+     * Verifies that {@link App#getTotalPopulationByDistrict(District)} returns a positive integer.
+     */
     @Test
     void testGetTotalPopulationByDistrict() {
         long districtPop = app.getTotalPopulationByDistrict(testDistrict);
@@ -404,6 +468,9 @@ public class AppIntegrationTest {
 
     }
 
+    /**
+     * Verifies that {@link App#getTotalPopulationByCity(City)} returns a positive integer.
+     */
     @Test
     void testGetTotalPopulationByCity() {
         long cityPop = app.getTotalPopulationByCity(testCity);
