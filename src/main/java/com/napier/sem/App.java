@@ -82,14 +82,14 @@ public class App
         //Report #28
         ThisApp.printCities(ThisApp.getCitiesInContinent(thisContinent));
 
+        //Report #31
+        ArrayList<City> citiesInCountry = ThisApp.getCitiesInCountry(thisCountry);
+        ThisApp.printCities(citiesInCountry);
+
         //Report #32
         String districtName = readLineOrDefault(input, "Enter a district (for example, England): ", "England");
         ArrayList<City> citiesInDistrict = ThisApp.getCitiesInDistrict(new District(districtName));
         ThisApp.printCities(citiesInDistrict);
-
-        //Report #31
-        ArrayList<City> citiesInCountry = ThisApp.getCitiesInCountry(thisCountry);
-        ThisApp.printCities(citiesInCountry);
 
         //Report #36
         String regionName = readLineOrDefault(input, "Enter a region (for example, Eastern Africa): ",
@@ -123,6 +123,9 @@ public class App
         //Report #42
         ThisApp.printCities(ThisApp.getCapitalCities());
 
+        // Report #44
+        ThisApp.printCities(ThisApp.getCapitalCitiesInRegion(thisRegion));
+
         //Report #45
         ThisApp.printCities(ThisApp.getNCapitalCities(7));
 
@@ -135,15 +138,6 @@ public class App
         // Report #47
         ThisApp.printCities(ThisApp.getNCapitalCitiesInRegion(7, thisRegion));
 
-        // Report #44
-        ThisApp.printCities(ThisApp.getCapitalCitiesInRegion(thisRegion));
-
-        // Report #51
-        System.out.println(ThisApp.getTotalPopulation());
-
-        // Report #52
-        System.out.println(ThisApp.getTotalPopulationByContinent(thisContinent));
-
         // Report #48
         ThisApp.printPopulationBreakdownsByContinent();
 
@@ -152,6 +146,12 @@ public class App
 
         // Report #50
         ThisApp.printPopulationBreakdownsByCountry();
+
+        // Report #51
+        System.out.println(ThisApp.getTotalPopulation());
+
+        // Report #52
+        System.out.println(ThisApp.getTotalPopulationByContinent(thisContinent));
 
         // Report #53
         System.out.println(ThisApp.getTotalPopulationByRegion(thisRegion));
@@ -610,6 +610,45 @@ public class App
     }
 
     /**
+     * Report 31: Returns all cities in a country ordered by population from largest to smallest.
+     * @param country country whose cities should be returned
+     * @return cities in the country ordered by population
+     */
+    public ArrayList<City> getCitiesInCountry(Country country)
+    {
+        if (country == null || country.getCode() == null || country.getCode().trim().isEmpty())
+        {
+            throw new IllegalArgumentException("A country with a valid code is required");
+        }
+
+        String query = "SELECT ID, Name, CountryCode, District, Population "
+                + "FROM city WHERE CountryCode = ? ORDER BY Population DESC";
+        ArrayList<City> cities = new ArrayList<>();
+
+        try (PreparedStatement statement = con.prepareStatement(query))
+        {
+            statement.setString(1, country.getCode().trim().toUpperCase(Locale.ROOT));
+            try (ResultSet results = statement.executeQuery())
+            {
+                while (results.next())
+                {
+                    cities.add(new City(results.getInt("ID"),
+                            results.getString("Name"),
+                            results.getString("CountryCode"),
+                            results.getString("District"),
+                            results.getInt("Population")));
+                }
+            }
+            return cities;
+        }
+        catch (SQLException e)
+        {
+            System.out.println("getCitiesInCountry error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
      * Report 32
      * This method returns a list of all Cities in the world by a District.
      * @param district the District you want to filter by.
@@ -715,45 +754,6 @@ public class App
 
         } catch (Exception e) {
             System.out.println("getCitiesByPopulation error: " + e.getMessage());
-            return null;
-        }
-    }
-
-    /**
-     * Report 31: Returns all cities in a country ordered by population from largest to smallest.
-     * @param country country whose cities should be returned
-     * @return cities in the country ordered by population
-     */
-    public ArrayList<City> getCitiesInCountry(Country country)
-    {
-        if (country == null || country.getCode() == null || country.getCode().trim().isEmpty())
-        {
-            throw new IllegalArgumentException("A country with a valid code is required");
-        }
-
-        String query = "SELECT ID, Name, CountryCode, District, Population "
-                + "FROM city WHERE CountryCode = ? ORDER BY Population DESC";
-        ArrayList<City> cities = new ArrayList<>();
-
-        try (PreparedStatement statement = con.prepareStatement(query))
-        {
-            statement.setString(1, country.getCode().trim().toUpperCase(Locale.ROOT));
-            try (ResultSet results = statement.executeQuery())
-            {
-                while (results.next())
-                {
-                    cities.add(new City(results.getInt("ID"),
-                            results.getString("Name"),
-                            results.getString("CountryCode"),
-                            results.getString("District"),
-                            results.getInt("Population")));
-                }
-            }
-            return cities;
-        }
-        catch (SQLException e)
-        {
-            System.out.println("getCitiesInCountry error: " + e.getMessage());
             return null;
         }
     }
@@ -882,6 +882,88 @@ public class App
     }
 
     /**
+     * Report #43
+     * Returns all capital cities in a continent ordered by population from largest to smallest.
+     * @param continent continent whose capital cities should be returned
+     * @return capital cities in the continent ordered by population
+     */
+    public ArrayList<City> getCapitalCitiesInContinent(Continent continent)
+    {
+        if (continent == null || continent.getName() == null || continent.getName().trim().isEmpty())
+        {
+            throw new IllegalArgumentException("A continent is required");
+        }
+
+        String query = "SELECT city.ID, city.Name, city.CountryCode, city.District, city.Population "
+                + "FROM country JOIN city ON city.ID = country.Capital "
+                + "WHERE country.Continent = ? ORDER BY city.Population DESC";
+        ArrayList<City> cities = new ArrayList<>();
+
+        try (PreparedStatement statement = con.prepareStatement(query))
+        {
+            statement.setString(1, continent.getName().trim());
+            try (ResultSet results = statement.executeQuery())
+            {
+                while (results.next())
+                {
+                    cities.add(new City(results.getInt("ID"),
+                            results.getString("Name"),
+                            results.getString("CountryCode"),
+                            results.getString("District"),
+                            results.getInt("Population")));
+                }
+            }
+            return cities;
+        }
+        catch (SQLException e)
+        {
+            System.out.println("getCapitalCitiesInContinent error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Report #44
+     * Returns all capital cities in a region ordered by population from largest to smallest.
+     * @param region region whose capital cities should be returned
+     * @return capital cities in the region ordered by population
+     */
+    public ArrayList<City> getCapitalCitiesInRegion(Region region)
+    {
+        if (region == null || region.getName() == null || region.getName().trim().isEmpty())
+        {
+            throw new IllegalArgumentException("A region is required");
+        }
+
+        String query = "SELECT city.ID, city.Name, city.CountryCode, city.District, city.Population "
+                + "FROM country JOIN city ON city.ID = country.Capital "
+                + "WHERE country.Region = ? ORDER BY city.Population DESC";
+        ArrayList<City> cities = new ArrayList<>();
+
+        try (PreparedStatement statement = con.prepareStatement(query))
+        {
+            statement.setString(1, region.getName().trim());
+            try (ResultSet results = statement.executeQuery())
+            {
+                while (results.next())
+                {
+                    cities.add(new City(results.getInt("ID"),
+                            results.getString("Name"),
+                            results.getString("CountryCode"),
+                            results.getString("District"),
+                            results.getInt("Population")));
+                }
+            }
+            return cities;
+        }
+        catch (SQLException e)
+        {
+            System.out.println("getCapitalCitiesInRegion error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
      * Report #45
      * This method returns the top N populated capital cities in the world
      * @param N the number of capital cities you would like to return.
@@ -959,86 +1041,6 @@ public class App
         catch (Exception e)
         {
             System.out.println("ViewCitiesInRegion failed: " + e.getMessage());
-            return null;
-        }
-    }
-
-    /**
-     * Returns all capital cities in a continent ordered by population from largest to smallest.
-     * @param continent continent whose capital cities should be returned
-     * @return capital cities in the continent ordered by population
-     */
-    public ArrayList<City> getCapitalCitiesInContinent(Continent continent)
-    {
-        if (continent == null || continent.getName() == null || continent.getName().trim().isEmpty())
-        {
-            throw new IllegalArgumentException("A continent is required");
-        }
-
-        String query = "SELECT city.ID, city.Name, city.CountryCode, city.District, city.Population "
-                + "FROM country JOIN city ON city.ID = country.Capital "
-                + "WHERE country.Continent = ? ORDER BY city.Population DESC";
-        ArrayList<City> cities = new ArrayList<>();
-
-        try (PreparedStatement statement = con.prepareStatement(query))
-        {
-            statement.setString(1, continent.getName().trim());
-            try (ResultSet results = statement.executeQuery())
-            {
-                while (results.next())
-                {
-                    cities.add(new City(results.getInt("ID"),
-                            results.getString("Name"),
-                            results.getString("CountryCode"),
-                            results.getString("District"),
-                            results.getInt("Population")));
-                }
-            }
-            return cities;
-        }
-        catch (SQLException e)
-        {
-            System.out.println("getCapitalCitiesInContinent error: " + e.getMessage());
-            return null;
-        }
-    }
-
-    /**
-     * Returns all capital cities in a region ordered by population from largest to smallest.
-     * @param region region whose capital cities should be returned
-     * @return capital cities in the region ordered by population
-     */
-    public ArrayList<City> getCapitalCitiesInRegion(Region region)
-    {
-        if (region == null || region.getName() == null || region.getName().trim().isEmpty())
-        {
-            throw new IllegalArgumentException("A region is required");
-        }
-
-        String query = "SELECT city.ID, city.Name, city.CountryCode, city.District, city.Population "
-                + "FROM country JOIN city ON city.ID = country.Capital "
-                + "WHERE country.Region = ? ORDER BY city.Population DESC";
-        ArrayList<City> cities = new ArrayList<>();
-
-        try (PreparedStatement statement = con.prepareStatement(query))
-        {
-            statement.setString(1, region.getName().trim());
-            try (ResultSet results = statement.executeQuery())
-            {
-                while (results.next())
-                {
-                    cities.add(new City(results.getInt("ID"),
-                            results.getString("Name"),
-                            results.getString("CountryCode"),
-                            results.getString("District"),
-                            results.getInt("Population")));
-                }
-            }
-            return cities;
-        }
-        catch (SQLException e)
-        {
-            System.out.println("getCapitalCitiesInRegion error: " + e.getMessage());
             return null;
         }
     }
