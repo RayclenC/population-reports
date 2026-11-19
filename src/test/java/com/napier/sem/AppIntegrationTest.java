@@ -307,6 +307,28 @@ public class AppIntegrationTest {
     }
 
     @Test
+    void printPopulationBreakdownsByRegionDisplaysPopulationAndPercentages()
+    {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        PrintStream originalOutput = System.out;
+        try
+        {
+            System.setOut(new PrintStream(output));
+            app.printPopulationBreakdownsByRegion();
+        }
+        finally
+        {
+            System.setOut(originalOutput);
+        }
+
+        String report = new String(output.toByteArray(), StandardCharsets.UTF_8);
+        assertTrue(report.contains("Eastern Africa: total population"));
+        assertTrue(report.contains("living in cities"));
+        assertTrue(report.contains("not living in cities"));
+        assertTrue(report.contains("%"));
+    }
+
+    @Test
     void testGetTotalPopulationByRegion()
     {
         long regionPop = app.getTotalPopulationByRegion(testRegion);
