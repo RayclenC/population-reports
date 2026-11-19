@@ -207,13 +207,6 @@ class AppUnitTest
 
         ArrayList<City> cities = new ArrayList<>();
 
-        // Populating the city class
-        City testCity = new City(460,
-                "Edinburgh",
-                "GBR",
-                "District",
-                450180);
-
         // Adding the populated object to the array
         cities.add(testCity);
 
@@ -228,11 +221,6 @@ class AppUnitTest
     void printCitiesTestEdgeCase(){
 
         ArrayList<City> cities = new ArrayList<>();
-        City testCity = new City(460,
-                "Edinburgh",
-                "GBR",
-                "Scotland",
-                450180);
 
         testCity.setId(0);
         testCity.setPopulation(0);
@@ -259,7 +247,22 @@ class AppUnitTest
     void printCountriesTestPopulated(){
         ArrayList<Country> countries = new ArrayList<>();
 
-        //need to finish implementing this
+        countries.add(testCountry);
+
+        app.printCountries(countries);
+    }
+
+    @Test
+    void printCountriesTestEdgeCase(){
+
+        ArrayList<Country> countries = new ArrayList<>();
+
+        testCountry.setPopulation(0);
+
+        countries.add(testCountry);
+
+        app.printCountries(countries);
+
     }
 
     @Test
