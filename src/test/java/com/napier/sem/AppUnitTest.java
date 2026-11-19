@@ -417,6 +417,12 @@ class AppUnitTest
     }
 
     @Test
+    void populationPercentageCalculatesLanguageShareOfWorld()
+    {
+        assertEquals(10.0, App.getPopulationPercentage(100, 1000));
+    }
+
+    @Test
     void getNPopulousCitiesInCountryRejectsNonPositiveLimit()
     {
         assertThrows(IllegalArgumentException.class,

@@ -351,6 +351,31 @@ public class AppIntegrationTest {
     }
 
     @Test
+    void printLanguageStatisticsShowsAllRequestedLanguages()
+    {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        PrintStream originalOutput = System.out;
+        try
+        {
+            System.setOut(new PrintStream(output));
+            app.printLanguageStatistics();
+        }
+        finally
+        {
+            System.setOut(originalOutput);
+        }
+
+        String report = new String(output.toByteArray(), StandardCharsets.UTF_8);
+        assertTrue(report.contains("Chinese:"));
+        assertTrue(report.contains("English:"));
+        assertTrue(report.contains("Hindi:"));
+        assertTrue(report.contains("Spanish:"));
+        assertTrue(report.contains("Arabic:"));
+        assertTrue(report.contains("speakers ("));
+        assertTrue(report.contains("% of world population)"));
+    }
+
+    @Test
     void testGetTotalPopulationByRegion()
     {
         long regionPop = app.getTotalPopulationByRegion(testRegion);

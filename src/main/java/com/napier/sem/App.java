@@ -165,6 +165,9 @@ public class App
         // Report #56
         System.out.println(ThisApp.getTotalPopulationByCity(thisCity));
 
+        // Report #57
+        ThisApp.printLanguageStatistics();
+
         /*
         End of Reports
          */
@@ -1209,6 +1212,38 @@ public class App
             return 0;
         }
         return population * 100.0 / totalPopulation;
+    }
+
+    // Report #57
+    public void printLanguageStatistics()
+    {
+        String query = "SELECT countrylanguage.Language, "
+                + "SUM(country.Population * countrylanguage.Percentage / 100) AS speakers "
+                + "FROM countrylanguage JOIN country ON countrylanguage.CountryCode = country.Code "
+                + "WHERE countrylanguage.Language IN "
+                + "('Chinese', 'English', 'Hindi', 'Spanish', 'Arabic') "
+                + "GROUP BY countrylanguage.Language ORDER BY speakers DESC";
+
+        try
+        {
+            Statement statement = con.createStatement();
+            ResultSet results = statement.executeQuery(query);
+            long worldPopulation = getTotalPopulation();
+
+            while(results.next())
+            {
+                String language = results.getString("Language");
+                long speakers = Math.round(results.getDouble("speakers"));
+                double percentage = getPopulationPercentage(speakers, worldPopulation);
+
+                System.out.println(language + ": " + speakers + " speakers ("
+                        + percentage + "% of world population)");
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
     }
 
     // Report #49
