@@ -1,0 +1,59 @@
+name: Bug Report
+description: Report an error to help us improve the system
+title: "[BUG]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a bug! Fill in the fields below with as much detail as possible.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: Tell us clearly what happened.
+      placeholder: "Ex: When I click on 'List Countries', the app closes."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Play
+      description: How can we replicate the error?
+      placeholder: |
+        1. I opened the app
+        2. I chose option X
+        3. I clicked on Y
+        4. I saw error Z
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What was supposed to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Current Behavior
+      description: What happened instead?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - P0 - Critical (app won't open)
+        - P1 - High (main functionality broken)
+        - P2 - Medium (annoying error but usable)
+        - P3 - Low (visual error or minor)
+    validations:
+      required: true
