@@ -147,6 +147,9 @@ public class App
         // Report #48
         ThisApp.printPopulationBreakdownsByContinent();
 
+        // Report #49
+        ThisApp.printPopulationBreakdownsByRegion();
+
         // Report #53
         System.out.println(ThisApp.getTotalPopulationByRegion(thisRegion));
 
@@ -1203,6 +1206,56 @@ public class App
             return 0;
         }
         return population * 100.0 / totalPopulation;
+    }
+
+    // Report #49
+    public void printPopulationBreakdownsByRegion()
+    {
+        try
+        {
+            String regionQuery = "SELECT Region, SUM(Population) AS total_population "
+                    + "FROM country GROUP BY Region ORDER BY Region";
+            Statement statement = con.createStatement();
+            ResultSet results = statement.executeQuery(regionQuery);
+
+            ArrayList<String> regions = new ArrayList<>();
+            ArrayList<Long> totalPopulations = new ArrayList<>();
+
+            while(results.next())
+            {
+                regions.add(results.getString("Region"));
+                totalPopulations.add(results.getLong("total_population"));
+            }
+
+            String cityQuery = "SELECT COALESCE(SUM(city.Population), 0) AS city_population "
+                    + "FROM city JOIN country ON city.CountryCode = country.Code "
+                    + "WHERE country.Region = ?";
+            PreparedStatement cityStatement = con.prepareStatement(cityQuery);
+
+            for(int i = 0; i < regions.size(); i++)
+            {
+                String region = regions.get(i);
+                long total = totalPopulations.get(i);
+
+                cityStatement.setString(1, region);
+                ResultSet cityResults = cityStatement.executeQuery();
+                cityResults.next();
+                long cityPopulation = cityResults.getLong("city_population");
+                long nonCityPopulation = total - cityPopulation;
+
+                double cityPercent = getPopulationPercentage(cityPopulation, total);
+                double nonCityPercent = getPopulationPercentage(nonCityPopulation, total);
+
+                System.out.println(region + ": total population " + total
+                        + ", living in cities " + cityPopulation + " (" + cityPercent + "%)"
+                        + ", not living in cities " + nonCityPopulation
+                        + " (" + nonCityPercent + "%)");
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
