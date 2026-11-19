@@ -150,6 +150,9 @@ public class App
         // Report #49
         ThisApp.printPopulationBreakdownsByRegion();
 
+        // Report #50
+        ThisApp.printPopulationBreakdownsByCountry();
+
         // Report #53
         System.out.println(ThisApp.getTotalPopulationByRegion(thisRegion));
 
@@ -1247,6 +1250,46 @@ public class App
                 double nonCityPercent = getPopulationPercentage(nonCityPopulation, total);
 
                 System.out.println(region + ": total population " + total
+                        + ", living in cities " + cityPopulation + " (" + cityPercent + "%)"
+                        + ", not living in cities " + nonCityPopulation
+                        + " (" + nonCityPercent + "%)");
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    // Report #50
+    public void printPopulationBreakdownsByCountry()
+    {
+        try
+        {
+            String countryQuery = "SELECT Code, Name, Population FROM country ORDER BY Name";
+            Statement countryStatement = con.createStatement();
+            ResultSet countries = countryStatement.executeQuery(countryQuery);
+
+            String cityQuery = "SELECT COALESCE(SUM(Population), 0) AS city_population "
+                    + "FROM city WHERE CountryCode = ?";
+            PreparedStatement cityStatement = con.prepareStatement(cityQuery);
+
+            while(countries.next())
+            {
+                String countryCode = countries.getString("Code");
+                String countryName = countries.getString("Name");
+                long total = countries.getLong("Population");
+
+                cityStatement.setString(1, countryCode);
+                ResultSet cityResults = cityStatement.executeQuery();
+                cityResults.next();
+                long cityPopulation = cityResults.getLong("city_population");
+                long nonCityPopulation = total - cityPopulation;
+
+                double cityPercent = getPopulationPercentage(cityPopulation, total);
+                double nonCityPercent = getPopulationPercentage(nonCityPopulation, total);
+
+                System.out.println(countryName + ": total population " + total
                         + ", living in cities " + cityPopulation + " (" + cityPercent + "%)"
                         + ", not living in cities " + nonCityPopulation
                         + " (" + nonCityPercent + "%)");
