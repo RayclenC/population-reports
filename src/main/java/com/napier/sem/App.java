@@ -86,10 +86,9 @@ public class App
         ArrayList<City> citiesInCountry = ThisApp.getCitiesInCountry(thisCountry);
         ThisApp.printCities(citiesInCountry);
 
-        //Report #32
-        String districtName = readLineOrDefault(input, "Enter a district (for example, England): ", "England");
-        ArrayList<City> citiesInDistrict = ThisApp.getCitiesInDistrict(new District(districtName));
-        ThisApp.printCities(citiesInDistrict);
+        //Reports #23 and #32
+        String districtName = readLineOrDefault(input, "Enter a district (press Enter for England): ", "England");
+        ThisApp.printDistrictCityReport(new District(districtName.isBlank() ? "England" : districtName));
 
         //Report #36
         String regionName = readLineOrDefault(input, "Enter a region (for example, Eastern Africa): ",
@@ -649,7 +648,7 @@ public class App
     }
 
     /**
-     * Report 32
+     * Reports #23 and #32
      * This method returns a list of all Cities in the world by a District.
      * @param district the District you want to filter by.
      * @return list of all City objects filtered by a given District.
@@ -661,21 +660,31 @@ public class App
             throw new IllegalArgumentException("District must not be empty");
         }
 
-        String query = "SELECT ID, Name, CountryCode, District, Population "
-                + "FROM city WHERE District = ? ORDER BY Population DESC";
+        if (con == null)
+        {
+            System.out.println("Cannot retrieve district cities because the database connection is unavailable.");
+            return null;
+        }
+
+        String query = "SELECT city.ID, city.Name AS city_name, city.CountryCode, city.District, "
+                + "city.Population, country.Name AS country_name "
+                + "FROM city JOIN country ON city.CountryCode = country.Code "
+                + "WHERE city.District = ? ORDER BY city.Population DESC, city.ID ASC";
         ArrayList<City> cities = new ArrayList<>();
 
         try (PreparedStatement statement = con.prepareStatement(query))
         {
             statement.setString(1, district.getName().trim());
-            ResultSet results = statement.executeQuery();
-            while (results.next())
+            try (ResultSet results = statement.executeQuery())
             {
-                cities.add(new City(results.getInt("ID"),
-                        results.getString("Name"),
-                        results.getString("CountryCode"),
-                        results.getString("District"),
-                        results.getInt("Population")));
+                while (results.next())
+                {
+                    City city = new City(results.getInt("ID"), results.getString("city_name"),
+                            results.getString("CountryCode"), results.getString("District"),
+                            results.getInt("Population"));
+                    city.setCountryName(results.getString("country_name"));
+                    cities.add(city);
+                }
             }
             return cities;
         }
@@ -686,6 +695,28 @@ public class App
         }
     }
 
+
+    private void printDistrictCityReport(District district)
+    {
+        ArrayList<City> cities = getCitiesInDistrict(district);
+        if (cities == null)
+        {
+            return;
+        }
+        if (cities.isEmpty())
+        {
+            System.out.printf("No cities found for district '%s'.%n", district.getName());
+            return;
+        }
+
+        System.out.printf("%nCities in %s by population%n", district.getName());
+        System.out.printf("%-35s %-52s %-20s %12s%n", "Name", "Country", "District", "Population");
+        for (City city : cities)
+        {
+            System.out.printf("%-35s %-52s %-20s %,12.0f%n", city.getName(), city.getCountryName(),
+                    city.getDistrict(), city.getPopulation());
+        }
+    }
 
     /**
      * Report 38
