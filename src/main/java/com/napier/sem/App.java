@@ -17,6 +17,12 @@ import java.util.Scanner;
  */
 public class App
 {
+    private static final String REGIONAL_CITIES_QUERY =
+            "SELECT city.ID, city.Name AS city_name, city.CountryCode, city.District, "
+                    + "city.Population, country.Name AS country_name "
+                    + "FROM city JOIN country ON city.CountryCode = country.Code "
+                    + "WHERE country.Region = ? ORDER BY city.Population DESC, city.ID ASC";
+
     private Connection con = null;
 
     public static void main(String[] args)
@@ -91,12 +97,16 @@ public class App
         ArrayList<City> citiesInDistrict = ThisApp.getCitiesInDistrict(new District(districtName));
         ThisApp.printCities(citiesInDistrict);
 
+        //Reports #21 and #36 use the same region.
+        String defaultRegion = "Eastern Africa";
+        String regionName = readLineOrDefault(input, "Enter a region for the city and country reports "
+                + "(press Enter for Eastern Africa): ", defaultRegion);
+        Region reportRegion = new Region(regionName.isBlank() ? defaultRegion : regionName);
+        ThisApp.printRegionalCityReport(reportRegion);
+
         //Report #36
-        String regionName = readLineOrDefault(input, "Enter a region (for example, Eastern Africa): ",
-                "Eastern Africa");
         int numberOfRegionCountries = readPositiveInteger(
                 input, "Enter the number of top countries to display: ", 5);
-        Region reportRegion = new Region(regionName);
         ArrayList<Country> topCountriesInRegion =
                 ThisApp.getNPopulousCountriesInRegion(numberOfRegionCountries, reportRegion);
         ThisApp.printCountries(topCountriesInRegion);
@@ -573,39 +583,77 @@ public class App
     }
 
     /**
-     * Report 30
+     * Reports #21 and #30
      * This method returns a list of all Cities in the world by a Region.
      * @param region the Region you want to filter by.
      * @return list of all City objects filtered by a given Region.
      */
-    public ArrayList<City> getCitiesInRegion(Region region) {
-        try {
-            // Create an SQL statement
-            Statement stmt = con.createStatement();
-            // Create string for SQL statement
-            String strSelect =
-                    "SELECT city.ID, city.Name, city.CountryCode, city.District, city.Population "
-                            + "FROM city "
-                            + "LEFT JOIN country ON city.CountryCode = country.Code "
-                            + "WHERE country.Region LIKE '" + region.getName() + "'"
-                            + " ORDER BY city.Population DESC";
-            // Execute SQL statement
-            ResultSet rset = stmt.executeQuery(strSelect);
+    public ArrayList<City> getCitiesInRegion(Region region)
+    {
+        if (region == null || region.getName() == null || region.getName().isBlank())
+        {
+            System.out.println("Please provide a region name.");
+            return null;
+        }
+        if (con == null)
+        {
+            System.out.println("Cannot retrieve regional cities because the database connection is unavailable.");
+            return null;
+        }
 
-            ArrayList<City> cities = new ArrayList<>();
-            while (rset.next()) {
-                City city = new City(rset.getInt("ID"),
-                        rset.getString("Name"),
-                        rset.getString("CountryCode"),
-                        rset.getString("District"),
-                        rset.getInt("Population"));
-                cities.add(city);
+        ArrayList<City> cities = new ArrayList<>();
+        try (PreparedStatement statement = con.prepareStatement(REGIONAL_CITIES_QUERY))
+        {
+            statement.setString(1, region.getName().strip());
+            try (ResultSet results = statement.executeQuery())
+            {
+                while (results.next())
+                {
+                    cities.add(new City(results.getInt("ID"), results.getString("city_name"),
+                            results.getString("CountryCode"), results.getString("District"),
+                            results.getInt("Population")));
+                }
             }
             return cities;
-
-        } catch (Exception e) {
-            System.out.println("getCountriesByPopulation error: " + e.getMessage());
+        }
+        catch (SQLException e)
+        {
+            System.out.println("Could not retrieve cities for the region: " + e.getMessage());
             return null;
+        }
+    }
+
+    private void printRegionalCityReport(Region region)
+    {
+        if (con == null)
+        {
+            System.out.println("Cannot retrieve regional cities because the database connection is unavailable.");
+            return;
+        }
+        try (PreparedStatement statement = con.prepareStatement(REGIONAL_CITIES_QUERY))
+        {
+            statement.setString(1, region.getName().strip());
+            try (ResultSet results = statement.executeQuery())
+            {
+                if (!results.next())
+                {
+                    System.out.printf("No cities found for region '%s'.%n", region.getName());
+                    return;
+                }
+
+                System.out.printf("%nCities in %s by population%n", region.getName());
+                System.out.printf("%-35s %-52s %-20s %12s%n", "Name", "Country", "District", "Population");
+                do
+                {
+                    System.out.printf("%-35s %-52s %-20s %,12d%n", results.getString("city_name"),
+                            results.getString("country_name"), results.getString("District"),
+                            results.getInt("Population"));
+                } while (results.next());
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println("Could not retrieve cities for the region: " + e.getMessage());
         }
     }
 
