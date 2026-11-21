@@ -17,6 +17,12 @@ import java.util.Scanner;
  */
 public class App
 {
+    private static final String COUNTRY_CITIES_QUERY =
+            "SELECT city.ID, city.Name AS city_name, city.CountryCode, city.District, "
+                    + "city.Population, country.Name AS country_name "
+                    + "FROM city JOIN country ON country.Code = city.CountryCode "
+                    + "WHERE city.CountryCode = ? ORDER BY city.Population DESC, city.ID ASC";
+
     private Connection con = null;
 
     public static void main(String[] args)
@@ -622,37 +628,26 @@ public class App
             throw new IllegalArgumentException("A country with a valid code is required");
         }
 
-        return getCitiesByCountryCode(country.getCode());
-    }
-
-    private ArrayList<City> getCitiesByCountryCode(String countryCode)
-    {
         if (con == null)
         {
             System.out.println("Cannot retrieve country cities because the database connection is unavailable.");
             return null;
         }
 
-        String query = "SELECT city.ID, city.Name AS city_name, city.CountryCode, city.District, "
-                + "city.Population, country.Name AS country_name "
-                + "FROM city JOIN country ON country.Code = city.CountryCode "
-                + "WHERE city.CountryCode = ? ORDER BY city.Population DESC, city.ID ASC";
         ArrayList<City> cities = new ArrayList<>();
 
-        try (PreparedStatement statement = con.prepareStatement(query))
+        try (PreparedStatement statement = con.prepareStatement(COUNTRY_CITIES_QUERY))
         {
-            statement.setString(1, countryCode.strip().toUpperCase(Locale.ROOT));
+            statement.setString(1, country.getCode().strip().toUpperCase(Locale.ROOT));
             try (ResultSet results = statement.executeQuery())
             {
                 while (results.next())
                 {
-                    City city = new City(results.getInt("ID"),
+                    cities.add(new City(results.getInt("ID"),
                             results.getString("city_name"),
                             results.getString("CountryCode"),
                             results.getString("District"),
-                            results.getInt("Population"));
-                    city.setCountryName(results.getString("country_name"));
-                    cities.add(city);
+                            results.getInt("Population")));
                 }
             }
             return cities;
@@ -666,23 +661,35 @@ public class App
 
     private void printCountryCityReport(String countryCode)
     {
-        ArrayList<City> cities = getCitiesByCountryCode(countryCode);
-        if (cities == null)
+        if (con == null)
         {
+            System.out.println("Cannot retrieve country cities because the database connection is unavailable.");
             return;
         }
-        if (cities.isEmpty())
+        try (PreparedStatement statement = con.prepareStatement(COUNTRY_CITIES_QUERY))
         {
-            System.out.printf("No cities found for country code '%s'.%n", countryCode);
-            return;
-        }
+            statement.setString(1, countryCode.strip().toUpperCase(Locale.ROOT));
+            try (ResultSet results = statement.executeQuery())
+            {
+                if (!results.next())
+                {
+                    System.out.printf("No cities found for country code '%s'.%n", countryCode);
+                    return;
+                }
 
-        System.out.printf("%nCities in %s by population%n", cities.get(0).getCountryName());
-        System.out.printf("%-35s %-52s %-20s %12s%n", "Name", "Country", "District", "Population");
-        for (City city : cities)
+                System.out.printf("%nCities in %s by population%n", results.getString("country_name"));
+                System.out.printf("%-35s %-52s %-20s %12s%n", "Name", "Country", "District", "Population");
+                do
+                {
+                    System.out.printf("%-35s %-52s %-20s %,12d%n", results.getString("city_name"),
+                            results.getString("country_name"), results.getString("District"),
+                            results.getInt("Population"));
+                } while (results.next());
+            }
+        }
+        catch (SQLException e)
         {
-            System.out.printf("%-35s %-52s %-20s %,12.0f%n", city.getName(), city.getCountryName(),
-                    city.getDistrict(), city.getPopulation());
+            System.out.println("Could not retrieve cities for the country: " + e.getMessage());
         }
     }
 
