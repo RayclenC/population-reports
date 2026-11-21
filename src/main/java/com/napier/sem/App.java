@@ -17,6 +17,12 @@ import java.util.Scanner;
  */
 public class App
 {
+    private static final String DISTRICT_CITIES_QUERY =
+            "SELECT city.ID, city.Name AS city_name, city.CountryCode, city.District, "
+                    + "city.Population, country.Name AS country_name "
+                    + "FROM city JOIN country ON city.CountryCode = country.Code "
+                    + "WHERE city.District = ? ORDER BY city.Population DESC, city.ID ASC";
+
     private Connection con = null;
 
     public static void main(String[] args)
@@ -666,24 +672,18 @@ public class App
             return null;
         }
 
-        String query = "SELECT city.ID, city.Name AS city_name, city.CountryCode, city.District, "
-                + "city.Population, country.Name AS country_name "
-                + "FROM city JOIN country ON city.CountryCode = country.Code "
-                + "WHERE city.District = ? ORDER BY city.Population DESC, city.ID ASC";
         ArrayList<City> cities = new ArrayList<>();
 
-        try (PreparedStatement statement = con.prepareStatement(query))
+        try (PreparedStatement statement = con.prepareStatement(DISTRICT_CITIES_QUERY))
         {
             statement.setString(1, district.getName().trim());
             try (ResultSet results = statement.executeQuery())
             {
                 while (results.next())
                 {
-                    City city = new City(results.getInt("ID"), results.getString("city_name"),
+                    cities.add(new City(results.getInt("ID"), results.getString("city_name"),
                             results.getString("CountryCode"), results.getString("District"),
-                            results.getInt("Population"));
-                    city.setCountryName(results.getString("country_name"));
-                    cities.add(city);
+                            results.getInt("Population")));
                 }
             }
             return cities;
@@ -698,23 +698,35 @@ public class App
 
     private void printDistrictCityReport(District district)
     {
-        ArrayList<City> cities = getCitiesInDistrict(district);
-        if (cities == null)
+        if (con == null)
         {
+            System.out.println("Cannot retrieve district cities because the database connection is unavailable.");
             return;
         }
-        if (cities.isEmpty())
+        try (PreparedStatement statement = con.prepareStatement(DISTRICT_CITIES_QUERY))
         {
-            System.out.printf("No cities found for district '%s'.%n", district.getName());
-            return;
-        }
+            statement.setString(1, district.getName().trim());
+            try (ResultSet results = statement.executeQuery())
+            {
+                if (!results.next())
+                {
+                    System.out.printf("No cities found for district '%s'.%n", district.getName());
+                    return;
+                }
 
-        System.out.printf("%nCities in %s by population%n", district.getName());
-        System.out.printf("%-35s %-52s %-20s %12s%n", "Name", "Country", "District", "Population");
-        for (City city : cities)
+                System.out.printf("%nCities in %s by population%n", district.getName());
+                System.out.printf("%-35s %-52s %-20s %12s%n", "Name", "Country", "District", "Population");
+                do
+                {
+                    System.out.printf("%-35s %-52s %-20s %,12d%n", results.getString("city_name"),
+                            results.getString("country_name"), results.getString("District"),
+                            results.getInt("Population"));
+                } while (results.next());
+            }
+        }
+        catch (SQLException e)
         {
-            System.out.printf("%-35s %-52s %-20s %,12.0f%n", city.getName(), city.getCountryName(),
-                    city.getDistrict(), city.getPopulation());
+            System.out.println("Could not retrieve cities for the district: " + e.getMessage());
         }
     }
 
