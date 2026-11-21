@@ -17,6 +17,12 @@ import java.util.Scanner;
  */
 public class App
 {
+    private static final String COUNTRY_CITIES_QUERY =
+            "SELECT city.ID, city.Name AS city_name, city.CountryCode, city.District, "
+                    + "city.Population, country.Name AS country_name "
+                    + "FROM city JOIN country ON country.Code = city.CountryCode "
+                    + "WHERE city.CountryCode = ? ORDER BY city.Population DESC, city.ID ASC";
+
     private Connection con = null;
 
     public static void main(String[] args)
@@ -82,9 +88,10 @@ public class App
         //Report #28
         ThisApp.printCities(ThisApp.getCitiesInContinent(thisContinent));
 
-        //Report #31
-        ArrayList<City> citiesInCountry = ThisApp.getCitiesInCountry(thisCountry);
-        ThisApp.printCities(citiesInCountry);
+        //Reports #22 and #31
+        String cityReportCountryCode = readLineOrDefault(input,
+                "Enter a country code for the all-cities report (press Enter for CAN): ", "CAN");
+        ThisApp.printCountryCityReport(cityReportCountryCode.isBlank() ? "CAN" : cityReportCountryCode);
 
         //Report #32
         String districtName = readLineOrDefault(input, "Enter a district (for example, England): ", "England");
@@ -621,19 +628,23 @@ public class App
             throw new IllegalArgumentException("A country with a valid code is required");
         }
 
-        String query = "SELECT ID, Name, CountryCode, District, Population "
-                + "FROM city WHERE CountryCode = ? ORDER BY Population DESC";
+        if (con == null)
+        {
+            System.out.println("Cannot retrieve country cities because the database connection is unavailable.");
+            return null;
+        }
+
         ArrayList<City> cities = new ArrayList<>();
 
-        try (PreparedStatement statement = con.prepareStatement(query))
+        try (PreparedStatement statement = con.prepareStatement(COUNTRY_CITIES_QUERY))
         {
-            statement.setString(1, country.getCode().trim().toUpperCase(Locale.ROOT));
+            statement.setString(1, country.getCode().strip().toUpperCase(Locale.ROOT));
             try (ResultSet results = statement.executeQuery())
             {
                 while (results.next())
                 {
                     cities.add(new City(results.getInt("ID"),
-                            results.getString("Name"),
+                            results.getString("city_name"),
                             results.getString("CountryCode"),
                             results.getString("District"),
                             results.getInt("Population")));
@@ -645,6 +656,40 @@ public class App
         {
             System.out.println("getCitiesInCountry error: " + e.getMessage());
             return null;
+        }
+    }
+
+    private void printCountryCityReport(String countryCode)
+    {
+        if (con == null)
+        {
+            System.out.println("Cannot retrieve country cities because the database connection is unavailable.");
+            return;
+        }
+        try (PreparedStatement statement = con.prepareStatement(COUNTRY_CITIES_QUERY))
+        {
+            statement.setString(1, countryCode.strip().toUpperCase(Locale.ROOT));
+            try (ResultSet results = statement.executeQuery())
+            {
+                if (!results.next())
+                {
+                    System.out.printf("No cities found for country code '%s'.%n", countryCode);
+                    return;
+                }
+
+                System.out.printf("%nCities in %s by population%n", results.getString("country_name"));
+                System.out.printf("%-35s %-52s %-20s %12s%n", "Name", "Country", "District", "Population");
+                do
+                {
+                    System.out.printf("%-35s %-52s %-20s %,12d%n", results.getString("city_name"),
+                            results.getString("country_name"), results.getString("District"),
+                            results.getInt("Population"));
+                } while (results.next());
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println("Could not retrieve cities for the country: " + e.getMessage());
         }
     }
 
